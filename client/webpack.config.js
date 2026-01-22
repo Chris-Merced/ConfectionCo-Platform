@@ -5,7 +5,7 @@ module.exports = (env, argv) => {
   const isProd = argv.mode === "production";
 
   return {
-    entry: path.resolve(__dirname, "src", "index.jsx"),
+    entry: path.resolve(__dirname, "src", "index.tsx"),
     output: {
       path: path.resolve(__dirname, "dist"),
       filename: isProd ? "bundle.[contenthash].js" : "bundle.js",
@@ -13,7 +13,7 @@ module.exports = (env, argv) => {
       publicPath: "/",
     },
     resolve: {
-      extensions: [".js", ".jsx"],
+      extensions: [".js", ".jsx", ".tsx"],
     },
     module: {
       rules: [
