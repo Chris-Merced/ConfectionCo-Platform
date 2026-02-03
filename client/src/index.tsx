@@ -2,7 +2,7 @@ import type { ReactElement } from "react";
 import { useEffect, useState } from "react";
 import { createRoot } from "react-dom/client";
 import "./styles.css";
-
+//TODO: Create Router and import to app function
 function App(): ReactElement{
   const [response, setResponse] = useState("not ok");
   
