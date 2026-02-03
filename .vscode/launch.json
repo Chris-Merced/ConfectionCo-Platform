@@ -1,0 +1,14 @@
+{
+    "configurations": [
+        {
+            "type": "java",
+            "name": "Spring Boot-ConfectioncoApplication<confectionco>",
+            "request": "launch",
+            "cwd": "${workspaceFolder}",
+            "mainClass": "com.chrismerced.projects.confectionco.ConfectioncoApplication",
+            "projectName": "confectionco",
+            "args": "",
+            "envFile": "${workspaceFolder}/.env"
+        }
+    ]
+}
