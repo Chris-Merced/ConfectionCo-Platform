@@ -1,7 +1,7 @@
-import { createRoot } from "react-dom/client";
-import "./styles.css";
 import type { ReactElement } from "react";
 import { useEffect, useState } from "react";
+import { createRoot } from "react-dom/client";
+import "./styles.css";
 
 function App(): ReactElement{
   const [response, setResponse] = useState("not ok");
@@ -9,14 +9,13 @@ function App(): ReactElement{
  useEffect(()=>{
   async function getRoute(){
     try{
-    const res = await fetch("http://localhost:8080/api/base")
-    console.log(res)
-    const data = await res.json()
-    console.log(data)
+      const res = await fetch("http://localhost:8080/api/base")
+      console.log(res)
+      const data = await res.json()
+      console.log(data)
 
-    setResponse(data.status)
+      setResponse(data.status)
     }catch(err){
-
       console.error("Error fetching route: " + err)
     }
   }
