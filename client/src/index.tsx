@@ -2,37 +2,16 @@ import type { ReactElement } from "react";
 import { useEffect, useState } from "react";
 import { createRoot } from "react-dom/client";
 import { Header } from "./components/header";
+import { Body } from "./components/body";
 import "./styles.css";
 //TODO: Create Router and import to app function
 function App(): ReactElement {
   const [response, setResponse] = useState();
 
-  useEffect(() => {
-    async function getRoute() {
-      try {
-        const res = await fetch("http://localhost:8080/api/base")
-        console.log(res)
-        const data = await res.json()
-        console.log(data)
-
-        setResponse(data.status)
-      } catch (err) {
-        console.error("Error fetching route: " + err)
-      }
-    }
-
-
-    getRoute();
-  }, [])
-
-
   return (
     <>
-      <h1>ConfectionCo</h1>
       <Header />
-      {response ?
-        <span>{response}</span> : <span>loading</span>
-      }
+      <Body />
     </>
   )
 }

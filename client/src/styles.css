@@ -4,5 +4,10 @@
     align-items: center;
     width: 500px;
     height: 200px;
-    color:blue;
+    color:rgb(79, 79, 170);
+}
+
+body{
+    size: 20px;
+    color: rgb(85, 7, 7)
 }
