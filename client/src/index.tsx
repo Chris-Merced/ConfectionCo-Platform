@@ -6,7 +6,6 @@ import { Main } from "./components/main";
 import "./styles.css";
 //TODO: Create Router and import to app function
 function App(): ReactElement {
-  const [response, setResponse] = useState();
 
   return (
     <>
