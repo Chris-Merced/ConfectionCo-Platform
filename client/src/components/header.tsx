@@ -4,7 +4,7 @@ import "../styles.css";
 export function Header(): ReactElement {
     return (
         <>
-            <div className="Header">Wow look at me</div>
+            <div className="header">Confection Co</div>
         </>
     )
 }

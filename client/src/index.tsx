@@ -2,7 +2,7 @@ import type { ReactElement } from "react";
 import { useEffect, useState } from "react";
 import { createRoot } from "react-dom/client";
 import { Header } from "./components/header";
-import { Body } from "./components/body";
+import { Main } from "./components/main";
 import "./styles.css";
 //TODO: Create Router and import to app function
 function App(): ReactElement {
@@ -11,7 +11,7 @@ function App(): ReactElement {
   return (
     <>
       <Header />
-      <Body />
+      <Main/>
     </>
   )
 }
