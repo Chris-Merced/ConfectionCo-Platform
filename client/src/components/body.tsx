@@ -1,4 +1,5 @@
 import type { ReactElement } from "react";
+import "../styles.css";
 
 export function Body(): ReactElement {
     return (
