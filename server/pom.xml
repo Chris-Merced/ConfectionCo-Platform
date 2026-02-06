@@ -58,8 +58,8 @@
 		<!-- Migrations -->
   		<dependency>
     		<groupId>org.flywaydb</groupId>
-    		<artifactId>flyway-core</artifactId>
-  		</dependency>
+    		<artifactId>flyway-database-postgresql</artifactId>
+		</dependency>
 	</dependencies>
 
 	<build>
