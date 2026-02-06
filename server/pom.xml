@@ -84,7 +84,7 @@
 				</configuration>
 
 				<executions>					
-				<!-- Install Node + npm locally for this project -->
+					<!-- Install Node + npm locally for this project -->
 					<execution>
 						<id>install-node-and-npm</id>
 						<phase>generate-resources</phase>
