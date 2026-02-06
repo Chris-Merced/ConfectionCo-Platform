@@ -99,8 +99,8 @@
 						</configuration>
 						</execution>
 
-						<!-- npm ci -->
-						<execution>
+					<!-- npm ci -->
+					<execution>
 						<id>npm-ci</id>
 						<phase>generate-resources</phase>
 						<goals>
@@ -109,10 +109,10 @@
 						<configuration>
 							<arguments>ci</arguments>
 						</configuration>
-						</execution>
+					</execution>
 
-						<!-- npm run build -->
-						<execution>
+					<!-- npm run build -->
+					<execution>
 						<id>npm-build</id>
 						<phase>generate-resources</phase>
 						<goals>
