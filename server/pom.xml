@@ -99,7 +99,7 @@
 						</configuration>
 						</execution>
 
-						<!-- 2️ npm ci -->
+						<!-- npm ci -->
 						<execution>
 						<id>npm-ci</id>
 						<phase>generate-resources</phase>
