@@ -40,6 +40,26 @@
 			<artifactId>spring-boot-starter-test</artifactId>
 			<scope>test</scope>
 		</dependency>
+
+		<!-- JDBC -->
+		<dependency>
+    		<groupId>org.springframework.boot</groupId>
+    		<artifactId>spring-boot-starter-jdbc</artifactId>
+  		</dependency>
+
+		<!-- PostgreSQL driver -->
+  		<dependency>
+    		<groupId>org.postgresql</groupId>
+    		<artifactId>postgresql</artifactId>
+    		<scope>runtime</scope>
+  		</dependency>
+
+
+		<!-- Migrations -->
+  		<dependency>
+    		<groupId>org.flywaydb</groupId>
+    		<artifactId>flyway-core</artifactId>
+  		</dependency>
 	</dependencies>
 
 	<build>
