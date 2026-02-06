@@ -97,7 +97,7 @@
 							<workingDirectory>${project.basedir}/../client</workingDirectory>
 							<installDirectory>${project.basedir}/../client</installDirectory>
 						</configuration>
-						</execution>
+					</execution>
 
 					<!-- npm ci -->
 					<execution>
