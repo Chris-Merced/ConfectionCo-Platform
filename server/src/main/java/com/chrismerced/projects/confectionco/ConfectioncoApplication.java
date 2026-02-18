@@ -14,6 +14,12 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 //      need to be different for visual ordering on website, description, img_url 
 // will have to use S3 to store user photos
 // use Stripe for payments
+// Need to figure out texting system
+// Create a high level layout for the website (in total what pages need to be made)
+//   - Main page for ordering
+//   - - disappearing header
+//   - - - main content that shows menu with clickthrough to ordering
+//   - - - set cart to local storage which will be an array of items with the same order number
 
 
 @SpringBootApplication
