@@ -12,18 +12,21 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 //      order # (uuid), total_payment, payment_made, payment_pending, date_ordered, date_delivery, item_number, inspiration, description
 // items table - item number (unique identifier), and list_ordered number (what order the item appears on the website) 
 //      need to be different for visual ordering on website, description, img_url 
-// will have to use S3 to store user photos
+// will have to use S3 to store user photos - set expiration on the date of order, modify expiration on order change if necessary
 // use Stripe for payments
 // Need to figure out texting system
 // Create a high level layout for the website (in total what pages need to be made)
 //  - context wrap the cart from local storage 
 //		- Header containing cart info
 //			- Main page for ordering
-//   			- - - main content that shows menu with clickthrough to ordering
+//   			- - - main content that shows menu with clickthrough to popup form for detailed ordering
 //   			- - - set cart to local storage which will be an array of items with the same order number
 //				- - - - Each item will contain full information on order with description and inspo
 // 				- - - - Orders cannot be for two seperate locations or events
 // 			- Cart Page for completing order
+//  		- Portfolio page (set up to pull from instagram account)
+
+
 
 @SpringBootApplication
 public class ConfectioncoApplication {
