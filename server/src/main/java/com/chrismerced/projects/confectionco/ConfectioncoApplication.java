@@ -18,14 +18,15 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 // Create a high level layout for the website (in total what pages need to be made)
 //  - context wrap the cart from local storage 
 //		- Header containing cart info
-//			- Main page for ordering
+//			- Main page for ordering -> Small portfolio window, below this have a grid of item cards to order from
 //   			- - - main content that shows menu with clickthrough to popup form for detailed ordering
 //   			- - - set cart to local storage which will be an array of items with the same order number
 //				- - - - Each item will contain full information on order with description and inspo
+//				- - - - - upon filling out an item, prompt user to go directly to cart or continue shopping
 // 				- - - - Orders cannot be for two seperate locations or events
 // 			- Cart Page for completing order
 //  		- Portfolio page (set up to pull from instagram account)
-
+// 				- Set up as gallery -> should probably have a preview window of this one the main page
 
 
 @SpringBootApplication
