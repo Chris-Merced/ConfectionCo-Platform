@@ -17,10 +17,12 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 // Need to figure out texting system
 // Create a high level layout for the website (in total what pages need to be made)
 //  - context wrap the cart from local storage 
+//   			- - - set cart to local storage which will be an array of items with the same order number
 //		- Header containing cart info
 //			- Main page for ordering -> Small portfolio window, below this have a grid of item cards to order from
-//   			- - - main content that shows menu with clickthrough to popup form for detailed ordering
-//   			- - - set cart to local storage which will be an array of items with the same order number
+//   			- - - main content that shows menu items
+//              - - - - - Each item with clickthrough to popup form for detailed ordering, then closes on cart addition 
+// 							or "Go to Cart" button 
 //				- - - - Each item will contain full information on order with description and inspo
 //				- - - - - upon filling out an item, prompt user to go directly to cart or continue shopping
 // 				- - - - Orders cannot be for two seperate locations or events
