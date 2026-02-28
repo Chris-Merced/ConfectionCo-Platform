@@ -7,6 +7,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 // TODO:
 // 	Set up the db to utilize an email system rather than a user account system
 //  -  Email will be used to house phone number, points and associate orders
+//  -  Email will be used to track order histories
 //  we can have an email table with the email and points
 //  hash email on storage
 // 	email table will be tied to orders table, orders will have
