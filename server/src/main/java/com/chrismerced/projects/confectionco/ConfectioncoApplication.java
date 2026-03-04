@@ -31,7 +31,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 // 			- Cart Page for completing order
 //  		- Portfolio page (set up to pull from instagram account)
 // 				- Set up as gallery -> should probably have a preview window of this one the main page
-
+// Need to discuss text message implementation 
 
 @SpringBootApplication
 public class ConfectioncoApplication {
