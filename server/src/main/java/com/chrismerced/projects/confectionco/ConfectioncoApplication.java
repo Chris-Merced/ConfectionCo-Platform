@@ -32,7 +32,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 //  		- Portfolio page (set up to pull from instagram account)
 // 				- Set up as gallery -> should probably have a preview window of this one the main page
 // Need to discuss text message implementation 
-
+//  - - - Text Message to be added further down the line, email should be sufficient for receipt 
 @SpringBootApplication
 public class ConfectioncoApplication {
 
