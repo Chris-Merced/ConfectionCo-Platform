@@ -4,7 +4,7 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 
-// TODO:
+// OVERVIEW:
 // 	Set up the db to utilize an email system rather than a user account system
 //  -  Email will be used to house phone number, points and associate orders
 //  -  Email will be used to track order histories
@@ -34,6 +34,9 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 // Need to discuss text message implementation 
 //  - - - Text Message to be added further down the line, email should be sufficient for receipt 
 //  - - - phone number should be stored with email in information, possibly hashed
+
+// TODO: 
+// 	- - Set up email service to proof of concept level
 @SpringBootApplication
 public class ConfectioncoApplication {
 
