@@ -38,6 +38,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 // TODO: 
 // 	- - Set up email service to proof of concept level
 //  - - - Start with creating account with resend
+//  - - - relay with client for email string
 @SpringBootApplication
 public class ConfectioncoApplication {
 
