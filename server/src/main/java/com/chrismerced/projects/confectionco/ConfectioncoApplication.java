@@ -40,6 +40,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 //  - - - Start with creating account with resend
 //  - - - Use Confection.Co850
 //  - - - - Get email registered
+//  - Need to create outline for front end on where insta feed is displayed
 @SpringBootApplication
 public class ConfectioncoApplication {
 
