@@ -41,6 +41,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 //  - - - Use Confection.Co850
 //  - - - - Get email registered
 //  - Need to create outline for front end on where insta feed is displayed
+//  - - check how easily accessible the insta api is if at all
 @SpringBootApplication
 public class ConfectioncoApplication {
 
