@@ -4,7 +4,7 @@ import "../styles.css";
 export function Main(): ReactElement {
     return (
         <>
-            <div className="main">We have made it</div>
+            <div className="main">We have made it to main display</div>
         </>
     )
 }
