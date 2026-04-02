@@ -1,10 +1,7 @@
 // OVERVIEW:
-// 	Set up the db to utilize an email system rather than a user account system
-//  -  Email will be used to house phone number, points and associate orders
-//  -  Email will be used to track order histories
-//  we can have an email table with the email and points
-//  hash email on storage
-// 	email table will be tied to orders table, orders will have
+// 	Use a user account system, simple account creation with user and pass, do not require email verification
+//   - - - - use email system for receipt and notification of payments due
+// 	User table will be tied to orders table, orders will have
 //      order # (uuid), total_payment, payment_made, payment_pending, date_ordered, date_delivery, item_number, inspiration, description
 // items table - item number (unique identifier), and list_ordered number (what order the item appears on the website) 
 //      need to be different for visual ordering on website, description, img_url 
@@ -29,3 +26,11 @@
 //  - - - Text Message to be added further down the line, email should be sufficient for receipt 
 //  - - - phone number should be stored with email in information, possibly hashed
 // Think about adding update system through text message after base features have been added
+//
+// User account system
+//   user needs refund - full refunds can be done through Stripe
+//   
+//   giving user discounts - apply points to the associated email to use later
+//   
+//   flow -> add to cart -> email, full name, card info -> upfront payment, store in db -> send email redirecting to user
+//      account with orders to complete stripe payment
