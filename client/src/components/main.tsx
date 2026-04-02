@@ -10,9 +10,14 @@ export function Main(): ReactElement {
 
     useEffect(() => {
         async function getSomething() {
+            try{
             const res = await fetch('http://localhost:8080/api/base')
             const data = await res.json();
             useNewVal(data)
+            }catch(error){
+                console.log("whoops teehee")
+                useNewVal({status: "gay"})
+            }
         }
 
         getSomething();
