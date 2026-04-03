@@ -6,7 +6,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 
 // TODO: 
-// 	- - Set up email service to proof of concept level
+// 	- - Set up email service to proof of concept level -
 //  - - - Start with creating account with resend
 //  - - - Use Confection.Co850
 //  - - - - Get email registered
