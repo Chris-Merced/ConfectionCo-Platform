@@ -20,7 +20,7 @@ public class BaseController {
 
     @GetMapping("/api/base")
     public Map<String, String> base(){
-        resend.sendEmail();        
+        //resend.sendEmail();        
         return Map.of("status", "ok");
     }
 }
