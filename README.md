@@ -1,2 +1,2 @@
 # ConfectionCo-Platform
-Platform to Maintain Business Operations for ConfectionCo Bakery
+Business Platform to Maintain Operations for ConfectionCo Bakery
