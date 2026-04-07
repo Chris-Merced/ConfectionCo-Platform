@@ -6,7 +6,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 import com.chrismerced.projects.confectionco.services.ResendEmailService;
 
-//TODO: Modify CORS to ENV variables between prod and dev
+//TODO: --> ConfectionCoApplication.java    
+//     
 @CrossOrigin(origins = "http://localhost:5173")
 
 @RestController
