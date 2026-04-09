@@ -63,6 +63,7 @@ jobs:
           DB_URL: jdbc:postgresql://localhost:5432/confectionco_test
           DB_USERNAME: confectionco
           DB_PASSWORD: ci_password
+          RESEND_API_KEY: dummy_ci_key
         run: |
           chmod +x mvnw
           ./mvnw test
