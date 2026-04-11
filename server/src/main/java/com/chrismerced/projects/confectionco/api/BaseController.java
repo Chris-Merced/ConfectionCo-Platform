@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.chrismerced.projects.confectionco.services.ResendEmailService;
 
 //TODO: --> ConfectionCoApplication.java    
-//     
+//     Change constructor for DI
 @CrossOrigin(origins = "http://localhost:5173")
 
 @RestController
