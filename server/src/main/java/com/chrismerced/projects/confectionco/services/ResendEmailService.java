@@ -14,7 +14,7 @@ interface Email {
 
 @Service
 public class ResendEmailService implements Email {
-    @Value("${RESEND_API_KEY:}")
+    @Value("${RESEND_API_KEY}")
     private String apiKey;
 
     public void sendEmail() {
@@ -29,6 +29,8 @@ public class ResendEmailService implements Email {
                     .build();
 
             CreateEmailResponse data = resend.emails().send(sendEmailRequest);
+            System.out.println("Resend Email Data: ");
+            System.out.println(data);
         } catch (ResendException e) {
             System.err.println(e);
         }
