@@ -7,7 +7,6 @@
 //      need to be different for visual ordering on website, description, img_url 
 // will have to use S3 to store user photos - set expiration on the date of order, modify expiration on order change if necessary
 // use Stripe for payments
-// Need to figure out texting system
 // Create a high level layout for the website (in total what pages need to be made)
 //  - context wrap the cart from local storage 
 //   			- - - set cart to local storage which will be an array of items with the same order number
@@ -22,15 +21,17 @@
 // 			- Cart Page for completing order
 //  		- Portfolio page (set up to pull from instagram account)
 // 				- Set up as gallery -> should probably have a preview window of this one the main page
-// Need to discuss text message implementation 
-//  - - - Text Message to be added further down the line, email should be sufficient for receipt 
-//  - - - phone number should be stored with email in information, possibly hashed
-// Think about adding update system through text message after base features have been added
 //
-// User account system
-//   user needs refund - full refunds can be done through Stripe
-//   
-//   giving user discounts - apply points to the associated email to use later
-//   
-//   flow -> add to cart -> email, full name, card info -> upfront payment, store in db -> send email redirecting to user
+// LIBRARY OVERVIEW:
+//  - Twilio for Text messaging
+//  - Stripe for payment
+//  - Resend for email
+//  - Auth0 for Admin authentication into dashboard
+//
+//   FLOW:
+//   MAKE SURE DURING PAYMENT PROCESS - PRIOR TO PAYMENT STATE 
+//        -(Under circumstances where incorrect information leads to the inability for the business owner to contact refunds will be unavailable)
+//   flow -> add to cart -> email, full name, phone number, payment info -> upfront downpayment through Stripe -> text message sent to baker and customer confirming order
+//      -> Email for receipt -> store in db on confirmation and display on baker admin page -> when baker approves, approve full payment through admin page
+//         ->Twilio sends payment link for full payment through stripe -> webhook payment to confirm on api end to update database and admin baker page > baker begins production 
 //      account with orders to complete stripe payment
