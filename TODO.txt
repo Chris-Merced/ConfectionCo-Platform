@@ -31,6 +31,7 @@
 //   FLOW:
 //   MAKE SURE DURING PAYMENT PROCESS - vvvv PRIOR TO PAYMENT LET THE USER KNOW vvvv 
 //        -"Under circumstances where incorrect information leads to the inability for the business owner to contact you, refunds will be unavailable"
+//        -ALL STANDARD AND CUSTOM ORDERS WILL REQUIRE DOWNPAYMENT BASED ON THE HIGHEST TICKET ITEM IN THE CART
 //   flow -> add to cart -> email, full name, phone number, payment info -> upfront downpayment through Stripe -> text message sent to baker and customer confirming order
 //      -> Email for receipt -> store in db on confirmation and display on baker admin page -> when baker approves, approve full payment through admin page
 //         ->Twilio sends payment link for full payment through stripe -> webhook payment to confirm on api end to update database and admin baker page > baker begins production 
