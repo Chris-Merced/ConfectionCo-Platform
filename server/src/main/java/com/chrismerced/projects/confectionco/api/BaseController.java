@@ -1,9 +1,11 @@
 package com.chrismerced.projects.confectionco.api;
 
 import java.util.Map;
+
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
+
 import com.chrismerced.projects.confectionco.services.ResendEmailService;
 
 //TODO: --> ConfectionCoApplication.java    
@@ -12,7 +14,7 @@ import com.chrismerced.projects.confectionco.services.ResendEmailService;
 
 @RestController
 public class BaseController {
-    
+
     private final ResendEmailService resend;
 
     BaseController(ResendEmailService resend) {
@@ -20,8 +22,19 @@ public class BaseController {
     }
 
     @GetMapping("/api/base")
-    public Map<String, String> base(){
-        //resend.sendEmail();        
+    public Map<String, String> base() {
+        // resend.sendEmail();
         return Map.of("status", "ok");
+    }
+
+    @GetMapping("/api/resend")
+    public Map<String, Boolean> sendEmail() {
+        try {
+            resend.sendEmail();
+
+            return Map.of("success",true);
+        } catch (Exception error) {
+            return Map.of("success",false);
+        }
     }
 }

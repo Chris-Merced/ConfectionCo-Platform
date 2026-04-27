@@ -3,20 +3,20 @@ import "../styles.css";
 
 export function Main(): ReactElement {
 
-    type apiResponse = { status: string };
+    type apiResponse = { success: boolean | null };
 
     const [newVal, useNewVal] = useState<apiResponse>()
-    const [status, useStatus] = useState<string>('')
+    const [status, useStatus] = useState<boolean | null>(null)
 
     useEffect(() => {
         async function getSomething() {
-            try{
-            const res = await fetch('http://localhost:8080/api/base')
-            const data = await res.json();
-            useNewVal(data)
-            }catch(error){
+            try {
+                const res = await fetch('http://localhost:8080/api/resend')
+                const data = await res.json();
+                useNewVal(data)
+            } catch (error) {
                 console.log("whoops teehee")
-                useNewVal({status: "gay"})
+                useNewVal({ success : false })
             }
         }
 
@@ -28,9 +28,10 @@ export function Main(): ReactElement {
 
     useEffect(() => {
         if (newVal) {
+            let statusVal = null
             console.log("achieved")
-            console.log(newVal.status)
-            const statusVal = newVal.status
+            console.log(newVal.success)
+            statusVal = newVal.success
             console.log(statusVal)
             useStatus(statusVal)
         }
@@ -41,7 +42,7 @@ export function Main(): ReactElement {
             <div className="main">We have made it to main display</div>
             <></>
 
-            <>Status: {status}</>
+            <>Status: {String(status)}</>
         </>
     )
 }
