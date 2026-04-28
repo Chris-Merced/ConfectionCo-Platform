@@ -28,7 +28,14 @@
 //  - Resend for email
 //  - Auth0 for Admin authentication into dashboard
 //
-//   FLOW:
+//   NEW FLOW:
+//      USER FILLS OUT ORDER FORM -> SENT TO DB ADDED TO DASHBOARD -> TEXT SENT TO ISABEL TO CHECK -> 
+//            -> ON APPROVAL (ACCESS FROM DASHBOARD) A TEXT IS SENT TO CUSTOMER  WITH EMAIL RECEIPT ->
+//            -> STRIPE LINK SENT TO CUSTOMER FOR DOWNPAYMENT -> WEBHOOK STRIPE ON APPROVAL UPDATES DASHBOARD FOR DOWNPAYMENT ->
+//            -> ISABEL SENDS FINAL PAYMENT LINK VIA DASHBOARD LATER WHICH WILL BE SENT THROUGH TWILIO
+//
+//
+//   OLD FLOW: 
 //   MAKE SURE DURING PAYMENT PROCESS - vvvv PRIOR TO PAYMENT LET THE USER KNOW vvvv 
 //        -"Under circumstances where incorrect information leads to the inability for the business owner to contact you, refunds will be unavailable"
 //        -ALL STANDARD AND CUSTOM ORDERS WILL REQUIRE DOWNPAYMENT BASED ON THE HIGHEST TICKET ITEM IN THE CART
