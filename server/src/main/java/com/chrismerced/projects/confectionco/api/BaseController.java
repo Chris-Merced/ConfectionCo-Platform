@@ -30,7 +30,7 @@ public class BaseController {
     @GetMapping("/api/resend")
     public Map<String, Boolean> sendEmail() {
         try {
-            //resend.sendEmail();
+            resend.sendReceipt();
 
             return Map.of("success",true);
         } catch (Exception error) {
