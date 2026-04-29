@@ -25,7 +25,7 @@
 // LIBRARY OVERVIEW:
 //  - Twilio for Text messaging
 //  - Stripe for payment
-//  - Resend for email
+//  - Resend for email - Confection.Co850
 //  - Auth0 for Admin authentication into dashboard
 //
 //   NEW FLOW:
