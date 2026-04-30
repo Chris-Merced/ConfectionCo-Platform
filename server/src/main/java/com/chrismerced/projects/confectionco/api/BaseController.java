@@ -6,7 +6,8 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.chrismerced.projects.confectionco.services.ResendEmailService;
+import com.chrismerced.projects.confectionco.services.EmailService;
+import com.chrismerced.projects.confectionco.services.TextingService;
 
 //TODO: --> ConfectionCoApplication.java    
 //     Change constructor for DI
@@ -15,26 +16,28 @@ import com.chrismerced.projects.confectionco.services.ResendEmailService;
 @RestController
 public class BaseController {
 
-    private final ResendEmailService resend;
+    private final EmailService email;
+    private final TextingService textingService;
 
-    BaseController(ResendEmailService resend) {
-        this.resend = resend;
+    BaseController(EmailService email, TextingService textingService) {
+        this.email = email;
+        this.textingService = textingService;
     }
 
     @GetMapping("/api/base")
     public Map<String, String> base() {
-        // resend.sendEmail();
+        // email.sendEmail();
         return Map.of("status", "ok");
     }
 
     @GetMapping("/api/resend")
     public Map<String, Boolean> sendEmail() {
         try {
-            resend.sendReceipt();
+            email.sendReceipt();
 
-            return Map.of("success",true);
+            return Map.of("success", true);
         } catch (Exception error) {
-            return Map.of("success",false);
+            return Map.of("success", false);
         }
     }
 }

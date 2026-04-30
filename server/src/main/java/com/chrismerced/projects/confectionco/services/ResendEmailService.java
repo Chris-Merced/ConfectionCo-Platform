@@ -8,12 +8,8 @@ import com.resend.core.exception.ResendException;
 import com.resend.services.emails.model.CreateEmailOptions;
 import com.resend.services.emails.model.CreateEmailResponse;
 
-interface Email {
-    void sendEmail();
-}
-
 @Service
-public class ResendEmailService implements Email {
+public class ResendEmailService implements EmailService {
     @Value("${RESEND_API_KEY}")
     private String apiKey;
 
