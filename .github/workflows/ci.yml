@@ -64,6 +64,8 @@ jobs:
           DB_USERNAME: confectionco
           DB_PASSWORD: ci_password
           RESEND_API_KEY: dummy_ci_key
+          TWILIO_ACCOUNT_SID: dummy_account_sid
+          TWILIO_AUTH_TOKEN: dummy_auth_token
         run: |
           chmod +x mvnw
           ./mvnw test
