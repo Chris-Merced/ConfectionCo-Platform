@@ -13,7 +13,7 @@ public class ResendEmailService implements EmailService {
     @Value("${RESEND_API_KEY}")
     private String apiKey;
 
-    private Resend resend;
+    private final Resend resend;
 
     ResendEmailService() {
         this.resend = new Resend(apiKey);
