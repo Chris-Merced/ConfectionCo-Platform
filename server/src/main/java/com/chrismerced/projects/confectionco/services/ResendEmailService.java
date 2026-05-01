@@ -13,8 +13,13 @@ public class ResendEmailService implements EmailService {
     @Value("${RESEND_API_KEY}")
     private String apiKey;
 
+    private Resend resend;
+
+    ResendEmailService() {
+        this.resend = new Resend(apiKey);
+    }
+
     public void sendEmail() {
-        Resend resend = new Resend(apiKey);
 
         try {
             CreateEmailOptions sendEmailRequest = CreateEmailOptions.builder()
@@ -33,7 +38,6 @@ public class ResendEmailService implements EmailService {
     }
 
     public void sendReceipt() {
-        Resend resend = new Resend(apiKey);
 
         try {
             CreateEmailOptions sendEmailRequest = CreateEmailOptions.builder()
