@@ -27,13 +27,14 @@ public class BaseController {
     @GetMapping("/api/base")
     public Map<String, String> base() {
         // email.sendEmail();
+        textingService.sendText();
         return Map.of("status", "ok");
     }
 
     @GetMapping("/api/resend")
     public Map<String, Boolean> sendEmail() {
         try {
-            email.sendReceipt();
+            //email.sendReceipt();
 
             return Map.of("success", true);
         } catch (Exception error) {

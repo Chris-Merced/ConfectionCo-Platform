@@ -41,6 +41,14 @@
 			<scope>test</scope>
 		</dependency>
 
+		<!-- Twilio -->
+		<dependency>
+  			<groupId>com.twilio.sdk</groupId>
+  			<artifactId>twilio</artifactId>
+  			<version>12.0.0</version>
+  			<scope>compile</scope>
+		</dependency>
+		
 		<!-- JDBC -->
 		<dependency>
     		<groupId>org.springframework.boot</groupId>
