@@ -10,7 +10,7 @@ import com.chrismerced.projects.confectionco.services.EmailService;
 import com.chrismerced.projects.confectionco.services.TextingService;
 
 //TODO: --> ConfectionCoApplication.java    
-//     Change constructor for DI
+//     Start setting up auth0, only proof of concept to log in, set up route in react
 @CrossOrigin(origins = "http://localhost:5173")
 
 @RestController
