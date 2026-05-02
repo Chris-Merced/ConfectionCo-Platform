@@ -1,7 +1,7 @@
 import { useEffect, useState, type ReactElement } from "react";
 import "../styles.css";
 
-export function Main(): ReactElement {
+export default function Main(): ReactElement {
 
     type apiResponse = { success: boolean | null };
 
