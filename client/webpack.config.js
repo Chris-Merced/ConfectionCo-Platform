@@ -7,16 +7,16 @@ module.exports = (env, argv) => {
   return {
     entry: path.resolve(__dirname, "src", "index.tsx"),
     output: {
-  path: path.resolve(__dirname, "dist"),
-  filename: isProd
-    ? "bundle.[contenthash].js"
-    : "bundle.[name].js",
-  chunkFilename: isProd
-    ? "[name].[contenthash].chunk.js"
-    : "[name].chunk.js",
-  clean: true,
-  publicPath: "/",
-},
+    path: path.resolve(__dirname, "dist"),
+      filename: isProd
+        ? "bundle.[contenthash].js"
+        : "bundle.[name].js",
+      chunkFilename: isProd
+        ? "[name].[contenthash].chunk.js"
+        : "[name].chunk.js",
+      clean: true,
+      publicPath: "/",
+    },
     resolve: {
       extensions: [".js", ".jsx", ".tsx", ".ts"],
     },
@@ -44,13 +44,12 @@ module.exports = (env, argv) => {
       ],
     },
     optimization: {
-  splitChunks: {
-    chunks: "all",
-  },
-  moduleIds: "deterministic",
-  chunkIds: "deterministic",
-  },
-
+      splitChunks: {
+      chunks: "all",
+      },
+      moduleIds: "deterministic",
+      chunkIds: "deterministic",
+    },
     plugins: [
       new HtmlWebpackPlugin({
         template: path.resolve(__dirname, "public", "index.html"),
