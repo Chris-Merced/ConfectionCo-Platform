@@ -20,7 +20,6 @@ public class ResendEmailService implements EmailService {
     }
 
     public void sendEmail() {
-
         try {
             CreateEmailOptions sendEmailRequest = CreateEmailOptions.builder()
                     .from("onboarding@resend.dev")
@@ -38,7 +37,6 @@ public class ResendEmailService implements EmailService {
     }
 
     public void sendReceipt() {
-
         try {
             CreateEmailOptions sendEmailRequest = CreateEmailOptions.builder()
                     .from("onboarding@resend.dev")
