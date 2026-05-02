@@ -17,17 +17,17 @@ import com.chrismerced.projects.confectionco.services.TextingService;
 public class BaseController {
 
     private final EmailService email;
-    private final TextingService textingService;
+    private final TextingService messenger;
 
     BaseController(EmailService email, TextingService textingService) {
         this.email = email;
-        this.textingService = textingService;
+        this.messenger = textingService;
     }
 
     @GetMapping("/api/base")
     public Map<String, String> base() {
         // email.sendEmail();
-        textingService.sendText();
+        // messenger.sendText();
         return Map.of("status", "ok");
     }
 
