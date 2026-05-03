@@ -4,10 +4,15 @@ import java.util.Map;
 
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.chrismerced.projects.confectionco.services.EmailService;
 import com.chrismerced.projects.confectionco.services.TextingService;
+import com.chrismerced.projects.confectionco.authentication.LoginRequest;
+import org.springframework.web.bind.annotation.RequestParam;
+
 
 //TODO: --> ConfectionCoApplication.java    
 //     Start setting up auth0, only proof of concept to log in, set up route in react
@@ -18,6 +23,7 @@ public class BaseController {
 
     private final EmailService email;
     private final TextingService messenger;
+    
 
     BaseController(EmailService email, TextingService textingService) {
         this.email = email;
@@ -41,4 +47,16 @@ public class BaseController {
             return Map.of("success", false);
         }
     }
+
+    @PostMapping("/api/login")
+    public Map<String, String> login(@RequestBody LoginRequest request) {
+        String user = request.getUsername();
+        String pass = request.getPassword();
+
+        System.out.println(user);
+        System.out.println(pass);
+        return Map.of("status", "okay");
+    }
+    
+
 }
