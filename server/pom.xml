@@ -114,7 +114,7 @@
 							<goal>install-node-and-npm</goal>
 						</goals>
 						<configuration>
-							<nodeVersion>v20.11.1</nodeVersion>
+							<nodeVersion>v22.13.0</nodeVersion>
 							<npmVersion>10.2.4</npmVersion>
 							<workingDirectory>${project.basedir}/../client</workingDirectory>
 							<installDirectory>${project.basedir}/../client</installDirectory>
