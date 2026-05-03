@@ -25,7 +25,7 @@ export default function AdminDashboard(): ReactElement {
 
     }
 
-    return (<><p>Welcome to the Admin Dashboard</p>
+    return (<><h1>Welcome to the Admin Dashboard</h1>
         <form className="loginForm" onSubmit={loginHandler} role="form">
             <h2>Login</h2>
             <div className="username">
