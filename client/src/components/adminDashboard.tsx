@@ -30,11 +30,21 @@ export default function AdminDashboard(): ReactElement {
             <h2>Login</h2>
             <div className="username">
                 <label className="usernameLabel" htmlFor="username">Username: </label>
-                <input className="usernameInput" id="username" value={username} onChange={(e) => { setUsername(e.target.value) }} />
+                <input 
+                    className="usernameInput"
+                    id="username" 
+                    value={username} 
+                    onChange={(e) => { setUsername(e.target.value) }} >
+                </input>
             </div>
             <div className="password">
                 <label className="passwordLabel" htmlFor="password">Password: </label>
-                <input className="passwordInput" id="password" name="password" onChange={(e) => { setPassword(e.target.value) }} />
+                <input 
+                    className="passwordInput" 
+                    id="password" 
+                    name="password" 
+                    onChange={(e) => { setPassword(e.target.value) }}>
+                </input>
             </div>
             <button className="loginButton" type="submit">login</button>
         </form>
