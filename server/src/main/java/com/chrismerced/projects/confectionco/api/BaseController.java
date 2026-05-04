@@ -18,6 +18,7 @@ import com.chrismerced.projects.confectionco.authentication.LoginRequest;
 //TODO: --> ConfectionCoApplication.java    
 //     Properly seperate api from authenticated and non-authenticated routes in securityconfig
 //     Set up Stripe
+//     LEARN TO USE TANSTACK QUERY
 @CrossOrigin(origins = {"http://localhost:5173"})
 
 @RestController
