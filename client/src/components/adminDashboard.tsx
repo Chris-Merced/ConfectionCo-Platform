@@ -20,12 +20,16 @@ export default function AdminDashboard(): ReactElement {
         if (!isAuthenticated) return;
 
         const getToken = async () => {
-            const token = await getAccessTokenSilently();
+            const token = await getAccessTokenSilently({
+                authorizationParams: {
+                    audience: "https://confectionco-api"
+                }
+            });
 
             console.log("Access Token:", token);
 
             // Example API call
-            const res = await fetch("http://localhost:8080/authentication", {
+            const res = await fetch("http://localhost:8080/api/authentication", {
                 headers: {
                     Authorization: `Bearer ${token}`,
                 },
