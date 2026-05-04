@@ -1,9 +1,48 @@
 import type { FormEvent } from "react";
 import { useState, type ReactElement } from "react";
+import { useAuth0 } from "@auth0/auth0-react";
 
 export default function AdminDashboard(): ReactElement {
 
-    const [username, setUsername] = useState("")
+   
+   const {
+    isLoading, // Loading state, the SDK needs to reach Auth0 on load
+    isAuthenticated,
+    error,
+    loginWithRedirect: login, // Starts the login flow
+    logout: auth0Logout, // Starts the logout flow
+    user, // User profile
+  } = useAuth0();
+
+  const signup = () =>
+    login({ authorizationParams: { screen_hint: "signup" } });
+
+  const logout = () =>
+    auth0Logout({ logoutParams: { returnTo: window.location.origin } });
+
+  if (isLoading) return <p>Loading...</p>;
+
+  return isAuthenticated && user ? (
+    <>
+      <p>Logged in as {user.email}</p>
+
+      <h1>User Profile</h1>
+
+      <pre>{JSON.stringify(user, null, 2)}</pre>
+
+      <button onClick={logout}>Logout</button>
+    </>
+  ) : (
+    <>
+      {error && <p>Error: {error.message}</p>}
+
+      <button onClick={signup}>Signup</button>
+
+      <button onClick={()=>login}>Login</button>
+    </>
+  );
+   
+    /*const [username, setUsername] = useState("")
     const [password, setPassword] = useState("")
 
 
@@ -49,6 +88,6 @@ export default function AdminDashboard(): ReactElement {
             <button className="loginButton" type="submit">login</button>
         </form>
 
-    </>)
+    </>)*/
 }
 
