@@ -14,7 +14,7 @@ import com.chrismerced.projects.confectionco.authentication.LoginRequest;
 
 
 //TODO: --> ConfectionCoApplication.java    
-//     Start setting up auth0, only proof of concept to log in, set up route in react
+//     Set up Auth0 functionality from main website
 @CrossOrigin(origins = "http://localhost:5173")
 
 @RestController
