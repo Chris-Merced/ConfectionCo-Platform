@@ -6,6 +6,8 @@ import { Auth0Provider } from "@auth0/auth0-react";
 export default function AuthWrapper({ children }: { children: React.ReactNode }) {
   const navigate = useNavigate();
 
+
+  //Handles redirect to admin page on login
   const onRedirectCallback = (appState?: AppState) => {
     navigate(appState?.returnTo || "/");
   };

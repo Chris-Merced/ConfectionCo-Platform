@@ -1,14 +1,12 @@
 import type { AppState } from "@auth0/auth0-react";
-import { Auth0Provider } from "@auth0/auth0-react";
-import { useNavigate } from "react-router-dom";
-import AuthWrapper from "./components/authWrapper";
-
 import type { ReactElement } from "react";
+
 import { lazy, StrictMode, Suspense } from "react";
 import { createRoot } from "react-dom/client";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import Header from "./components/header";
 import Main from "./components/main";
+import AuthWrapper from "./components/authWrapper";
 import "./styles.css";
 
 const AdminDashboard = lazy((): any => import("./components/adminDashboard"))
@@ -24,21 +22,18 @@ function App(): ReactElement {
   return (
     <>
       <StrictMode>
-          <BrowserRouter>
-                  <AuthWrapper>
-
+        <BrowserRouter>
+          <AuthWrapper>
             <Suspense fallback={<div>Loading...</div>}>
               <Routes>
                 <Route path="/" element={<><Header /><Main /></>} />
-
                 <Route path="/admin" element={<AdminDashboard />} />
-
                 <Route path="*" element={<div>Page not found</div>} />
               </Routes>
             </Suspense>
-            </AuthWrapper>
-          </BrowserRouter>
-        
+          </AuthWrapper>
+        </BrowserRouter>
+
       </StrictMode>
     </>
   )

@@ -8,6 +8,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import jakarta.servlet.http.HttpServletRequest;
+
 import com.chrismerced.projects.confectionco.services.EmailService;
 import com.chrismerced.projects.confectionco.services.TextingService;
 import com.chrismerced.projects.confectionco.authentication.LoginRequest;
@@ -55,6 +57,17 @@ public class BaseController {
         System.out.println(user);
         System.out.println(pass);
         return Map.of("status", "okay");
+    }
+    
+    //Authenticate account and retrieve orders
+    @GetMapping("/api/authentication")
+    public Map<String, String> auth(HttpServletRequest request) {
+        String authHeader = request.getHeader("Authorization");
+
+        System.out.println("AUTH HEADER: " + authHeader);
+
+        return Map.of("token", authHeader != null ? authHeader : "missing");
+        
     }
     
 
