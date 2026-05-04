@@ -1,79 +1,81 @@
-import type { FormEvent } from "react";
-import { useEffect, useState, type ReactElement } from "react";
 import { useAuth0 } from "@auth0/auth0-react";
+import { useEffect, type ReactElement } from "react";
+
 
 export default function AdminDashboard(): ReactElement {
 
-   
-   const {
-    isLoading, // Loading state, the SDK needs to reach Auth0 on load
-    isAuthenticated,
-    error,
-    loginWithRedirect: login, // Starts the login flow
-    logout: auth0Logout, // Starts the logout flow
-    user, // User profile
-    getAccessTokenSilently, //JWT
-  } = useAuth0();
+
+    const {
+        isLoading, // Loading state, the SDK needs to reach Auth0 on load
+        isAuthenticated,
+        error,
+        loginWithRedirect: login, // Starts the login flow
+        logout: auth0Logout, // Starts the logout flow
+        user, // User profile
+        getAccessTokenSilently, //JWT
+    } = useAuth0();
+
+    // Send Token to backend for Authentication
+    useEffect(() => {
+        if (!isAuthenticated) return;
+
+        const getToken = async () => {
+            const token = await getAccessTokenSilently();
+
+            console.log("Access Token:", token);
+
+            // Example API call
+            const res = await fetch("http://localhost:8080/authentication", {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            });
+
+            console.log(await res.json());
+        };
+
+        getToken();
+    }, [isAuthenticated, getAccessTokenSilently]);
 
 
-  useEffect(() => {
-    if (!isAuthenticated) return;
+    const signup = () =>
+        login({ authorizationParams: { screen_hint: "signup" } });
 
-    const getToken = async () => {
-      const token = await getAccessTokenSilently();
+    const logout = () =>
+        auth0Logout({ logoutParams: { returnTo: window.location.origin } });
 
-      console.log("Access Token:", token);
 
-      // Example API call
-      const res = await fetch("http://localhost:8080/authentication", {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
+    const handleLogin = () => {
 
-      console.log(await res.json());
+        login({
+            appState: {
+                returnTo: "/admin",
+            },
+        });
     };
 
-    getToken();
-  }, [isAuthenticated, getAccessTokenSilently]);
+    if (isLoading) return <p>Loading...</p>;
 
+    return isAuthenticated && user ? (
+        <>
+            <p>Logged in as {user.email}</p>
 
-  const signup = () =>
-    login({ authorizationParams: { screen_hint: "signup", redirect_uri: "http://localhost:5173/admin" } });
+            <h1>User Profile</h1>
 
-  const logout = () =>
-    auth0Logout({ logoutParams: { returnTo: window.location.origin } });
+            <pre>{JSON.stringify(user, null, 2)}</pre>
 
+            <button onClick={logout}>Logout</button>
+        </>
+    ) : (
+        <>
+            {error && <p>Error: {error.message}</p>}
 
-  const handleLogin = () =>
-    login({
-        authorizationParams: {
-        redirect_uri: "http://localhost:5173/admin",
-        },
-  });
+            <button onClick={signup}>Signup</button>
 
-  if (isLoading) return <p>Loading...</p>;
+            <button onClick={handleLogin}>Login</button>
+        </>
+    );
 
-  return isAuthenticated && user ? (
-    <>
-      <p>Logged in as {user.email}</p>
-
-      <h1>User Profile</h1>
-
-      <pre>{JSON.stringify(user, null, 2)}</pre>
-
-      <button onClick={logout}>Logout</button>
-    </>
-  ) : (
-    <>
-      {error && <p>Error: {error.message}</p>}
-
-      <button onClick={signup}>Signup</button>
-
-      <button onClick={handleLogin}>Login</button>
-    </>
-  );
-   
     /*const [username, setUsername] = useState("")
     const [password, setPassword] = useState("")
 
