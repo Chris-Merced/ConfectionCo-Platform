@@ -16,8 +16,9 @@ import com.chrismerced.projects.confectionco.authentication.LoginRequest;
 
 
 //TODO: --> ConfectionCoApplication.java    
-//     Set up Auth0 functionality from main website
-@CrossOrigin(origins = "http://localhost:5173")
+//     Properly seperate api from authenticated and non-authenticated routes in securityconfig
+//     Set up Stripe
+@CrossOrigin(origins = {"http://localhost:5173"})
 
 @RestController
 public class BaseController {
