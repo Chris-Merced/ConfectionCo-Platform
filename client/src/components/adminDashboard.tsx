@@ -1,5 +1,5 @@
 import type { FormEvent } from "react";
-import { useState, type ReactElement } from "react";
+import { useEffect, useState, type ReactElement } from "react";
 import { useAuth0 } from "@auth0/auth0-react";
 
 export default function AdminDashboard(): ReactElement {
@@ -12,13 +12,45 @@ export default function AdminDashboard(): ReactElement {
     loginWithRedirect: login, // Starts the login flow
     logout: auth0Logout, // Starts the logout flow
     user, // User profile
+    getAccessTokenSilently, //JWT
   } = useAuth0();
 
+
+  useEffect(() => {
+    if (!isAuthenticated) return;
+
+    const getToken = async () => {
+      const token = await getAccessTokenSilently();
+
+      console.log("Access Token:", token);
+
+      // Example API call
+      const res = await fetch("http://localhost:8080/authentication", {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      console.log(await res.json());
+    };
+
+    getToken();
+  }, [isAuthenticated, getAccessTokenSilently]);
+
+
   const signup = () =>
-    login({ authorizationParams: { screen_hint: "signup" } });
+    login({ authorizationParams: { screen_hint: "signup", redirect_uri: "http://localhost:5173/admin" } });
 
   const logout = () =>
     auth0Logout({ logoutParams: { returnTo: window.location.origin } });
+
+
+  const handleLogin = () =>
+    login({
+        authorizationParams: {
+        redirect_uri: "http://localhost:5173/admin",
+        },
+  });
 
   if (isLoading) return <p>Loading...</p>;
 
@@ -38,7 +70,7 @@ export default function AdminDashboard(): ReactElement {
 
       <button onClick={signup}>Signup</button>
 
-      <button onClick={()=>login}>Login</button>
+      <button onClick={handleLogin}>Login</button>
     </>
   );
    

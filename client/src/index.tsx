@@ -20,21 +20,23 @@ function App(): ReactElement {
   return (
     <>
       <StrictMode>
-        <BrowserRouter>
-          <Suspense fallback={<div>Loading...</div>}>
-            <Routes>
-              <Route path="/" element={<><Header /><Main /></>} />
-              <Auth0Provider
+        <Auth0Provider
                 domain="dev-oayu8epftihuelj1.us.auth0.com"
                 clientId="dxRIYZwKz8Zh790ccHzAwctQ3JcqJe1T"
                 authorizationParams={{ redirect_uri: window.location.origin }}
               >
+        <BrowserRouter>
+          <Suspense fallback={<div>Loading...</div>}>
+            <Routes>
+              <Route path="/" element={<><Header /><Main /></>} />
+              
                 <Route path="/admin" element={<AdminDashboard/>} />
-              </Auth0Provider>
+              
               <Route path="*" element={<div>Page not found</div>} />
             </Routes>
           </Suspense>
         </BrowserRouter>
+      </Auth0Provider>
       </StrictMode>
     </>
   )
