@@ -1,4 +1,5 @@
 import type { ReactElement } from "react";
+import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import  Header  from "./components/header";
 import Main  from "./components/main";
@@ -17,15 +18,17 @@ function App(): ReactElement {
 
   return (
     <>
-      <BrowserRouter>
-        <Suspense fallback={<div>Loading...</div>}>
-          <Routes>
-            <Route path="/" element={<><Header /><Main /></>} />
-            <Route path="/admin" element={<AdminDashboard/>} />
-            <Route path="*" element={<div>Page not found</div>} />
-          </Routes>
-        </Suspense>
-      </BrowserRouter>
+      <StrictMode>
+        <BrowserRouter>
+          <Suspense fallback={<div>Loading...</div>}>
+            <Routes>
+              <Route path="/" element={<><Header /><Main /></>} />
+              <Route path="/admin" element={<AdminDashboard/>} />
+              <Route path="*" element={<div>Page not found</div>} />
+            </Routes>
+          </Suspense>
+        </BrowserRouter>
+      </StrictMode>
     </>
   )
 }
