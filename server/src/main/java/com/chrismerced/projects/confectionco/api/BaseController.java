@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.RestController;
 import com.chrismerced.projects.confectionco.services.EmailService;
 import com.chrismerced.projects.confectionco.services.TextingService;
 import com.chrismerced.projects.confectionco.authentication.LoginRequest;
-import org.springframework.web.bind.annotation.RequestParam;
 
 
 //TODO: --> ConfectionCoApplication.java    
