@@ -1,14 +1,28 @@
-CREATE TABLE users (
+CREATE TABLE orders (
     id BIGSERIAL PRIMARY KEY,
 
-    email TEXT NOT NULL UNIQUE,
-    password_hash TEXT NOT NULL,
+    user_email TEXT NOT NULL,
+    user_phone TEXT,
 
-    first_name TEXT NOT NULL,
-    last_name TEXT NOT NULL,
+    status TEXT NOT NULL DEFAULT 'PENDING',
 
-    is_admin BOOLEAN NOT NULL DEFAULT FALSE,
-    is_active BOOLEAN NOT NULL DEFAULT TRUE,
+    total_amount NUMERIC(10,2),
 
-    created_at TIMESTAMPTZ NOT NULL DEFAULT now()
+    stripe_session_id TEXT,
+
+    deposit_paid BOOLEAN NOT NULL DEFAULT FALSE,
+    full_payment_paid BOOLEAN NOT NULL DEFAULT FALSE,
+
+    created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
+    updated_at TIMESTAMPTZ NOT NULL DEFAULT now()
+);
+
+CREATE TABLE order_items (
+    id BIGSERIAL PRIMARY KEY,
+
+    order_id BIGINT NOT NULL REFERENCES orders(id) ON DELETE CASCADE,
+
+    product_name TEXT NOT NULL,
+    quantity INT NOT NULL,
+    price NUMERIC(10,2) NOT NULL
 );

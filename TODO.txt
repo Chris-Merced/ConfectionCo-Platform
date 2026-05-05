@@ -1,45 +1,9 @@
-// OVERVIEW:
-// 	Use a user account system, simple account creation with user and pass, do not require email verification
-//   - - - - use email system for receipt and notification of payments due
-// 	User table will be tied to orders table, orders will have
-//      order # (uuid), total_payment, payment_made, payment_pending, date_ordered, date_delivery, item_number, inspiration, description
-// items table - item number (unique identifier), and list_ordered number (what order the item appears on the website) 
-//      need to be different for visual ordering on website, description, img_url 
-// will have to use S3 to store user photos - set expiration on the date of order, modify expiration on order change if necessary
-// use Stripe for payments
-// Create a high level layout for the website (in total what pages need to be made)
-//  - context wrap the cart from local storage 
-//   			- - - set cart to local storage which will be an array of items with the same order number
-//		- Header containing cart info
-//			- Main page for ordering -> Small portfolio window, below this have a grid of item cards to order from
-//   			- - - main content that shows menu items
-//              - - - - - Each item with clickthrough to popup form for detailed ordering, then closes on cart addition 
-// 							or "Go to Cart" button 
-//				- - - - Each item will contain full information on order with description and inspo
-//				- - - - - upon filling out an item, prompt user to go directly to cart or continue shopping
-// 				- - - - Orders cannot be for two seperate locations or events
-// 			- Cart Page for completing order
-//  		- Portfolio page (set up to pull from instagram account)
-// 				- Set up as gallery -> should probably have a preview window of this one the main page
-//
-// LIBRARY OVERVIEW:
-//  - Twilio for Text messaging
-//  - Stripe for payment
-//  - Resend for email - Confection.Co850
-//  - Auth0 for Admin authentication into dashboard
-//
-//   NEW FLOW:
-//      USER FILLS OUT ORDER FORM -> SENT TO DB ADDED TO DASHBOARD -> TEXT SENT TO ISABEL TO CHECK -> 
-//            -> ON APPROVAL (ACCESS FROM DASHBOARD) A TEXT IS SENT TO CUSTOMER  WITH EMAIL RECEIPT ->
-//            -> STRIPE LINK SENT TO CUSTOMER FOR DOWNPAYMENT -> WEBHOOK STRIPE ON APPROVAL UPDATES DASHBOARD FOR DOWNPAYMENT ->
-//            -> ISABEL SENDS FINAL PAYMENT LINK VIA DASHBOARD LATER WHICH WILL BE SENT THROUGH TWILIO
-//
-//
-//   OLD FLOW: 
-//   MAKE SURE DURING PAYMENT PROCESS - vvvv PRIOR TO PAYMENT LET THE USER KNOW vvvv 
-//        -"Under circumstances where incorrect information leads to the inability for the business owner to contact you, refunds will be unavailable"
-//        -ALL STANDARD AND CUSTOM ORDERS WILL REQUIRE DOWNPAYMENT BASED ON THE HIGHEST TICKET ITEM IN THE CART
-//   flow -> add to cart -> email, full name, phone number, payment info -> upfront downpayment through Stripe -> text message sent to baker and customer confirming order
-//      -> Email for receipt -> store in db on confirmation and display on baker admin page -> when baker approves, approve full payment through admin page
-//         ->Twilio sends payment link for full payment through stripe -> webhook payment to confirm on api end to update database and admin baker page > baker begins production 
-//      account with orders to complete stripe payment
+Flow of Order:
+PENDING
+APPROVED
+REJECTED
+AWAITING_DEPOSIT
+IN_PROGRESS
+AWAITING_FINAL_PAYMENT
+PAID_IN_FULL
+COMPLETED
