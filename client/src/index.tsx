@@ -30,9 +30,9 @@ function App(): ReactElement {
               <Routes>
                 <Route path="/" element={<><Header /><Main /></>} />
                 <Route path="/admin" element={<AdminDashboard />} />
-                <Route path="*" element={<div>Page not found</div>} />
                 <Route path="/payment-success" element={<PaymentSuccess />} />
                 <Route path="/payment-cancel" element={<PaymentCancel />} />
+                <Route path="*" element={<div>Page not found</div>} />
               </Routes>
             </Suspense>
           </AuthWrapper>
