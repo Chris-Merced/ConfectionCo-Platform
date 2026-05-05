@@ -2,7 +2,7 @@
   "name": "confectionco-platform",
   "version": "1.0.0",
   "description": "Platform for ConfectionCo Business Operations",
-  "main": "index.js",
+  "main": "index.tsx",
   "scripts": {
     "dev": "webpack serve --mode development",
     "build": "webpack --mode production",

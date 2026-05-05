@@ -2,15 +2,59 @@ package com.chrismerced.projects.confectionco.services;
 
 import org.springframework.stereotype.Service;
 
+import com.stripe.model.Event;
+import com.stripe.model.checkout.Session;
+
+import com.chrismerced.projects.confectionco.model.Order;
+import com.chrismerced.projects.confectionco.repository.OrderRepository;
+
 @Service
 public class OrderService {
 
-    public void markDepositPaid(Long orderId) {
-        System.out.println("Deposit paid for order: " + orderId);
+    OrderRepository orderRepository;
+    
+    OrderService(OrderRepository repository){
+        this.orderRepository = repository;
+    }
 
-        // TODO next step:
-        // 1. fetch order from DB
-        // 2. update deposit_paid = true
-        // 3. update status = IN_PROGRESS or AWAITING_FINAL_PAYMENT
+    public void handleStripeEvent(Event event) {
+
+        switch (event.getType()) {
+
+            case "checkout.session.completed" -> {
+                var deserializer = event.getDataObjectDeserializer();
+
+                if (deserializer.getObject().isEmpty()) {
+                    System.out.println("Failed to deserialize event: " + event.getId());
+                    return;
+                }
+
+                Session session = (Session) deserializer.getObject().get();
+
+                handleStripeCheckoutCompleted(session);
+            }
+
+            default -> {
+                System.out.println("Unhandled event: " + event.getType());
+            }
+        }
+
+    }
+
+    public void handleStripeCheckoutCompleted(Session session) {
+
+        
+        Long orderId = Long.valueOf(session.getMetadata().get("orderId"));
+        String orderType = session.getMetadata().get("orderType");
+
+        Order order = orderRepository.findById(orderId)
+        .orElseThrow(() -> new RuntimeException("Order not found"));
+
+
+        //order.setDepositPaid(true);
+        //order.setFullPaymentPaid(true);
+        //order.setStatus(OrderStatus.IN_PROGRESS);
+
+        //orderRepository.save(order)
     }
 }
