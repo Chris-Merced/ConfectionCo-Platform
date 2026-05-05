@@ -18,8 +18,7 @@ import com.chrismerced.projects.confectionco.services.TextingService;
 
 //TODO: --> ConfectionCoApplication.java    
 //     Properly seperate api from authenticated and non-authenticated routes in securityconfig
-//     Set up Stripe
-//     LEARN TO USE TANSTACK QUERY
+//     Continue from OrderService.java and work on idempotency then how to actually interact with DB
 @CrossOrigin(origins = { "http://localhost:5173" })
 
 @RestController
