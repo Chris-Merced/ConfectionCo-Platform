@@ -7,6 +7,8 @@ import { BrowserRouter, Route, Routes } from "react-router-dom";
 import Header from "./components/header";
 import Main from "./components/main";
 import AuthWrapper from "./components/authWrapper";
+import PaymentSuccess from "./components/PaymentSuccess";
+import PaymentCancel from "./components/paymentCancel";
 import "./styles.css";
 
 const AdminDashboard = lazy((): any => import("./components/adminDashboard"))
@@ -29,6 +31,8 @@ function App(): ReactElement {
                 <Route path="/" element={<><Header /><Main /></>} />
                 <Route path="/admin" element={<AdminDashboard />} />
                 <Route path="*" element={<div>Page not found</div>} />
+                <Route path="/payment-success" element={<PaymentSuccess />} />
+                <Route path="/payment-cancel" element={<PaymentCancel />} />
               </Routes>
             </Suspense>
           </AuthWrapper>
