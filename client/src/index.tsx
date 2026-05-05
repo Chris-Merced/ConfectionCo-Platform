@@ -7,7 +7,7 @@ import { BrowserRouter, Route, Routes } from "react-router-dom";
 import Header from "./components/header";
 import Main from "./components/main";
 import AuthWrapper from "./components/authWrapper";
-import PaymentSuccess from "./components/PaymentSuccess";
+import PaymentSuccess from "./components/paymentSuccess";
 import PaymentCancel from "./components/paymentCancel";
 import "./styles.css";
 

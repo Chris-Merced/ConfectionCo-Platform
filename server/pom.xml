@@ -112,6 +112,12 @@
     		<artifactId>stripe-java</artifactId>
     		<version>26.0.0</version>
 		</dependency>
+		
+		<!-- Jakarta for ARM -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-data-jpa</artifactId>
+		</dependency>
 	</dependencies>
 
 	<build>
@@ -169,6 +175,9 @@
 							<arguments>run build</arguments>
 						</configuration>
     				</execution>
+
+					
+					
 				</executions>
 			</plugin>
 
