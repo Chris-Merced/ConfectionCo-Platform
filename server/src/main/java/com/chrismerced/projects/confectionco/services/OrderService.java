@@ -47,8 +47,7 @@ public class OrderService {
         Long orderId = Long.valueOf(session.getMetadata().get("orderId"));
         String orderType = session.getMetadata().get("orderType");
 
-        Order order = orderRepository.findById(orderId)
-        .orElseThrow(() -> new RuntimeException("Order not found"));
+        Order order = orderRepository.findById(orderId).orElseThrow(() -> new RuntimeException("Order not found"));
 
 
         //order.setDepositPaid(true);
