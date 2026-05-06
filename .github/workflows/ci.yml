@@ -68,6 +68,13 @@ jobs:
           TWILIO_AUTH_TOKEN: dummy_auth_token
           STRIPE_WEBHOOK_SECRET: whsec_xx
           STRIPE_API_KEY: your_key
+          EMAIL: confectioncobakery.com
+          AWS_ACCESS_KEY_ID: aws_access_key_id
+          AWS_SECRET_ACCESS_KEY: aws_secret_access_key
+          AWS_REGION: aws_region
+          AWS_BUCKET_ASSETS: aws_bucket_assets
+          AWS_BUCKET_INSPO: aws_bucket_inspo
+          AWS_BUCKET_URL: aws_bucket
         run: |
           chmod +x mvnw
           ./mvnw test
