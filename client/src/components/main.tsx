@@ -24,27 +24,7 @@ export default function Main(): ReactElement {
         getSomething();
     }, [])
 
-    //Send Text Message
-    useEffect(() => {
-        async function sendText() {
-            try {
-                
-                    console.log("starting the processs of text sending")
-                    const res = await fetch("http://localhost:8080/api/base")
-                    const data = await res.json()
-
-                    console.log(data)
-                }
-              catch (err) {
-                console.log("Whoops text error" + err)
-            
-            
-            }
-           
-        }
-
-        sendText();
-    }, [])
+   
 
 
     console.log("here is your value: ")

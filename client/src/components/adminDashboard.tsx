@@ -1,5 +1,5 @@
 import { useAuth0 } from "@auth0/auth0-react";
-import { useEffect, type ReactElement } from "react";
+import { useEffect, useState, type ReactElement } from "react";
 
 
 export default function AdminDashboard(): ReactElement {
@@ -15,31 +15,75 @@ export default function AdminDashboard(): ReactElement {
         getAccessTokenSilently, //JWT
     } = useAuth0();
 
+
+    const [token, setToken] = useState("");
+
     // Send Token to backend for Authentication
     useEffect(() => {
-        if (!isAuthenticated) return;
-
         const getToken = async () => {
             const token = await getAccessTokenSilently({
                 authorizationParams: {
                     audience: "https://confectionco-api"
                 }
-            });
+            })
+            setToken(token);
+        }
 
-            console.log("Access Token:", token);
+        getToken();
+    }, [])
 
-            // Example API call
-            const res = await fetch("http://localhost:8080/api/authentication", {
-                headers: {
-                    Authorization: `Bearer ${token}`,
-                },
-            });
+    useEffect(() => {
+        if (!isAuthenticated || !token) return;
 
-            console.log(await res.json());
+        const getToken = async () => {
+
+            try {
+                console.log("Access Token:", token);
+
+                // Example API call
+                const res = await fetch("http://localhost:8080/api/authentication", {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                    },
+                });
+
+                console.log(await res.json());
+            } catch (err) {
+                console.log("Failed authentication route")
+            }
+
+
         };
 
         getToken();
-    }, [isAuthenticated, getAccessTokenSilently]);
+
+    }, [isAuthenticated, token]);
+
+    //Send Text Message
+    useEffect(() => {
+        if(!isAuthenticated || !token) return;
+
+        async function sendText() {
+            try {
+
+                console.log("starting the processs of text sending")
+                const res = await fetch("http://localhost:8080/api/base", {
+                    headers: { Authorization: `Bearer ${token}` }
+                })
+                const data = await res.json()
+
+                console.log(data)
+            }
+            catch (err) {
+                console.log("Whoops text error" + err)
+
+
+            }
+
+        }
+
+        sendText();
+    }, [isAuthenticated,token])
 
 
     const signup = () =>

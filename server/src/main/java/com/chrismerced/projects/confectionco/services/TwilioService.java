@@ -16,14 +16,19 @@ public class TwilioService implements TextingService {
   private String authToken;
 
   public void sendText() {
-    System.out.println("Invoked sendText");
+    try{
+      System.out.println("Invoked sendText");
 
-    Twilio.init(accountSID, authToken);
+      Twilio.init(accountSID, authToken);
 
-    Message message = Message.creator(
-        new com.twilio.type.PhoneNumber("+18777804236"),
-        "MG8e2f4b9c6edc84900475493a6d36573e",
-        "Message from application").create();
-    System.out.println(message.getSid());
+      Message message = Message.creator(
+          new com.twilio.type.PhoneNumber("+18502381106"),
+          "MG8e2f4b9c6edc84900475493a6d36573e",
+          "Message from application").create();
+      System.out.println(message.getSid());
+    }catch(Exception err){
+      System.err.println(err);
+    }
   }
 }
+
