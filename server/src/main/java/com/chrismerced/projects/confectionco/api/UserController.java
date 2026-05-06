@@ -13,8 +13,6 @@ import com.chrismerced.projects.confectionco.authentication.LoginRequest;
 import com.chrismerced.projects.confectionco.services.EmailService;
 import com.chrismerced.projects.confectionco.services.TextingService;
 
-//TODO: --> ConfectionCoApplication.java    
-//     Continue from OrderService.java and work on idempotency then how to actually interact with DB
 @CrossOrigin(origins = { "http://localhost:5173" })
 
 @RestController

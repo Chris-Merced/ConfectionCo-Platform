@@ -27,7 +27,7 @@ public class OrderController {
     @Value("${aws.bucket-inspo}")
     private String inspoBucket;
 
-    @Value("$aws.bucket-assets")
+    @Value("${aws.bucket-assets}")
     private String assetBucket;
 
     private final OrderRepository orderRepository;

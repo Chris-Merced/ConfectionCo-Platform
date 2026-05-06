@@ -1,6 +1,6 @@
 import { useAuth0 } from "@auth0/auth0-react";
-import { useEffect, useState, type ReactElement } from "react";
-
+import { use, useEffect, useState, type ReactElement } from "react";
+import { useQuery } from "@tanstack/react-query";
 
 export default function AdminDashboard(): ReactElement {
 
@@ -17,10 +17,11 @@ export default function AdminDashboard(): ReactElement {
 
 
     const [token, setToken] = useState("");
-    const [orders, setOrders] = useState([])
 
     // Send Token to backend for Authentication
     useEffect(() => {
+        if(!isAuthenticated) return;
+
         const getToken = async () => {
             const token = await getAccessTokenSilently({
                 authorizationParams: {
@@ -31,8 +32,9 @@ export default function AdminDashboard(): ReactElement {
         }
 
         getToken();
-    }, [])
+    }, [isAuthenticated])
 
+    /*
     useEffect(() => {
         if (!isAuthenticated || !token) return;
 
@@ -52,17 +54,28 @@ export default function AdminDashboard(): ReactElement {
             } catch (err) {
                 console.log("Failed authentication route")
             }
-
-
         };
 
         getToken();
 
     }, [isAuthenticated, token]);
+*/
 
+    const { data: authData, isLoading: authCheckLoading, error: authCheckError } = useQuery({
+        queryKey: ["auth-check"],
+        queryFn: async()=>{
+            const res = await fetch("http://localhost:8080/api/authentication",{
+                headers:{ Authorization: `Bearer ${token}`}
+            });
+            return res.json();
+        },
+        enabled: isAuthenticated && !!token,
+    })
+
+    /*
     //Send Text Message
     useEffect(() => {
-        if(!isAuthenticated || !token) return;
+        if (!isAuthenticated || !token) return;
 
         async function sendText() {
             try {
@@ -84,10 +97,37 @@ export default function AdminDashboard(): ReactElement {
         }
 
         sendText();
-    }, [isAuthenticated,token])
+    }, [isAuthenticated, token])*/
+
+    const {data: textData, isLoading: textLoading, error: textError} = useQuery({
+        queryKey: ["text-query"],
+        queryFn: async () =>{
+            const res = await fetch("http://localhost:8080/api/base",{
+                headers: {Authorization: `Bearer ${token}`}
+            })
+            return res.json()
+        },
+        enabled: isAuthenticated && !!token
+    })
 
     //Grab All Orders That Have not Been Completed
+    const {data: orderData, isLoading: orderLoading, error: orderError} = useQuery({
+        queryKey: ["order-query"],
+        queryFn:  async ()=>{
+            const res = await fetch("http://localhost:8080/api/admin/orders",{
+                headers: {Authorization: `Bearer ${token}`}
+            })
+            
+            if (!res.ok) throw new Error("Failed to retrieve orders")
+            
+            return res.json()
+        },
+        enabled: isAuthenticated && !!token
+    })
 
+    if(!orderLoading){
+        console.log(orderData)
+    }
 
 
     const signup = () =>
