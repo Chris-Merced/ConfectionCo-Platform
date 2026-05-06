@@ -31,10 +31,6 @@ public class S3Service {
 
         private S3Client s3Client;
 
-        S3Service(String bucketName) {
-                this.bucketName = bucketName;
-        }
-
 
         @PostConstruct
         public void init() {
