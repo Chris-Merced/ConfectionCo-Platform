@@ -5,13 +5,13 @@ import { lazy, StrictMode, Suspense } from "react";
 import { createRoot } from "react-dom/client";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import Header from "./components/header";
-import Main from "./components/main";
+import Main from "./Routes/main";
 import AuthWrapper from "./components/authWrapper";
-import PaymentSuccess from "./components/paymentSuccess";
-import PaymentCancel from "./components/paymentCancel";
+import PaymentSuccess from "./Routes/paymentSuccess";
+import PaymentCancel from "./Routes/paymentCancel";
 import "./styles.css";
 
-const AdminDashboard = lazy((): any => import("./components/adminDashboard"))
+const AdminDashboard = lazy((): any => import("./Routes/adminDashboard"))
 //TODO: Create Router and import to app function
 // Create EmailService
 // Utilize Resend as an email service
