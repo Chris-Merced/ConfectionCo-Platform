@@ -35,7 +35,7 @@ public class BaseController {
     @GetMapping("/api/base")
     public Map<String, String> base() {
         // email.sendEmail();
-        // messenger.sendText();
+         messenger.sendText();
         return Map.of("status", "ok");
     }
 
