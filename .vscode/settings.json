@@ -16,6 +16,8 @@
   "[javascriptreact]": {
     "editor.defaultFormatter": "esbenp.prettier-vscode"
   },
+  "java.format.settings.url": "file:///C:/Users/Chris/Desktop/projects/ConfectionCo-Platform/.vscode/java-formatter.xml",
+  "java.format.settings.profile": "ConfectionCo",
   "[java]": {
     "editor.defaultFormatter": "redhat.java",
     "editor.formatOnSave": true

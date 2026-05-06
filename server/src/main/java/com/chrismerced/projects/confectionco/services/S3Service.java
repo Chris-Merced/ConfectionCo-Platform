@@ -18,40 +18,37 @@ import software.amazon.awssdk.services.s3.model.PutObjectRequest;
 @Service
 public class S3Service {
 
-        
-        @Value("${aws.access-key}")
-        private String accessKey;
+    @Value("${aws.access-key}")
+    private String accessKey;
 
-        @Value("${aws.secret-key}")
-        private String secretKey;
+    @Value("${aws.secret-key}")
+    private String secretKey;
 
-        @Value("${aws.region}")
-        private String region;
+    @Value("${aws.region}")
+    private String region;
 
+    private S3Client s3Client;
 
-        private S3Client s3Client;
+    @PostConstruct
+    public void init() {
+        s3Client = S3Client.builder()
+                .region(Region.of(region))
+                .credentialsProvider(StaticCredentialsProvider.create(
+                        AwsBasicCredentials.create(accessKey, secretKey)))
+                .build();
+    }
 
+    public String uploadFile(MultipartFile file, String bucketName) throws IOException {
+        String key = UUID.randomUUID() + "_" + file.getOriginalFilename();
 
-        @PostConstruct
-        public void init() {
-                s3Client = S3Client.builder()
-                                .region(Region.of(region))
-                                .credentialsProvider(StaticCredentialsProvider.create(
-                                                AwsBasicCredentials.create(accessKey, secretKey)))
-                                .build();
-        }
+        s3Client.putObject(
+                PutObjectRequest.builder()
+                        .bucket(bucketName)
+                        .key(key)
+                        .contentType(file.getContentType())
+                        .build(),
+                RequestBody.fromBytes(file.getBytes()));
 
-        public String uploadFile(MultipartFile file, String bucketName) throws IOException {
-                String key = UUID.randomUUID() + "_" + file.getOriginalFilename();
-
-                s3Client.putObject(
-                                PutObjectRequest.builder()
-                                                .bucket(bucketName)
-                                                .key(key)
-                                                .contentType(file.getContentType())
-                                                .build(),
-                                RequestBody.fromBytes(file.getBytes()));
-
-                return key;
-        }
+        return key;
+    }
 }

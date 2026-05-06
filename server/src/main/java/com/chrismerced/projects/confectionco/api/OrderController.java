@@ -23,7 +23,7 @@ import com.chrismerced.projects.confectionco.services.S3Service;
 @RestController
 @RequestMapping("/api/orders")
 public class OrderController {
-    
+
     @Value("${aws.bucket-inspo}")
     private String inspoBucket;
 
@@ -32,9 +32,6 @@ public class OrderController {
 
     private final OrderRepository orderRepository;
     private final S3Service s3Service;
-
-    
-
 
     OrderController(OrderRepository orderRepository, S3Service s3Service) {
         this.orderRepository = orderRepository;

@@ -1,10 +1,7 @@
 package com.chrismerced.projects.confectionco.api;
 
-import java.util.List;
 import java.util.Map;
 
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -35,7 +32,7 @@ public class UserController {
     @GetMapping("/api/base")
     public Map<String, String> base() {
         // email.sendEmail();
-         messenger.sendText();
+        messenger.sendText();
         return Map.of("status", "ok");
     }
 

@@ -1,6 +1,6 @@
-import { useNavigate } from "react-router-dom";
 import type { AppState } from "@auth0/auth0-react";
 import { Auth0Provider } from "@auth0/auth0-react";
+import { useNavigate } from "react-router-dom";
 
 
 export default function AuthWrapper({ children }: { children: React.ReactNode }) {
