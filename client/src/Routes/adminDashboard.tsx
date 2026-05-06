@@ -17,6 +17,7 @@ export default function AdminDashboard(): ReactElement {
 
 
     const [token, setToken] = useState("");
+    const [orders, setOrders] = useState([])
 
     // Send Token to backend for Authentication
     useEffect(() => {
@@ -84,6 +85,9 @@ export default function AdminDashboard(): ReactElement {
 
         sendText();
     }, [isAuthenticated,token])
+
+    //Grab All Orders That Have not Been Completed
+
 
 
     const signup = () =>
