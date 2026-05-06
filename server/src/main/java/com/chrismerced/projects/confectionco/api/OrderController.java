@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -22,9 +23,18 @@ import com.chrismerced.projects.confectionco.services.S3Service;
 @RestController
 @RequestMapping("/api/orders")
 public class OrderController {
+    
+    @Value("${aws.bucket-inspo}")
+    private String inspoBucket;
+
+    @Value("$aws.bucket-assets")
+    private String assetBucket;
 
     private final OrderRepository orderRepository;
     private final S3Service s3Service;
+
+    
+
 
     OrderController(OrderRepository orderRepository, S3Service s3Service) {
         this.orderRepository = orderRepository;
@@ -43,7 +53,7 @@ public class OrderController {
         if (photos != null) {
             for (MultipartFile photo : photos) {
                 if (!photo.isEmpty()) {
-                    photoKeys.add(s3Service.uploadFile(photo));
+                    photoKeys.add(s3Service.uploadFile(photo, inspoBucket));
                 }
             }
         }
