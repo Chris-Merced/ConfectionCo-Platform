@@ -1,14 +1,15 @@
-import type { AppState } from "@auth0/auth0-react";
 import type { ReactElement } from "react";
 
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { lazy, StrictMode, Suspense } from "react";
 import { createRoot } from "react-dom/client";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
+
+import AuthWrapper from "./components/authWrapper";
 import Header from "./components/header";
 import Main from "./Routes/main";
-import AuthWrapper from "./components/authWrapper";
-import PaymentSuccess from "./Routes/paymentSuccess";
 import PaymentCancel from "./Routes/paymentCancel";
+import PaymentSuccess from "./Routes/paymentSuccess";
 import "./styles.css";
 
 const AdminDashboard = lazy((): any => import("./Routes/adminDashboard"))
@@ -17,27 +18,26 @@ const AdminDashboard = lazy((): any => import("./Routes/adminDashboard"))
 // Utilize Resend as an email service
 function App(): ReactElement {
 
-  const onRedirectCallback = (appState?: AppState) => {
-    window.location.pathname = appState?.returnTo || "/";
-  };
+  const queryClient = new QueryClient();
 
   return (
     <>
       <StrictMode>
-        <BrowserRouter>
-          <AuthWrapper>
-            <Suspense fallback={<div>Loading...</div>}>
-              <Routes>
-                <Route path="/" element={<><Header /><Main /></>} />
-                <Route path="/admin" element={<AdminDashboard />} />
-                <Route path="/payment-success" element={<PaymentSuccess />} />
-                <Route path="/payment-cancel" element={<PaymentCancel />} />
-                <Route path="*" element={<div>Page not found</div>} />
-              </Routes>
-            </Suspense>
-          </AuthWrapper>
-        </BrowserRouter>
-
+        <QueryClientProvider client={queryClient}>
+          <BrowserRouter>
+            <AuthWrapper>
+              <Suspense fallback={<div>Loading...</div>}>
+                <Routes>
+                  <Route path="/" element={<><Header /><Main /></>} />
+                  <Route path="/admin" element={<AdminDashboard />} />
+                  <Route path="/payment-success" element={<PaymentSuccess />} />
+                  <Route path="/payment-cancel" element={<PaymentCancel />} />
+                  <Route path="*" element={<div>Page not found</div>} />
+                </Routes>
+              </Suspense>
+            </AuthWrapper>
+          </BrowserRouter>
+        </ QueryClientProvider>
       </StrictMode>
     </>
   )
