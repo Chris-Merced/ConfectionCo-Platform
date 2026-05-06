@@ -24,8 +24,12 @@ public class AdminController {
     }
 
     @GetMapping("/orders")
-    public ResponseEntity<List<Order>> getActiveOrders() {
-        return ResponseEntity.ok(orderRepository.findByStatusNot("COMPLETED"));
+    public ResponseEntity<?> getActiveOrders() {
+        try {
+            return ResponseEntity.ok(orderRepository.findByStatusNot("COMPLETED"));
+        } catch (Exception e) {
+            return ResponseEntity.internalServerError().body("Failed to retrieve orders");
+        }
     }
 
     @GetMapping("/authentication")
