@@ -2,18 +2,17 @@ package com.chrismerced.projects.confectionco.services;
 
 import org.springframework.stereotype.Service;
 
-import com.stripe.model.Event;
-import com.stripe.model.checkout.Session;
-
 import com.chrismerced.projects.confectionco.model.Order;
 import com.chrismerced.projects.confectionco.repository.OrderRepository;
+import com.stripe.model.Event;
+import com.stripe.model.checkout.Session;
 
 @Service
 public class OrderService {
 
     OrderRepository orderRepository;
-    
-    OrderService(OrderRepository repository){
+
+    OrderService(OrderRepository repository) {
         this.orderRepository = repository;
     }
 
@@ -43,17 +42,15 @@ public class OrderService {
 
     public void handleStripeCheckoutCompleted(Session session) {
 
-        
         Long orderId = Long.valueOf(session.getMetadata().get("orderId"));
         String orderType = session.getMetadata().get("orderType");
 
         Order order = orderRepository.findById(orderId).orElseThrow(() -> new RuntimeException("Order not found"));
 
+        // order.setDepositPaid(true);
+        // order.setFullPaymentPaid(true);
+        // order.setStatus(OrderStatus.IN_PROGRESS);
 
-        //order.setDepositPaid(true);
-        //order.setFullPaymentPaid(true);
-        //order.setStatus(OrderStatus.IN_PROGRESS);
-
-        //orderRepository.save(order)
+        // orderRepository.save(order)
     }
 }
