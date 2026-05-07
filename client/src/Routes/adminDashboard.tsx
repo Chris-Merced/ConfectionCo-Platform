@@ -34,32 +34,7 @@ export default function AdminDashboard(): ReactElement {
         getToken();
     }, [isAuthenticated])
 
-    /*
-    useEffect(() => {
-        if (!isAuthenticated || !token) return;
-
-        const getToken = async () => {
-
-            try {
-                console.log("Access Token:", token);
-
-                // Example API call
-                const res = await fetch("http://localhost:8080/api/authentication", {
-                    headers: {
-                        Authorization: `Bearer ${token}`,
-                    },
-                });
-
-                console.log(await res.json());
-            } catch (err) {
-                console.log("Failed authentication route")
-            }
-        };
-
-        getToken();
-
-    }, [isAuthenticated, token]);
-*/
+  
 
     const { data: authData, isLoading: authCheckLoading, error: authCheckError } = useQuery({
         queryKey: ["auth-check"],
@@ -72,32 +47,6 @@ export default function AdminDashboard(): ReactElement {
         enabled: isAuthenticated && !!token,
     })
 
-    /*
-    //Send Text Message
-    useEffect(() => {
-        if (!isAuthenticated || !token) return;
-
-        async function sendText() {
-            try {
-
-                console.log("starting the processs of text sending")
-                const res = await fetch("http://localhost:8080/api/base", {
-                    headers: { Authorization: `Bearer ${token}` }
-                })
-                const data = await res.json()
-
-                console.log(data)
-            }
-            catch (err) {
-                console.log("Whoops text error" + err)
-
-
-            }
-
-        }
-
-        sendText();
-    }, [isAuthenticated, token])*/
 
     const {data: textData, isLoading: textLoading, error: textError} = useQuery({
         queryKey: ["text-query"],
@@ -121,6 +70,21 @@ export default function AdminDashboard(): ReactElement {
             if (!res.ok) throw new Error("Failed to retrieve orders")
             
             return res.json()
+        },
+        enabled: isAuthenticated && !!token
+    })
+
+    const {data: receiptData, isLoading: receiptLoading, error : receiptError} = useQuery({
+        queryKey: ["order-receipt"],
+        queryFn: async ()=>{
+            const res = await fetch("http://localhost:8080/api/admin/sendReceipt",{
+                headers: {Authorization: `Bearer ${token}`}
+            })
+
+            if(!res.ok){
+                throw new Error("Failed to send Receipt")
+            }
+            return res.json();
         },
         enabled: isAuthenticated && !!token
     })
@@ -167,52 +131,5 @@ export default function AdminDashboard(): ReactElement {
         </>
     );
 
-    /*const [username, setUsername] = useState("")
-    const [password, setPassword] = useState("")
-
-
-
-    async function loginHandler(e: FormEvent) {
-        e.preventDefault()
-        console.log("you've logged in")
-        console.log(username)
-        console.log(password)
-
-        const res = await fetch("http://localhost:8080/api/login", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ username, password })
-        })
-        const data = await res.json();
-        console.log(res)
-        console.log(data)
-
-    }
-
-    return (<><h1>Welcome to the Admin Dashboard</h1>
-        <form className="loginForm" onSubmit={loginHandler} role="form">
-            <h2>Login</h2>
-            <div className="username">
-                <label className="usernameLabel" htmlFor="username">Username: </label>
-                <input 
-                    className="usernameInput"
-                    id="username" 
-                    value={username} 
-                    onChange={(e) => { setUsername(e.target.value) }} >
-                </input>
-            </div>
-            <div className="password">
-                <label className="passwordLabel" htmlFor="password">Password: </label>
-                <input 
-                    className="passwordInput" 
-                    id="password" 
-                    name="password" 
-                    onChange={(e) => { setPassword(e.target.value) }}>
-                </input>
-            </div>
-            <button className="loginButton" type="submit">login</button>
-        </form>
-
-    </>)*/
 }
 
