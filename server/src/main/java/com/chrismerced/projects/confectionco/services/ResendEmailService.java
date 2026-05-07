@@ -20,7 +20,7 @@ public class ResendEmailService implements EmailService {
     public void sendEmail() {
         try {
             CreateEmailOptions sendEmailRequest = CreateEmailOptions.builder()
-                    .from("no-replyg@confectioncobaker.com")
+                    .from("no-replyg@confectioncobakery.com")
                     .to("christopher.r.merced@gmail.com")
                     .subject("Hello World")
                     .html("<p>Congrats on sending your <strong>first email</strong>!</p>")
