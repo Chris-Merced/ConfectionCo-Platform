@@ -11,7 +11,9 @@ import com.resend.services.emails.model.CreateEmailResponse;
 
 @Service
 public class ResendEmailService implements EmailService {
+    
     private final Resend resend;
+    private final String confectionCo = "@confectioncobakery.com";
 
     ResendEmailService(@Value("${RESEND_API_KEY}") String apiKey) {
         this.resend = new Resend(apiKey);
@@ -20,7 +22,7 @@ public class ResendEmailService implements EmailService {
     public void sendEmail() {
         try {
             CreateEmailOptions sendEmailRequest = CreateEmailOptions.builder()
-                    .from("no-reply@confectioncobakery.com")
+                    .from("no-reply" + confectionCo)
                     .to("christopher.r.merced@gmail.com")
                     .subject("Hello World")
                     .html("<p>Congrats on sending your <strong>first email</strong>!</p>")
@@ -34,14 +36,14 @@ public class ResendEmailService implements EmailService {
         }
     }
 
-    public void sendReceipt() {
+    public void sendReceipt(String recipient, String receipt) {
         try {
             System.out.println("made it to send receipt");
             CreateEmailOptions sendEmailRequest = CreateEmailOptions.builder()
-                    .from("no-reply@confectioncobakery.com")
-                    .to("christopher.r.merced@gmail.com")
+                    .from("no-reply" + confectionCo)
+                    .to(recipient)
                     .subject("Confection Company Order Confirmation")
-                    .html("<p>Thank you for shopping with Confection company!</p><p>Here are the results of your order: </p><p>Custom Cake: 2 <strong>BILLION</strong> dollars</p>")
+                    .html("<p>Thank you for shopping with Confection company!</p><p>Here are the results of your order: </p><p>" + receipt + "</p>")
                     .build();
 
             CreateEmailResponse data = resend.emails().send(sendEmailRequest);
