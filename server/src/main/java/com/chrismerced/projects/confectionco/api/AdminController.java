@@ -20,9 +20,8 @@ import com.chrismerced.projects.confectionco.services.EmailService;
 import com.chrismerced.projects.confectionco.services.TextingService;
 
 //TODO:
-// Wire up new Resend email
 // Create card to hold order data
-// 
+// Continue with Stripe integration in StripeService
 @RestController
 @RequestMapping("api/admin")
 @PreAuthorize("hasRole('ADMIN')")
