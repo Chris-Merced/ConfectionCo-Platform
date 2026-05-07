@@ -34,16 +34,7 @@ public class UserController {
         return Map.of("status", "ok");
     }
 
-    @GetMapping("/api/resend")
-    public Map<String, Boolean> sendEmail() {
-        try {
-            // email.sendReceipt();
-
-            return Map.of("success", true);
-        } catch (Exception error) {
-            return Map.of("success", false);
-        }
-    }
+   
 
     @PostMapping("/api/login")
     public Map<String, String> login(@RequestBody LoginRequest request) {

@@ -3,6 +3,7 @@ package com.chrismerced.projects.confectionco.services;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import com.chrismerced.projects.confectionco.exceptions.EmailServiceException;
 import com.resend.Resend;
 import com.resend.core.exception.ResendException;
 import com.resend.services.emails.model.CreateEmailOptions;
@@ -10,19 +11,16 @@ import com.resend.services.emails.model.CreateEmailResponse;
 
 @Service
 public class ResendEmailService implements EmailService {
-    @Value("${RESEND_API_KEY}")
-    private String apiKey;
-
     private final Resend resend;
 
-    ResendEmailService() {
+    ResendEmailService(@Value("${RESEND_API_KEY}") String apiKey) {
         this.resend = new Resend(apiKey);
     }
 
     public void sendEmail() {
         try {
             CreateEmailOptions sendEmailRequest = CreateEmailOptions.builder()
-                    .from("onboarding@resend.dev")
+                    .from("no-replyg@confectioncobaker.com")
                     .to("christopher.r.merced@gmail.com")
                     .subject("Hello World")
                     .html("<p>Congrats on sending your <strong>first email</strong>!</p>")
@@ -38,6 +36,7 @@ public class ResendEmailService implements EmailService {
 
     public void sendReceipt() {
         try {
+            System.out.println("made it to send receipt");
             CreateEmailOptions sendEmailRequest = CreateEmailOptions.builder()
                     .from("onboarding@resend.dev")
                     .to("christopher.r.merced@gmail.com")
@@ -49,7 +48,7 @@ public class ResendEmailService implements EmailService {
             System.out.println("Resend Email Data: ");
             System.out.println(data);
         } catch (ResendException e) {
-            System.err.println(e);
+            throw new EmailServiceException("Something went wrong sending the receipt: " + e.getMessage());
         }
     }
 

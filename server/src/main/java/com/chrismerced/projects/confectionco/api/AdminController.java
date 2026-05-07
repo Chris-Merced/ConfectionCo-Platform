@@ -14,6 +14,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.chrismerced.projects.confectionco.dtos.OrderDTO;
 import com.chrismerced.projects.confectionco.repository.OrderRepository;
+import com.chrismerced.projects.confectionco.services.EmailService;
+import com.chrismerced.projects.confectionco.services.TextingService;
 
 //TODO:
 // Wire up new Resend email
@@ -28,22 +30,33 @@ public class AdminController {
     private String bucketUrl;
 
     private final OrderRepository orderRepository;
+    private final EmailService emailService;
+    private final TextingService textingService;
 
-    AdminController(OrderRepository orderRepository) {
+    AdminController(OrderRepository orderRepository, EmailService emailService, TextingService textingService) {
         this.orderRepository = orderRepository;
+        this.emailService = emailService;
+        this.textingService = textingService;
     }
 
     @GetMapping("/orders")
     public ResponseEntity<?> getActiveOrders() {
         try {
             List<OrderDTO> orders = orderRepository.findByStatusNot("COMPLETED")
-                .stream()
-                .map(order -> new OrderDTO(order,bucketUrl))
-                .collect(Collectors.toList());
+                    .stream()
+                    .map(order -> new OrderDTO(order, bucketUrl))
+                    .collect(Collectors.toList());
             return ResponseEntity.ok(orders);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to retrieve orders");
         }
+    }
+
+    @GetMapping("/sendReceipt")
+    public ResponseEntity<Map<String, String>> sendReceipt() {
+        System.out.println("sendReceipt Invoked");
+        emailService.sendReceipt();
+        return ResponseEntity.status(200).body(Map.of("success", "ok"));
     }
 
     @GetMapping("/authentication")
