@@ -38,7 +38,7 @@ public class ResendEmailService implements EmailService {
         try {
             System.out.println("made it to send receipt");
             CreateEmailOptions sendEmailRequest = CreateEmailOptions.builder()
-                    .from("onboarding@resend.dev")
+                    .from("no-reply@confectioncobakery.com")
                     .to("christopher.r.merced@gmail.com")
                     .subject("Confection Company Order Confirmation")
                     .html("<p>Thank you for shopping with Confection company!</p><p>Here are the results of your order: </p><p>Custom Cake: 2 <strong>BILLION</strong> dollars</p>")
