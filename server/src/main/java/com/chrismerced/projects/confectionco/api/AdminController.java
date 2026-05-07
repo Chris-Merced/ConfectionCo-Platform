@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.chrismerced.projects.confectionco.dtos.SendReceiptRequest;
 import com.chrismerced.projects.confectionco.dtos.OrderDTO;
 import com.chrismerced.projects.confectionco.repository.OrderRepository;
 import com.chrismerced.projects.confectionco.services.EmailService;
@@ -54,10 +55,10 @@ public class AdminController {
     }
 
     @GetMapping("/sendReceipt")
-    public ResponseEntity<Map<String, String>> sendReceipt(@RequestBody body) {
+    public ResponseEntity<Map<String, Boolean>> sendReceipt(@RequestBody SendReceiptRequest sendReceiptRequest) {
         System.out.println("sendReceipt Invoked");
-        emailService.sendReceipt();
-        return ResponseEntity.status(200).body(Map.of("success", "ok"));
+        emailService.sendReceipt(sendReceiptRequest.getRecipient(), sendReceiptRequest.getReceipt());
+        return ResponseEntity.status(200).body(Map.of("EmailSent", true));
     }
 
     @GetMapping("/authentication")

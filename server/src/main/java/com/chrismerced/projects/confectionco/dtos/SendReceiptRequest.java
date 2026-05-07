@@ -1,11 +1,11 @@
 package com.chrismerced.projects.confectionco.dtos;
 
-public class EmailDTO {
+public class SendReceiptRequest {
 
     private String recipient;
     private String receipt;
 
-    public EmailDTO(String recipient, String receipt){
+    public SendReceiptRequest(String recipient, String receipt){
         this.recipient = recipient;
         this.receipt = receipt;
     }
