@@ -19,23 +19,6 @@ public class ResendEmailService implements EmailService {
         this.resend = new Resend(apiKey);
     }
 
-    public void sendEmail() {
-        try {
-            CreateEmailOptions sendEmailRequest = CreateEmailOptions.builder()
-                    .from("no-reply" + confectionCo)
-                    .to("christopher.r.merced@gmail.com")
-                    .subject("Hello World")
-                    .html("<p>Congrats on sending your <strong>first email</strong>!</p>")
-                    .build();
-
-            CreateEmailResponse data = resend.emails().send(sendEmailRequest);
-            System.out.println("Resend Email Data: ");
-            System.out.println(data);
-        } catch (ResendException e) {
-            System.err.println(e);
-        }
-    }
-
     public void sendReceipt(String recipient, String receipt) {
         try {
             System.out.println("made it to send receipt");
