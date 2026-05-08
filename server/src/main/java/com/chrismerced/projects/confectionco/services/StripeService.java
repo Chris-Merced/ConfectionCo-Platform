@@ -4,7 +4,9 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import com.stripe.Stripe;
+import com.stripe.model.Refund;
 import com.stripe.model.checkout.Session;
+import com.stripe.param.RefundCreateParams;
 import com.stripe.param.checkout.SessionCreateParams;
 
 import jakarta.annotation.PostConstruct;
@@ -26,6 +28,16 @@ public class StripeService {
 
     public Session createFinalPaymentCheckout(Long orderId, long amountInCents) throws Exception {
         return createCheckoutSession(orderId, amountInCents, "final", "Final Payment");
+    }
+
+    public void createRefund(String sessionId, long amountInCents) throws Exception {
+        Session session = Session.retrieve(sessionId);
+        String paymentIntentId = session.getPaymentIntent();
+
+        Refund.create(RefundCreateParams.builder()
+                .setPaymentIntent(paymentIntentId)
+                .setAmount(amountInCents)
+                .build());
     }
 
     private Session createCheckoutSession(Long orderId, long amountInCents, String orderType, String productName)

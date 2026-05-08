@@ -17,6 +17,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.chrismerced.projects.confectionco.model.Order;
 import com.chrismerced.projects.confectionco.repository.OrderRepository;
+import com.chrismerced.projects.confectionco.services.EmailService;
 import com.chrismerced.projects.confectionco.services.S3Service;
 
 @CrossOrigin(origins = { "http://localhost:5173" })
@@ -32,10 +33,12 @@ public class OrderController {
 
     private final OrderRepository orderRepository;
     private final S3Service s3Service;
+    private final EmailService emailService;
 
-    OrderController(OrderRepository orderRepository, S3Service s3Service) {
+    OrderController(OrderRepository orderRepository, S3Service s3Service, EmailService emailService) {
         this.orderRepository = orderRepository;
         this.s3Service = s3Service;
+        this.emailService = emailService;
     }
 
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
@@ -72,6 +75,7 @@ public class OrderController {
         order.setPhotoUrls(photoKeys);
 
         Order saved = orderRepository.save(order);
+        emailService.sendOrderConfirmation(email);
         return ResponseEntity.ok(Map.of("orderId", saved.getId()));
     }
 }

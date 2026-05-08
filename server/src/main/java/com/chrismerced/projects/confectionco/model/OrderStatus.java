@@ -7,5 +7,6 @@ public enum OrderStatus {
     IN_PROGRESS,
     AWAITING_FINAL_PAYMENT,
     PAID_IN_FULL,
-    COMPLETED
+    COMPLETED,
+    REFUNDED
 }

@@ -10,6 +10,7 @@ const STATUS_SECTIONS: { key: string; label: string }[] = [
   { key: "IN_PROGRESS", label: "In Progress" },
   { key: "AWAITING_FINAL_PAYMENT", label: "Awaiting Final Payment" },
   { key: "PAID_IN_FULL", label: "Paid in Full" },
+  { key: "REFUNDED", label: "Refunded" },
   { key: "REJECTED", label: "Rejected" },
 ];
 

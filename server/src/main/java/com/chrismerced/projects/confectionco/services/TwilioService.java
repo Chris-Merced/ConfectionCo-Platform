@@ -6,29 +6,39 @@ import org.springframework.stereotype.Service;
 import com.twilio.Twilio;
 import com.twilio.rest.api.v2010.account.Message;
 
+import jakarta.annotation.PostConstruct;
+
 @Service
 public class TwilioService implements TextingService {
 
-  @Value("${TWILIO_ACCOUNT_SID}")
-  private String accountSID;
+    @Value("${TWILIO_ACCOUNT_SID}")
+    private String accountSID;
 
-  @Value("${TWILIO_AUTH_TOKEN}")
-  private String authToken;
+    @Value("${TWILIO_AUTH_TOKEN}")
+    private String authToken;
 
-  public void sendText() {
-    try{
-      System.out.println("Invoked sendText");
-
-      Twilio.init(accountSID, authToken);
-
-      Message message = Message.creator(
-          new com.twilio.type.PhoneNumber("+18502381106"),
-          "MG8e2f4b9c6edc84900475493a6d36573e",
-          "Message from application").create();
-      System.out.println(message.getSid());
-    }catch(Exception err){
-      System.err.println(err);
+    @PostConstruct
+    public void init() {
+        Twilio.init(accountSID, authToken);
     }
-  }
-}
 
+    @Override
+    public void sendText(String to, String message) {
+        try {
+            Message.creator(
+                    new com.twilio.type.PhoneNumber(normalizePhone(to)),
+                    new com.twilio.type.PhoneNumber("+18508183403"),
+                    message)
+                    .create();
+        } catch (Exception e) {
+            System.err.println("Failed to send text to " + to + ": " + e.getMessage());
+        }
+    }
+
+    private String normalizePhone(String phone) {
+        String digits = phone.replaceAll("[^0-9]", "");
+        if (digits.length() == 10) return "+1" + digits;
+        if (digits.length() == 11 && digits.startsWith("1")) return "+" + digits;
+        return "+" + digits;
+    }
+}

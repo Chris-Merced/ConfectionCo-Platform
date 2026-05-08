@@ -73,6 +73,23 @@ public class AdminController {
         }
     }
 
+    @PostMapping("/orders/{id}/refund")
+    public ResponseEntity<?> refundOrder(
+            @PathVariable Long id,
+            @RequestBody Map<String, BigDecimal> body) {
+        try {
+            BigDecimal amount = body.get("amount");
+            orderService.refundOrder(id, amount);
+            return ResponseEntity.ok(Map.of("status", OrderStatus.REFUNDED.name()));
+        } catch (ResourceNotFoundException e) {
+            return ResponseEntity.notFound().build();
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to process refund");
+        }
+    }
+
     @PostMapping("/orders/{id}/complete")
     public ResponseEntity<?> completeOrder(@PathVariable Long id) {
         try {
