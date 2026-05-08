@@ -6,6 +6,7 @@ export interface Order {
   phoneNumber: string;
   status: string;
   totalAmount: number | null;
+  finalPaymentAmount: number | null;
   depositPaid: boolean;
   fullPaymentPaid: boolean;
   servingCount: number;
@@ -185,9 +186,9 @@ export default function OrderCard({ order, token, onUpdate }: OrderCardProps): R
 
       {order.status === "PAID_IN_FULL" && (
         <div style={{ ...styles.actions, marginTop: "1rem", borderTop: "1px solid #374151", paddingTop: "0.75rem" }}>
-          {order.totalAmount != null && (
+          {order.finalPaymentAmount != null && (
             <span style={{ fontSize: "0.85rem", color: "#9ca3af" }}>
-              Order total: ${order.totalAmount.toFixed(2)}
+              Final payment: ${order.finalPaymentAmount.toFixed(2)}
             </span>
           )}
           <input
