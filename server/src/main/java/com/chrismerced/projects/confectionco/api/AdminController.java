@@ -30,8 +30,11 @@ import com.chrismerced.projects.confectionco.services.TextingService;
 @PreAuthorize("hasRole('ADMIN')")
 public class AdminController {
 
-    @Value("${aws.bucket-url}")
-    private String bucketUrl;
+    @Value("${aws.bucket-inspo}")
+    private String inspoBucket;
+
+    @Value("${aws.region}")
+    private String awsRegion;
 
     private final OrderRepository orderRepository;
     private final OrderService orderService;
@@ -49,9 +52,10 @@ public class AdminController {
     @GetMapping("/orders")
     public ResponseEntity<?> getActiveOrders() {
         try {
+            String inspoBaseUrl = "https://" + inspoBucket + ".s3." + awsRegion + ".amazonaws.com";
             List<OrderDTO> orders = orderRepository.findByStatusNot(OrderStatus.COMPLETED)
                     .stream()
-                    .map(order -> new OrderDTO(order, bucketUrl))
+                    .map(order -> new OrderDTO(order, inspoBaseUrl))
                     .collect(Collectors.toList());
             return ResponseEntity.ok(orders);
         } catch (Exception e) {
