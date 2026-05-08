@@ -101,25 +101,24 @@ public class OrderService {
                     System.err.println("Failed to parse webhook payload for event " + event.getId() + ": " + e.getMessage());
                     return;
                 }
-                String orderId = dataObject.path("metadata").path("orderId").asText(null);
-                String orderType = dataObject.path("metadata").path("orderType").asText(null);
-                if (orderId == null || orderType == null) {
-                    System.err.println("Missing metadata in event: " + event.getId());
+                String orderId = dataObject.path("client_reference_id").asText(null);
+                if (orderId == null) {
+                    System.err.println("Missing client_reference_id in event: " + event.getId());
                     return;
                 }
                 // DB failures propagate — Stripe will retry on non-2xx response
-                handleStripeCheckoutCompleted(Long.valueOf(orderId), orderType);
+                handleStripeCheckoutCompleted(Long.valueOf(orderId));
             }
 
             default -> System.out.println("Unhandled event: " + event.getType());
         }
     }
 
-    private void handleStripeCheckoutCompleted(Long orderId, String orderType) {
+    private void handleStripeCheckoutCompleted(Long orderId) {
         Order order = orderRepository.findById(orderId)
                 .orElseThrow(() -> new RuntimeException("Order not found: " + orderId));
 
-        if ("deposit".equals(orderType)) {
+        if (order.getStatus() == OrderStatus.AWAITING_DEPOSIT) {
             order.setDepositPaid(true);
             order.setStatus(OrderStatus.IN_PROGRESS);
             orderRepository.save(order);
@@ -134,7 +133,7 @@ public class OrderService {
             } catch (Exception e) {
                 System.err.println("Failed to send deposit receipt email to " + order.getEmail() + ": " + e.getMessage());
             }
-        } else if ("final".equals(orderType)) {
+        } else if (order.getStatus() == OrderStatus.AWAITING_FINAL_PAYMENT) {
             order.setFullPaymentPaid(true);
             order.setStatus(OrderStatus.PAID_IN_FULL);
             orderRepository.save(order);
@@ -149,6 +148,8 @@ public class OrderService {
             } catch (Exception e) {
                 System.err.println("Failed to send final payment email to " + order.getEmail() + ": " + e.getMessage());
             }
+        } else {
+            System.err.println("checkout.session.completed for order " + orderId + " in unexpected status: " + order.getStatus());
         }
     }
 }
