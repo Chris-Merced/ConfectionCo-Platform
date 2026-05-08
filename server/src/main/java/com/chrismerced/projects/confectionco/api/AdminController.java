@@ -18,8 +18,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.chrismerced.projects.confectionco.dtos.SendReceiptRequest;
 import com.chrismerced.projects.confectionco.dtos.OrderDTO;
+import com.chrismerced.projects.confectionco.dtos.SendReceiptRequest;
 import com.chrismerced.projects.confectionco.exceptions.ResourceNotFoundException;
 import com.chrismerced.projects.confectionco.model.OrderStatus;
 import com.chrismerced.projects.confectionco.repository.OrderRepository;
@@ -178,7 +178,8 @@ public class AdminController {
         } catch (ResourceNotFoundException e) {
             return ResponseEntity.notFound().build();
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to generate final payment link");
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Failed to generate final payment link");
         }
     }
 

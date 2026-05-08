@@ -16,7 +16,8 @@ const STATUS_SECTIONS: { key: string; label: string }[] = [
 
 
 //TODO:
-//  add region locking to orders
+// add region locking to orders
+// add date to order
 // beige/brown base, pink accent, black lettering
  
 export default function AdminDashboard(): ReactElement {
