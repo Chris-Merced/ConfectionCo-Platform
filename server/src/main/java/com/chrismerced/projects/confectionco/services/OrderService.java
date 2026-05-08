@@ -8,7 +8,7 @@ import com.chrismerced.projects.confectionco.exceptions.ResourceNotFoundExceptio
 import com.chrismerced.projects.confectionco.model.Order;
 import com.chrismerced.projects.confectionco.model.OrderStatus;
 import com.chrismerced.projects.confectionco.repository.OrderRepository;
-import com.google.gson.JsonParser;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.stripe.model.Event;
 import com.stripe.model.checkout.Session;
 
@@ -17,10 +17,12 @@ public class OrderService {
 
     private final OrderRepository orderRepository;
     private final StripeService stripeService;
+    private final ObjectMapper objectMapper;
 
-    OrderService(OrderRepository orderRepository, StripeService stripeService) {
+    OrderService(OrderRepository orderRepository, StripeService stripeService, ObjectMapper objectMapper) {
         this.orderRepository = orderRepository;
         this.stripeService = stripeService;
+        this.objectMapper = objectMapper;
     }
 
     public void updateOrderStatus(Long orderId, OrderStatus status) {
@@ -65,12 +67,13 @@ public class OrderService {
         switch (event.getType()) {
             case "checkout.session.completed" -> {
                 try {
-                    String sessionId = JsonParser.parseString(rawPayload)
-                            .getAsJsonObject()
-                            .getAsJsonObject("data")
-                            .getAsJsonObject("object")
-                            .get("id")
-                            .getAsString();
+                    String sessionId = objectMapper.readTree(rawPayload)
+                            .path("data").path("object").path("id")
+                            .asText(null);
+                    if (sessionId == null) {
+                        System.out.println("No session ID in event: " + event.getId());
+                        return;
+                    }
                     Session session = Session.retrieve(sessionId);
                     handleStripeCheckoutCompleted(session);
                 } catch (Exception e) {
