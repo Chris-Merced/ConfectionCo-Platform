@@ -22,12 +22,12 @@ public class StripeService {
         Stripe.apiKey = apiKey;
     }
 
-    public Session createDepositCheckout(Long orderId, long amountInCents) throws Exception {
-        return createCheckoutSession(orderId, amountInCents, "deposit", "Order Deposit");
+    public Session createDepositCheckout(Long orderId, long amountInCents, String email) throws Exception {
+        return createCheckoutSession(orderId, amountInCents, "deposit", "Order Deposit", email);
     }
 
-    public Session createFinalPaymentCheckout(Long orderId, long amountInCents) throws Exception {
-        return createCheckoutSession(orderId, amountInCents, "final", "Final Payment");
+    public Session createFinalPaymentCheckout(Long orderId, long amountInCents, String email) throws Exception {
+        return createCheckoutSession(orderId, amountInCents, "final", "Final Payment", email);
     }
 
     public String getSessionUrl(String sessionId) throws Exception {
@@ -44,12 +44,14 @@ public class StripeService {
                 .build());
     }
 
-    private Session createCheckoutSession(Long orderId, long amountInCents, String orderType, String productName)
-            throws Exception {
+    private Session createCheckoutSession(Long orderId, long amountInCents, String orderType, String productName,
+            String email) throws Exception {
 
         SessionCreateParams params = SessionCreateParams.builder()
                 .setMode(SessionCreateParams.Mode.PAYMENT)
                 .setClientReferenceId(String.valueOf(orderId))
+                .setCustomerEmail(email)
+                .setBillingAddressCollection(SessionCreateParams.BillingAddressCollection.AUTO)
                 .putMetadata("orderId", String.valueOf(orderId))
                 .putMetadata("orderType", orderType)
                 .setSuccessUrl("http://localhost:5173/payment-success?orderId=" + orderId)

@@ -37,6 +37,9 @@ public class Order {
     @Column(name = "total_amount")
     private BigDecimal totalAmount;
 
+    @Column(name = "final_payment_amount")
+    private BigDecimal finalPaymentAmount;
+
     @Column(name = "stripe_session_id")
     private String stripeSessionId;
 
@@ -71,6 +74,8 @@ public class Order {
     public void setStatus(OrderStatus status) { this.status = status; }
     public BigDecimal getTotalAmount() { return totalAmount; }
     public void setTotalAmount(BigDecimal totalAmount) { this.totalAmount = totalAmount; }
+    public BigDecimal getFinalPaymentAmount() { return finalPaymentAmount; }
+    public void setFinalPaymentAmount(BigDecimal finalPaymentAmount) { this.finalPaymentAmount = finalPaymentAmount; }
     public String getStripeSessionId() { return stripeSessionId; }
     public void setStripeSessionId(String stripeSessionId) { this.stripeSessionId = stripeSessionId; }
     public boolean isDepositPaid() { return depositPaid; }

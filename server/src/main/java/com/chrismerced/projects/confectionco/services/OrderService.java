@@ -47,7 +47,7 @@ public class OrderService {
         order.setStatus(OrderStatus.AWAITING_DEPOSIT);
 
         long amountInCents = totalAmount.multiply(BigDecimal.valueOf(100)).longValue();
-        Session session = stripeService.createDepositCheckout(orderId, amountInCents);
+        Session session = stripeService.createDepositCheckout(orderId, amountInCents, order.getEmail());
 
         order.setStripeSessionId(session.getId());
         orderRepository.save(order);
@@ -63,9 +63,10 @@ public class OrderService {
                 .orElseThrow(() -> new ResourceNotFoundException("Order not found: " + orderId));
 
         order.setStatus(OrderStatus.AWAITING_FINAL_PAYMENT);
+        order.setFinalPaymentAmount(amount);
 
         long amountInCents = amount.multiply(BigDecimal.valueOf(100)).longValue();
-        Session session = stripeService.createFinalPaymentCheckout(orderId, amountInCents);
+        Session session = stripeService.createFinalPaymentCheckout(orderId, amountInCents, order.getEmail());
 
         order.setStripeSessionId(session.getId());
         orderRepository.save(order);
