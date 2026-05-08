@@ -1,135 +1,105 @@
 import { useAuth0 } from "@auth0/auth0-react";
-import { use, useEffect, useState, type ReactElement } from "react";
+import { useEffect, useState, type ReactElement } from "react";
 import { useQuery } from "@tanstack/react-query";
 
+import OrderCard, { type Order } from "../components/orderCard";
+
+const STATUS_SECTIONS: { key: string; label: string }[] = [
+  { key: "PENDING", label: "Pending Review" },
+  { key: "AWAITING_DEPOSIT", label: "Awaiting Deposit" },
+  { key: "IN_PROGRESS", label: "In Progress" },
+  { key: "AWAITING_FINAL_PAYMENT", label: "Awaiting Final Payment" },
+  { key: "PAID_IN_FULL", label: "Paid in Full" },
+  { key: "REJECTED", label: "Rejected" },
+];
+
 export default function AdminDashboard(): ReactElement {
+  const { isLoading, isAuthenticated, error, loginWithRedirect: login, logout: auth0Logout, user, getAccessTokenSilently } = useAuth0();
 
+  const [token, setToken] = useState("");
 
-    const {
-        isLoading, // Loading state, the SDK needs to reach Auth0 on load
-        isAuthenticated,
-        error,
-        loginWithRedirect: login, // Starts the login flow
-        logout: auth0Logout, // Starts the logout flow
-        user, // User profile
-        getAccessTokenSilently, //JWT
-    } = useAuth0();
+  useEffect(() => {
+    if (!isAuthenticated) return;
+    getAccessTokenSilently({ authorizationParams: { audience: "https://confectionco-api" } })
+      .then(setToken);
+  }, [isAuthenticated]);
 
+  const { data: orders, isLoading: ordersLoading, error: ordersError, refetch } = useQuery<Order[]>({
+    queryKey: ["orders"],
+    queryFn: async () => {
+      const res = await fetch("http://localhost:8080/api/admin/orders", {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      if (!res.ok) throw new Error("Failed to retrieve orders");
+      return res.json();
+    },
+    enabled: isAuthenticated && !!token,
+  });
 
-    const [token, setToken] = useState("");
+  const handleLogin = () => login({ appState: { returnTo: "/admin" } });
+  const logout = () => auth0Logout({ logoutParams: { returnTo: window.location.origin } });
 
-    // Send Token to backend for Authentication
-    useEffect(() => {
-        if(!isAuthenticated) return;
+  if (isLoading) return <p>Loading...</p>;
 
-        const getToken = async () => {
-            const token = await getAccessTokenSilently({
-                authorizationParams: {
-                    audience: "https://confectionco-api"
-                }
-            })
-            setToken(token);
-        }
-
-        getToken();
-    }, [isAuthenticated])
-
-  
-
-    const { data: authData, isLoading: authCheckLoading, error: authCheckError } = useQuery({
-        queryKey: ["auth-check"],
-        queryFn: async()=>{
-            const res = await fetch("http://localhost:8080/api/authentication",{
-                headers:{ Authorization: `Bearer ${token}`}
-            });
-            return res.json();
-        },
-        enabled: isAuthenticated && !!token,
-    })
-
-
-    const {data: textData, isLoading: textLoading, error: textError} = useQuery({
-        queryKey: ["text-query"],
-        queryFn: async () =>{
-            const res = await fetch("http://localhost:8080/api/base",{
-                headers: {Authorization: `Bearer ${token}`}
-            })
-            return res.json()
-        },
-        enabled: isAuthenticated && !!token
-    })
-
-    //Grab All Orders That Have not Been Completed
-    const {data: orderData, isLoading: orderLoading, error: orderError} = useQuery({
-        queryKey: ["order-query"],
-        queryFn:  async ()=>{
-            const res = await fetch("http://localhost:8080/api/admin/orders",{
-                headers: {Authorization: `Bearer ${token}`}
-            })
-            
-            if (!res.ok) throw new Error("Failed to retrieve orders")
-            
-            return res.json()
-        },
-        enabled: isAuthenticated && !!token
-    })
-
-    const {data: receiptData, isLoading: receiptLoading, error : receiptError} = useQuery({
-        queryKey: ["order-receipt"],
-        queryFn: async ()=>{
-            const res = await fetch("http://localhost:8080/api/admin/sendReceipt",{
-                headers: {Authorization: `Bearer ${token}`}
-            })
-
-            if(!res.ok){
-                throw new Error("Failed to send Receipt")
-            }
-            return res.json();
-        },
-        enabled: isAuthenticated && !!token
-    })
-
-    if(!orderLoading){
-        console.log(orderData)
-    }
-
-
-    const signup = () =>
-        login({ authorizationParams: { screen_hint: "signup" } });
-
-    const logout = () =>
-        auth0Logout({ logoutParams: { returnTo: window.location.origin } });
-
-
-    const handleLogin = () => {
-        login({
-            appState: {
-                returnTo: "/admin",
-            },
-        });
-    };
-
-    if (isLoading) return <p>Loading...</p>;
-
-    return isAuthenticated && user ? (
-        <>
-            <p>Logged in as {user.email}</p>
-
-            <h1>User Profile</h1>
-
-            <pre>{JSON.stringify(user, null, 2)}</pre>
-
-            <button onClick={logout}>Logout</button>
-        </>
-    ) : (
-        <>
-            {error && <p>Error: {error.message}</p>}
-
-            <button onClick={signup}>Signup</button>
-
-            <button onClick={handleLogin}>Login</button>
-        </>
+  if (!isAuthenticated) {
+    return (
+      <div style={styles.centered}>
+        {error && <p style={styles.error}>Error: {error.message}</p>}
+        <button style={styles.btn} onClick={handleLogin}>Admin Login</button>
+      </div>
     );
+  }
 
+  const grouped = STATUS_SECTIONS.reduce<Record<string, Order[]>>((acc, { key }) => {
+    acc[key] = (orders ?? []).filter((o) => o.status === key);
+    return acc;
+  }, {});
+
+  return (
+    <div style={styles.page}>
+      <div style={styles.topBar}>
+        <h1 style={styles.heading}>Order Dashboard</h1>
+        <div>
+          <span style={styles.userEmail}>{user?.email}</span>
+          <button style={styles.logoutBtn} onClick={logout}>Logout</button>
+        </div>
+      </div>
+
+      {ordersLoading && <p>Loading orders...</p>}
+      {ordersError && <p style={styles.error}>Failed to load orders.</p>}
+
+      {!ordersLoading && orders && (
+        <div style={styles.board}>
+          {STATUS_SECTIONS.map(({ key, label }) =>
+            grouped[key].length === 0 ? null : (
+              <div key={key} style={styles.column}>
+                <h2 style={styles.columnHeader}>
+                  {label}
+                  <span style={styles.badge}>{grouped[key].length}</span>
+                </h2>
+                {grouped[key].map((order) => (
+                  <OrderCard key={order.id} order={order} token={token} onUpdate={refetch} />
+                ))}
+              </div>
+            )
+          )}
+        </div>
+      )}
+    </div>
+  );
 }
 
+const styles: Record<string, React.CSSProperties> = {
+  page: { padding: "1.5rem", fontFamily: "sans-serif", background: "#f9f9f9", minHeight: "100vh" },
+  topBar: { display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "1.5rem" },
+  heading: { margin: 0 },
+  userEmail: { marginRight: "1rem", fontSize: "0.9rem", color: "#555" },
+  logoutBtn: { padding: "0.4rem 0.8rem", background: "#555", color: "#fff", border: "none", borderRadius: "4px", cursor: "pointer" },
+  board: { display: "flex", flexDirection: "column", gap: "2rem" },
+  column: { background: "#fff", borderRadius: "8px", padding: "1rem", boxShadow: "0 1px 3px rgba(0,0,0,0.08)" },
+  columnHeader: { margin: "0 0 1rem", fontSize: "1rem", fontWeight: 600, display: "flex", alignItems: "center", gap: "0.5rem" },
+  badge: { background: "#eee", borderRadius: "12px", padding: "0.1rem 0.5rem", fontSize: "0.8rem", fontWeight: 400 },
+  centered: { display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", height: "100vh" },
+  btn: { padding: "0.6rem 1.2rem", background: "#333", color: "#fff", border: "none", borderRadius: "4px", cursor: "pointer" },
+  error: { color: "#e53935" },
+};

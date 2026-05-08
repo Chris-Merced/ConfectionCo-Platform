@@ -98,6 +98,16 @@ export default function OrderCard({ order, token, onUpdate }: OrderCardProps): R
       {order.comments && <p style={styles.field}>Comments: {order.comments}</p>}
       {order.totalAmount != null && <p style={styles.field}>Total: ${order.totalAmount.toFixed(2)}</p>}
 
+      {order.photoUrls.length > 0 && (
+        <div style={styles.photos}>
+          {order.photoUrls.map((url, i) => (
+            <a key={i} href={url} target="_blank" rel="noreferrer">
+              <img src={url} alt={`Inspiration ${i + 1}`} style={styles.thumbnail} />
+            </a>
+          ))}
+        </div>
+      )}
+
       {order.status === "PENDING" && (
         <div style={styles.actions}>
           <input
@@ -184,6 +194,8 @@ const styles: Record<string, React.CSSProperties> = {
   btnReject: { padding: "0.4rem 0.9rem", background: "#e53935", color: "#fff", border: "none", borderRadius: "4px", cursor: "pointer" },
   btnCopy: { padding: "0.3rem 0.7rem", background: "#1976d2", color: "#fff", border: "none", borderRadius: "4px", cursor: "pointer", flexShrink: 0 },
   waiting: { color: "#888", fontStyle: "italic", marginTop: "0.5rem" },
+  photos: { display: "flex", gap: "0.5rem", flexWrap: "wrap" as const, marginTop: "0.75rem" },
+  thumbnail: { width: "80px", height: "80px", objectFit: "cover" as const, borderRadius: "4px", display: "block" },
   urlBox: { marginTop: "0.75rem", display: "flex", alignItems: "center", gap: "0.5rem", background: "#f5f5f5", padding: "0.5rem", borderRadius: "4px" },
   urlText: { fontSize: "0.8rem", wordBreak: "break-all", flex: 1 },
   error: { color: "#e53935", fontSize: "0.85rem", marginTop: "0.5rem" },
