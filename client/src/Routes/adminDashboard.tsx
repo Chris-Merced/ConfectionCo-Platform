@@ -19,6 +19,8 @@ const STATUS_SECTIONS: { key: string; label: string }[] = [
 // add region locking to orders
 // add date to order
 // beige/brown base, pink accent, black lettering
+// make sure failure events are communicated to the front end like order not going through etc 
+// see if we can set up an inbox for emails to come in for support in case wrong phone number
  
 export default function AdminDashboard(): ReactElement {
     const { isLoading, isAuthenticated, error, loginWithRedirect: login, logout: auth0Logout, user, getAccessTokenSilently } = useAuth0();
