@@ -12,41 +12,46 @@ import jakarta.annotation.PostConstruct;
 @Service
 public class StripeService {
 
-        @Value("${stripe.api.key}")
-        private String apiKey;
+    @Value("${stripe.api.key}")
+    private String apiKey;
 
-        @PostConstruct
-        public void init() {
-                Stripe.apiKey = apiKey;
-        }
+    @PostConstruct
+    public void init() {
+        Stripe.apiKey = apiKey;
+    }
 
-        public String createDepositCheckout(Long orderId, long amountInCents, String orderType) throws Exception {
+    public Session createDepositCheckout(Long orderId, long amountInCents) throws Exception {
+        return createCheckoutSession(orderId, amountInCents, "deposit", "Order Deposit");
+    }
 
-                SessionCreateParams params = SessionCreateParams.builder()
-                        .setMode(SessionCreateParams.Mode.PAYMENT)
-                        .putMetadata("orderId", String.valueOf(orderId))
-                        .putMetadata("orderType", orderType)
-                        .setSuccessUrl("http://localhost:5173/payment-success?orderId=" + orderId)
-                        .setCancelUrl("http://localhost:5173/payment-cancel")
-                        .addLineItem(
-                                SessionCreateParams.LineItem.builder()
-                                        .setQuantity(1L)
-                                        .setPriceData(
-                                                SessionCreateParams.LineItem.PriceData
-                                                        .builder()
-                                                        .setCurrency("usd")
-                                                        .setUnitAmount(amountInCents)
-                                                        .setProductData(
-                                                                SessionCreateParams.LineItem.PriceData.ProductData
-                                                                                .builder()
-                                                                                .setName("Order Deposit")
-                                                                                .build())
-                                                        .build())
+    public Session createFinalPaymentCheckout(Long orderId, long amountInCents) throws Exception {
+        return createCheckoutSession(orderId, amountInCents, "final", "Final Payment");
+    }
+
+    private Session createCheckoutSession(Long orderId, long amountInCents, String orderType, String productName)
+            throws Exception {
+
+        SessionCreateParams params = SessionCreateParams.builder()
+                .setMode(SessionCreateParams.Mode.PAYMENT)
+                .putMetadata("orderId", String.valueOf(orderId))
+                .putMetadata("orderType", orderType)
+                .setSuccessUrl("http://localhost:5173/payment-success?orderId=" + orderId)
+                .setCancelUrl("http://localhost:5173/payment-cancel")
+                .addLineItem(
+                        SessionCreateParams.LineItem.builder()
+                                .setQuantity(1L)
+                                .setPriceData(
+                                        SessionCreateParams.LineItem.PriceData.builder()
+                                                .setCurrency("usd")
+                                                .setUnitAmount(amountInCents)
+                                                .setProductData(
+                                                        SessionCreateParams.LineItem.PriceData.ProductData.builder()
+                                                                .setName(productName)
+                                                                .build())
                                                 .build())
-                        .build();
+                                .build())
+                .build();
 
-                Session session = Session.create(params);
-
-                return session.getUrl();
-        }
+        return Session.create(params);
+    }
 }
