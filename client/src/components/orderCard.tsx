@@ -85,6 +85,15 @@ export default function OrderCard({ order, token, onUpdate }: OrderCardProps): R
       onUpdate();
     });
 
+  const handleRefund = () =>
+    run(async () => {
+      await post(`/api/admin/orders/${order.id}/refund`, {
+        amount: parseFloat(amount),
+      });
+      setAmount("");
+      onUpdate();
+    });
+
   return (
     <div style={styles.card}>
       <div style={styles.row}>
@@ -159,6 +168,23 @@ export default function OrderCard({ order, token, onUpdate }: OrderCardProps): R
         </button>
       )}
 
+      {["IN_PROGRESS", "AWAITING_FINAL_PAYMENT", "PAID_IN_FULL"].includes(order.status) && (
+        <div style={{ ...styles.actions, marginTop: "1rem", borderTop: "1px solid #374151", paddingTop: "0.75rem" }}>
+          <input
+            style={styles.input}
+            type="number"
+            placeholder="Refund amount"
+            value={amount}
+            onChange={(e) => setAmount(e.target.value)}
+            step="0.01"
+            min="0"
+          />
+          <button style={styles.btnRefund} onClick={handleRefund} disabled={loading || !amount}>
+            Issue Refund
+          </button>
+        </div>
+      )}
+
       {paymentUrl && (
         <div style={styles.urlBox}>
           <span style={styles.urlText}>{paymentUrl}</span>
@@ -194,6 +220,7 @@ const styles: Record<string, React.CSSProperties> = {
   btnAccept: { padding: "0.4rem 0.9rem", background: "#16a34a", color: "#fff", border: "none", borderRadius: "4px", cursor: "pointer" },
   btnReject: { padding: "0.4rem 0.9rem", background: "#dc2626", color: "#fff", border: "none", borderRadius: "4px", cursor: "pointer" },
   btnCopy: { padding: "0.3rem 0.7rem", background: "#1d4ed8", color: "#fff", border: "none", borderRadius: "4px", cursor: "pointer", flexShrink: 0 },
+  btnRefund: { padding: "0.4rem 0.9rem", background: "#b45309", color: "#fff", border: "none", borderRadius: "4px", cursor: "pointer" },
   waiting: { color: "#6b7280", fontStyle: "italic", marginTop: "0.5rem" },
   photos: { display: "flex", gap: "0.5rem", flexWrap: "wrap" as const, marginTop: "0.75rem" },
   thumbnail: { width: "80px", height: "80px", objectFit: "cover" as const, borderRadius: "4px", display: "block" },

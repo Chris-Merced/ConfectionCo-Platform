@@ -7,34 +7,67 @@ import com.chrismerced.projects.confectionco.exceptions.EmailServiceException;
 import com.resend.Resend;
 import com.resend.core.exception.ResendException;
 import com.resend.services.emails.model.CreateEmailOptions;
-import com.resend.services.emails.model.CreateEmailResponse;
 
 @Service
 public class ResendEmailService implements EmailService {
-    
+
     private final Resend resend;
-    private final String confectionCo = "@confectioncobakery.com";
+    private final String from = "no-reply@confectioncobakery.com";
 
     ResendEmailService(@Value("${RESEND_API_KEY}") String apiKey) {
         this.resend = new Resend(apiKey);
     }
 
-    public void sendReceipt(String recipient, String receipt) {
-        try {
-            System.out.println("made it to send receipt");
-            CreateEmailOptions sendEmailRequest = CreateEmailOptions.builder()
-                    .from("no-reply" + confectionCo)
-                    .to(recipient)
-                    .subject("Confection Company Order Confirmation")
-                    .html("<p>Thank you for shopping with Confection company!</p><p>Here are the results of your order: </p><p>" + receipt + "</p>")
-                    .build();
-
-            CreateEmailResponse data = resend.emails().send(sendEmailRequest);
-            System.out.println("Resend Email Data: ");
-            System.out.println(data);
-        } catch (ResendException e) {
-            throw new EmailServiceException("Something went wrong sending the receipt: " + e.getMessage());
-        }
+    @Override
+    public void sendOrderConfirmation(String recipient) {
+        send(recipient,
+                "We've Received Your Order!",
+                "<p>Hi there!</p>" +
+                "<p>Thank you for placing your order with <strong>Confection Co. Bakery</strong>. " +
+                "We've received your request and it is currently awaiting our review.</p>" +
+                "<p>We'll reach out soon with next steps. We can't wait to create something sweet for you!</p>" +
+                "<p>— The Confection Co. Team</p>");
     }
 
+    @Override
+    public void sendDepositReceipt(String recipient) {
+        send(recipient,
+                "Deposit Payment Received",
+                "<p>Hi there!</p>" +
+                "<p>We've received your deposit payment — thank you! Your order is now <strong>in progress</strong>.</p>" +
+                "<p>We'll be in touch when your final payment is due.</p>" +
+                "<p>— The Confection Co. Team</p>");
+    }
+
+    @Override
+    public void sendFullPaymentConfirmation(String recipient) {
+        send(recipient,
+                "Payment Received in Full",
+                "<p>Hi there!</p>" +
+                "<p>We've received your final payment. Your order with <strong>Confection Co. Bakery</strong> " +
+                "is now <strong>paid in full</strong>.</p>" +
+                "<p>We'll be in touch shortly with updates on your order. Thank you so much!</p>" +
+                "<p>— The Confection Co. Team</p>");
+    }
+
+    @Override
+    public void sendReceipt(String recipient, String receipt) {
+        send(recipient,
+                "Confection Co. Order Receipt",
+                "<p>Thank you for shopping with Confection Co. Bakery!</p>" +
+                "<p>Here are the details of your order:</p><p>" + receipt + "</p>");
+    }
+
+    private void send(String recipient, String subject, String html) {
+        try {
+            resend.emails().send(CreateEmailOptions.builder()
+                    .from(from)
+                    .to(recipient)
+                    .subject(subject)
+                    .html(html)
+                    .build());
+        } catch (ResendException e) {
+            throw new EmailServiceException("Failed to send email: " + e.getMessage());
+        }
+    }
 }
