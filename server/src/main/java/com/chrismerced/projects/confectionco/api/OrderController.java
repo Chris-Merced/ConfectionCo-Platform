@@ -75,7 +75,11 @@ public class OrderController {
         order.setPhotoUrls(photoKeys);
 
         Order saved = orderRepository.save(order);
-        emailService.sendOrderConfirmation(email);
+        try {
+            emailService.sendOrderConfirmation(email);
+        } catch (Exception e) {
+            System.err.println("Order confirmation email failed for " + email + ": " + e.getMessage());
+        }
         return ResponseEntity.ok(Map.of("orderId", saved.getId()));
     }
 }

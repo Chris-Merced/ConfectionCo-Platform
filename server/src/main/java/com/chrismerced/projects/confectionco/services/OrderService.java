@@ -94,19 +94,21 @@ public class OrderService {
     public void handleStripeEvent(Event event, String rawPayload) {
         switch (event.getType()) {
             case "checkout.session.completed" -> {
+                com.fasterxml.jackson.databind.JsonNode dataObject;
                 try {
-                    com.fasterxml.jackson.databind.JsonNode dataObject = objectMapper.readTree(rawPayload)
-                            .path("data").path("object");
-                    String orderId = dataObject.path("metadata").path("orderId").asText(null);
-                    String orderType = dataObject.path("metadata").path("orderType").asText(null);
-                    if (orderId == null || orderType == null) {
-                        System.out.println("Missing metadata in event: " + event.getId());
-                        return;
-                    }
-                    handleStripeCheckoutCompleted(Long.valueOf(orderId), orderType);
+                    dataObject = objectMapper.readTree(rawPayload).path("data").path("object");
                 } catch (Exception e) {
-                    System.out.println("Failed to process checkout.session.completed " + event.getId() + ": " + e.getMessage());
+                    System.err.println("Failed to parse webhook payload for event " + event.getId() + ": " + e.getMessage());
+                    return;
                 }
+                String orderId = dataObject.path("metadata").path("orderId").asText(null);
+                String orderType = dataObject.path("metadata").path("orderType").asText(null);
+                if (orderId == null || orderType == null) {
+                    System.err.println("Missing metadata in event: " + event.getId());
+                    return;
+                }
+                // DB failures propagate — Stripe will retry on non-2xx response
+                handleStripeCheckoutCompleted(Long.valueOf(orderId), orderType);
             }
 
             default -> System.out.println("Unhandled event: " + event.getType());
@@ -121,16 +123,32 @@ public class OrderService {
             order.setDepositPaid(true);
             order.setStatus(OrderStatus.IN_PROGRESS);
             orderRepository.save(order);
-            textingService.sendText(order.getPhoneNumber(),
-                    "Great news! Your deposit has been received by Confection Co. Bakery. We're now working on your order!");
-            emailService.sendDepositReceipt(order.getEmail());
+            try {
+                textingService.sendText(order.getPhoneNumber(),
+                        "Great news! Your deposit has been received by Confection Co. Bakery. We're now working on your order!");
+            } catch (Exception e) {
+                System.err.println("Failed to send deposit text to " + order.getPhoneNumber() + ": " + e.getMessage());
+            }
+            try {
+                emailService.sendDepositReceipt(order.getEmail());
+            } catch (Exception e) {
+                System.err.println("Failed to send deposit receipt email to " + order.getEmail() + ": " + e.getMessage());
+            }
         } else if ("final".equals(orderType)) {
             order.setFullPaymentPaid(true);
             order.setStatus(OrderStatus.PAID_IN_FULL);
             orderRepository.save(order);
-            textingService.sendText(order.getPhoneNumber(),
-                    "Your final payment has been received by Confection Co. Bakery. Your order is paid in full — thank you!");
-            emailService.sendFullPaymentConfirmation(order.getEmail());
+            try {
+                textingService.sendText(order.getPhoneNumber(),
+                        "Your final payment has been received by Confection Co. Bakery. Your order is paid in full — thank you!");
+            } catch (Exception e) {
+                System.err.println("Failed to send final payment text to " + order.getPhoneNumber() + ": " + e.getMessage());
+            }
+            try {
+                emailService.sendFullPaymentConfirmation(order.getEmail());
+            } catch (Exception e) {
+                System.err.println("Failed to send final payment email to " + order.getEmail() + ": " + e.getMessage());
+            }
         }
     }
 }
