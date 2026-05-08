@@ -69,6 +69,16 @@ public class AdminController {
         }
     }
 
+    @PostMapping("/orders/{id}/complete")
+    public ResponseEntity<?> completeOrder(@PathVariable Long id) {
+        try {
+            orderService.updateOrderStatus(id, OrderStatus.COMPLETED);
+            return ResponseEntity.ok(Map.of("status", OrderStatus.COMPLETED.name()));
+        } catch (ResourceNotFoundException e) {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
     @PostMapping("/orders/{id}/deposit-link")
     public ResponseEntity<?> generateDepositLink(
             @PathVariable Long id,
