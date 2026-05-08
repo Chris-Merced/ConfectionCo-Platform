@@ -31,6 +31,6 @@ public class StripeWebhookController {
 
         Event event = Webhook.constructEvent(payload, sigHeader, endpointSecret);
 
-        orderService.handleStripeEvent(event);
+        orderService.handleStripeEvent(event, payload);
     }
 }
