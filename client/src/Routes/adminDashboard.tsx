@@ -91,8 +91,8 @@ export default function AdminDashboard(): ReactElement {
 }
 
 const styles: Record<string, React.CSSProperties> = {
-    page: { padding: "1.5rem", fontFamily: "sans-serif", background: "#111827", minHeight: "100vh", color: "#f3f4f6" },
-    topBar: { display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "1.5rem" },
+    page: { padding: "1.5rem", fontFamily: "sans-serif", background: "#111827", minHeight: "100vh", color: "#f3f4f6", boxSizing: "border-box", width: "100%" },
+    topBar: { display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "1.5rem", flexWrap: "wrap", gap: "0.5rem" },
     heading: { margin: 0, color: "#f9fafb" },
     userEmail: { marginRight: "1rem", fontSize: "0.9rem", color: "#9ca3af" },
     logoutBtn: { padding: "0.4rem 0.8rem", background: "#374151", color: "#f3f4f6", border: "none", borderRadius: "4px", cursor: "pointer" },
