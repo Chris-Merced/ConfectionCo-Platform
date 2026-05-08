@@ -10,6 +10,8 @@ import Header from "./components/header";
 import Main from "./Routes/main";
 import PaymentCancel from "./Routes/paymentCancel";
 import PaymentSuccess from "./Routes/paymentSuccess";
+import PrivacyPolicy from "./Routes/privacyPolicy";
+import TermsAndConditions from "./Routes/termsAndConditions";
 import "./styles.css";
 
 const AdminDashboard = lazy((): any => import("./Routes/adminDashboard"))
@@ -32,6 +34,8 @@ function App(): ReactElement {
                   <Route path="/admin" element={<AdminDashboard />} />
                   <Route path="/payment-success" element={<PaymentSuccess />} />
                   <Route path="/payment-cancel" element={<PaymentCancel />} />
+                  <Route path="/privacy-policy" element={<PrivacyPolicy />} />
+                  <Route path="/terms-and-conditions" element={<TermsAndConditions />} />
                   <Route path="*" element={<div>Page not found</div>} />
                 </Routes>
               </Suspense>
