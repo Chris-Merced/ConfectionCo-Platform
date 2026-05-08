@@ -1,4 +1,5 @@
 import { useState, type ReactElement } from "react";
+import { useMutation } from "@tanstack/react-query";
 
 export interface Order {
   id: number;
@@ -23,9 +24,9 @@ interface OrderCardProps {
 
 export default function OrderCard({ order, token, onUpdate }: OrderCardProps): ReactElement {
   const [amount, setAmount] = useState("");
+  const [editingComments, setEditingComments] = useState(false);
+  const [comments, setComments] = useState(order.comments ?? "");
   const [paymentUrl, setPaymentUrl] = useState<string | null>(null);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
 
   const headers = {
     "Content-Type": "application/json",
@@ -42,80 +43,91 @@ export default function OrderCard({ order, token, onUpdate }: OrderCardProps): R
     return res.json();
   };
 
-  const run = async (action: () => Promise<void>) => {
-    setLoading(true);
-    setError(null);
-    try {
-      await action();
-    } catch (e: any) {
-      setError(e.message);
-    } finally {
-      setLoading(false);
-    }
-  };
+  const rejectMutation = useMutation({
+    mutationFn: () => post(`/api/admin/orders/${order.id}/reject`),
+    onSuccess: onUpdate,
+  });
 
-  const handleDelete = () => {
-    if (!window.confirm(`Remove order #${order.id}? This cannot be undone.`)) return;
-    run(async () => {
+  const depositLinkMutation = useMutation({
+    mutationFn: () => post(`/api/admin/orders/${order.id}/deposit-link`, { totalAmount: parseFloat(amount) }),
+    onSuccess: (data) => { setPaymentUrl(data.url); setAmount(""); onUpdate(); },
+  });
+
+  const finalLinkMutation = useMutation({
+    mutationFn: () => post(`/api/admin/orders/${order.id}/final-link`, { amount: parseFloat(amount) }),
+    onSuccess: (data) => { setPaymentUrl(data.url); setAmount(""); onUpdate(); },
+  });
+
+  const completeMutation = useMutation({
+    mutationFn: () => post(`/api/admin/orders/${order.id}/complete`),
+    onSuccess: onUpdate,
+  });
+
+  const refundMutation = useMutation({
+    mutationFn: () => post(`/api/admin/orders/${order.id}/refund`, { amount: parseFloat(amount) }),
+    onSuccess: () => { setAmount(""); onUpdate(); },
+  });
+
+  const paymentUrlMutation = useMutation({
+    mutationFn: async () => {
+      const res = await fetch(`http://localhost:8080/api/admin/orders/${order.id}/payment-url`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      if (!res.ok) throw new Error(await res.text());
+      return res.json();
+    },
+    onSuccess: (data) => setPaymentUrl(data.url),
+  });
+
+  const commentsMutation = useMutation({
+    mutationFn: async () => {
+      const res = await fetch(`http://localhost:8080/api/admin/orders/${order.id}/comments`, {
+        method: "PATCH",
+        headers,
+        body: JSON.stringify({ comments }),
+      });
+      if (!res.ok) throw new Error(await res.text());
+      return res.json();
+    },
+    onSuccess: () => { setEditingComments(false); onUpdate(); },
+  });
+
+  const deleteMutation = useMutation({
+    mutationFn: async () => {
       const res = await fetch(`http://localhost:8080/api/admin/orders/${order.id}`, {
         method: "DELETE",
         headers: { Authorization: `Bearer ${token}` },
       });
       if (!res.ok) throw new Error(await res.text());
-      onUpdate();
-    });
+    },
+    onSuccess: onUpdate,
+  });
+
+  const handleDelete = () => {
+    if (!window.confirm(`Remove order #${order.id}? This cannot be undone.`)) return;
+    deleteMutation.mutate();
   };
 
-  const handleReject = () =>
-    run(async () => {
-      await post(`/api/admin/orders/${order.id}/reject`);
-      onUpdate();
-    });
+  const isAnyPending =
+    rejectMutation.isPending ||
+    depositLinkMutation.isPending ||
+    finalLinkMutation.isPending ||
+    completeMutation.isPending ||
+    refundMutation.isPending ||
+    paymentUrlMutation.isPending ||
+    commentsMutation.isPending ||
+    deleteMutation.isPending;
 
-  const handleDepositLink = () =>
-    run(async () => {
-      const data = await post(`/api/admin/orders/${order.id}/deposit-link`, {
-        totalAmount: parseFloat(amount),
-      });
-      setPaymentUrl(data.url);
-      setAmount("");
-      onUpdate();
-    });
-
-  const handleFinalLink = () =>
-    run(async () => {
-      const data = await post(`/api/admin/orders/${order.id}/final-link`, {
-        amount: parseFloat(amount),
-      });
-      setPaymentUrl(data.url);
-      setAmount("");
-      onUpdate();
-    });
-
-  const handleComplete = () =>
-    run(async () => {
-      await post(`/api/admin/orders/${order.id}/complete`);
-      onUpdate();
-    });
-
-  const handleGetPaymentUrl = () =>
-    run(async () => {
-      const res = await fetch(`http://localhost:8080/api/admin/orders/${order.id}/payment-url`, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
-      if (!res.ok) throw new Error(await res.text());
-      const data = await res.json();
-      setPaymentUrl(data.url);
-    });
-
-  const handleRefund = () =>
-    run(async () => {
-      await post(`/api/admin/orders/${order.id}/refund`, {
-        amount: parseFloat(amount),
-      });
-      setAmount("");
-      onUpdate();
-    });
+  const activeError = (
+    rejectMutation.error ||
+    depositLinkMutation.error ||
+    finalLinkMutation.error ||
+    completeMutation.error ||
+    refundMutation.error ||
+    paymentUrlMutation.error ||
+    commentsMutation.error ||
+    deleteMutation.error
+  ) as Error | null;
 
   return (
     <div style={styles.card}>
@@ -123,7 +135,7 @@ export default function OrderCard({ order, token, onUpdate }: OrderCardProps): R
         <strong>Order #{order.id}</strong>
         <div style={{ display: "flex", gap: "0.5rem", alignItems: "center" }}>
           <span style={styles.date}>{new Date(order.createdAt).toLocaleDateString()}</span>
-          <button style={styles.btnDelete} onClick={handleDelete} disabled={loading} title="Remove order">
+          <button style={styles.btnDelete} onClick={handleDelete} disabled={isAnyPending} title="Remove order">
             ✕
           </button>
         </div>
@@ -132,8 +144,30 @@ export default function OrderCard({ order, token, onUpdate }: OrderCardProps): R
       <p style={styles.field}>Email: {order.email}</p>
       <p style={styles.field}>Phone: {order.phoneNumber}</p>
       <p style={styles.field}>Servings: {order.servingCount}</p>
-      {order.comments && <p style={styles.field}>Comments: {order.comments}</p>}
       {order.totalAmount != null && <p style={styles.field}>Total: ${order.totalAmount.toFixed(2)}</p>}
+
+      <div style={{ margin: "0.2rem 0" }}>
+        {editingComments ? (
+          <div style={{ display: "flex", flexDirection: "column", gap: "0.4rem" }}>
+            <textarea
+              style={{ ...styles.input, width: "100%", resize: "vertical", minHeight: "60px" }}
+              value={comments}
+              onChange={(e) => setComments(e.target.value)}
+            />
+            <div style={{ display: "flex", gap: "0.4rem" }}>
+              <button style={styles.btnAccept} onClick={() => commentsMutation.mutate()} disabled={isAnyPending}>Save</button>
+              <button style={styles.btnReject} onClick={() => { setComments(order.comments ?? ""); setEditingComments(false); }} disabled={isAnyPending}>Cancel</button>
+            </div>
+          </div>
+        ) : (
+          <div style={{ display: "flex", alignItems: "flex-start", gap: "0.5rem" }}>
+            <p style={{ ...styles.field, margin: 0, flex: 1 }}>
+              Comments: {comments || <em style={{ color: "#6b7280" }}>none</em>}
+            </p>
+            <button style={styles.btnDelete} onClick={() => setEditingComments(true)}>Edit</button>
+          </div>
+        )}
+      </div>
 
       {order.photoUrls.length > 0 && (
         <div style={styles.photos}>
@@ -156,10 +190,10 @@ export default function OrderCard({ order, token, onUpdate }: OrderCardProps): R
             step="0.01"
             min="0"
           />
-          <button style={styles.btnAccept} onClick={handleDepositLink} disabled={loading || !amount}>
+          <button style={styles.btnAccept} onClick={() => depositLinkMutation.mutate()} disabled={isAnyPending || !amount}>
             Accept
           </button>
-          <button style={styles.btnReject} onClick={handleReject} disabled={loading}>
+          <button style={styles.btnReject} onClick={() => rejectMutation.mutate()} disabled={isAnyPending}>
             Reject
           </button>
         </div>
@@ -168,7 +202,7 @@ export default function OrderCard({ order, token, onUpdate }: OrderCardProps): R
       {order.status === "AWAITING_DEPOSIT" && (
         <div style={styles.actions}>
           <p style={{ ...styles.waiting, margin: 0 }}>Waiting for customer to pay deposit.</p>
-          <button style={styles.btnCopy} onClick={handleGetPaymentUrl} disabled={loading}>
+          <button style={styles.btnCopy} onClick={() => paymentUrlMutation.mutate()} disabled={isAnyPending}>
             Show Link
           </button>
         </div>
@@ -185,7 +219,7 @@ export default function OrderCard({ order, token, onUpdate }: OrderCardProps): R
             step="0.01"
             min="0"
           />
-          <button style={styles.btnAccept} onClick={handleFinalLink} disabled={loading || !amount}>
+          <button style={styles.btnAccept} onClick={() => finalLinkMutation.mutate()} disabled={isAnyPending || !amount}>
             Send Final Payment Link
           </button>
         </div>
@@ -194,14 +228,14 @@ export default function OrderCard({ order, token, onUpdate }: OrderCardProps): R
       {order.status === "AWAITING_FINAL_PAYMENT" && (
         <div style={styles.actions}>
           <p style={{ ...styles.waiting, margin: 0 }}>Waiting for customer to pay final balance.</p>
-          <button style={styles.btnCopy} onClick={handleGetPaymentUrl} disabled={loading}>
+          <button style={styles.btnCopy} onClick={() => paymentUrlMutation.mutate()} disabled={isAnyPending}>
             Show Link
           </button>
         </div>
       )}
 
       {order.status === "PAID_IN_FULL" && (
-        <button style={styles.btnAccept} onClick={handleComplete} disabled={loading}>
+        <button style={styles.btnAccept} onClick={() => completeMutation.mutate()} disabled={isAnyPending}>
           Mark as Complete
         </button>
       )}
@@ -222,7 +256,7 @@ export default function OrderCard({ order, token, onUpdate }: OrderCardProps): R
             step="0.01"
             min="0"
           />
-          <button style={styles.btnRefund} onClick={handleRefund} disabled={loading || !amount}>
+          <button style={styles.btnRefund} onClick={() => refundMutation.mutate()} disabled={isAnyPending || !amount}>
             Issue Refund
           </button>
         </div>
@@ -237,7 +271,7 @@ export default function OrderCard({ order, token, onUpdate }: OrderCardProps): R
         </div>
       )}
 
-      {error && <p style={styles.error}>{error}</p>}
+      {activeError && <p style={styles.error}>{activeError.message}</p>}
     </div>
   );
 }
