@@ -45,6 +45,7 @@ public class StripeService {
 
         SessionCreateParams params = SessionCreateParams.builder()
                 .setMode(SessionCreateParams.Mode.PAYMENT)
+                .setClientReferenceId(String.valueOf(orderId))
                 .putMetadata("orderId", String.valueOf(orderId))
                 .putMetadata("orderType", orderType)
                 .setSuccessUrl("http://localhost:5173/payment-success?orderId=" + orderId)
