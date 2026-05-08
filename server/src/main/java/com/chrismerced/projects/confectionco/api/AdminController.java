@@ -11,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -64,6 +65,23 @@ public class AdminController {
             return ResponseEntity.ok(orders);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to retrieve orders");
+        }
+    }
+
+    @PatchMapping("/orders/{id}/comments")
+    public ResponseEntity<?> updateComments(
+            @PathVariable Long id,
+            @RequestBody Map<String, String> body) {
+        try {
+            com.chrismerced.projects.confectionco.model.Order order = orderRepository.findById(id)
+                    .orElseThrow(() -> new ResourceNotFoundException("Order not found: " + id));
+            order.setComments(body.get("comments"));
+            orderRepository.save(order);
+            return ResponseEntity.ok(Map.of("comments", order.getComments() != null ? order.getComments() : ""));
+        } catch (ResourceNotFoundException e) {
+            return ResponseEntity.notFound().build();
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to update comments");
         }
     }
 
