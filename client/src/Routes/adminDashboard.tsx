@@ -90,16 +90,16 @@ export default function AdminDashboard(): ReactElement {
 }
 
 const styles: Record<string, React.CSSProperties> = {
-  page: { padding: "1.5rem", fontFamily: "sans-serif", background: "#f9f9f9", minHeight: "100vh" },
+  page: { padding: "1.5rem", fontFamily: "sans-serif", background: "#111827", minHeight: "100vh", color: "#f3f4f6" },
   topBar: { display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "1.5rem" },
-  heading: { margin: 0 },
-  userEmail: { marginRight: "1rem", fontSize: "0.9rem", color: "#555" },
-  logoutBtn: { padding: "0.4rem 0.8rem", background: "#555", color: "#fff", border: "none", borderRadius: "4px", cursor: "pointer" },
+  heading: { margin: 0, color: "#f9fafb" },
+  userEmail: { marginRight: "1rem", fontSize: "0.9rem", color: "#9ca3af" },
+  logoutBtn: { padding: "0.4rem 0.8rem", background: "#374151", color: "#f3f4f6", border: "none", borderRadius: "4px", cursor: "pointer" },
   board: { display: "flex", flexDirection: "column", gap: "2rem" },
-  column: { background: "#fff", borderRadius: "8px", padding: "1rem", boxShadow: "0 1px 3px rgba(0,0,0,0.08)" },
-  columnHeader: { margin: "0 0 1rem", fontSize: "1rem", fontWeight: 600, display: "flex", alignItems: "center", gap: "0.5rem" },
-  badge: { background: "#eee", borderRadius: "12px", padding: "0.1rem 0.5rem", fontSize: "0.8rem", fontWeight: 400 },
-  centered: { display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", height: "100vh" },
-  btn: { padding: "0.6rem 1.2rem", background: "#333", color: "#fff", border: "none", borderRadius: "4px", cursor: "pointer" },
-  error: { color: "#e53935" },
+  column: { background: "#1f2937", borderRadius: "8px", padding: "1rem", boxShadow: "0 1px 3px rgba(0,0,0,0.4)" },
+  columnHeader: { margin: "0 0 1rem", fontSize: "1rem", fontWeight: 600, display: "flex", alignItems: "center", gap: "0.5rem", color: "#e5e7eb" },
+  badge: { background: "#374151", color: "#9ca3af", borderRadius: "12px", padding: "0.1rem 0.5rem", fontSize: "0.8rem", fontWeight: 400 },
+  centered: { display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", height: "100vh", background: "#111827" },
+  btn: { padding: "0.6rem 1.2rem", background: "#374151", color: "#f3f4f6", border: "none", borderRadius: "4px", cursor: "pointer" },
+  error: { color: "#f87171" },
 };
