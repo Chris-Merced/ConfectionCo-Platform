@@ -15,9 +15,6 @@ import TermsAndConditions from "./Routes/termsAndConditions";
 import "./styles.css";
 
 const AdminDashboard = lazy((): any => import("./Routes/adminDashboard"))
-//TODO: Create Router and import to app function
-// Create EmailService
-// Utilize Resend as an email service
 function App(): ReactElement {
 
   const queryClient = new QueryClient();

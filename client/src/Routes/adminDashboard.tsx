@@ -17,6 +17,8 @@ const STATUS_SECTIONS: { key: string; label: string }[] = [
 
 //TODO:
 //  add region locking to orders
+// beige/brown base, pink accent, black lettering
+ 
 export default function AdminDashboard(): ReactElement {
     const { isLoading, isAuthenticated, error, loginWithRedirect: login, logout: auth0Logout, user, getAccessTokenSilently } = useAuth0();
 
