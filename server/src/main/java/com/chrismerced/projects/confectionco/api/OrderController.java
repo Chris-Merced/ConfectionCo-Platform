@@ -46,10 +46,19 @@ public class OrderController {
             @RequestParam(required = false) String comments,
             @RequestParam(required = false) List<MultipartFile> photos) throws IOException {
 
+        List<String> allowedTypes = List.of("image/jpeg", "image/png", "image/webp");
+        long maxBytes = 10 * 1024 * 1024; // 10MB
+
         List<String> photoKeys = new ArrayList<>();
         if (photos != null) {
             for (MultipartFile photo : photos) {
                 if (!photo.isEmpty()) {
+                    if (!allowedTypes.contains(photo.getContentType())) {
+                        throw new IllegalArgumentException("Only JPEG, PNG, and WebP images are allowed.");
+                    }
+                    if (photo.getSize() > maxBytes) {
+                        throw new IllegalArgumentException("Each photo must be under 10MB.");
+                    }
                     photoKeys.add(s3Service.uploadFile(photo, inspoBucket));
                 }
             }

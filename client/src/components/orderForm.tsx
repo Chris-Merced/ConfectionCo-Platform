@@ -10,9 +10,26 @@ export default function OrderForm(): ReactElement {
     const [error, setError] = useState("");
     const [loading, setLoading] = useState(false);
 
+    const ALLOWED_TYPES = ["image/jpeg", "image/png", "image/webp"];
+    const MAX_FILE_SIZE = 10 * 1024 * 1024;
+
     async function handleSubmit(e: FormEvent) {
         e.preventDefault();
         setError("");
+
+        if (photos) {
+            for (const photo of Array.from(photos)) {
+                if (!ALLOWED_TYPES.includes(photo.type)) {
+                    setError("Only JPEG, PNG, and WebP images are allowed. Please remove any GIFs or other file types.");
+                    return;
+                }
+                if (photo.size > MAX_FILE_SIZE) {
+                    setError(`"${photo.name}" exceeds the 10MB limit. Please use a smaller file.`);
+                    return;
+                }
+            }
+        }
+
         setLoading(true);
 
         const formData = new FormData();
@@ -81,7 +98,7 @@ export default function OrderForm(): ReactElement {
                 <input
                     id="photos"
                     type="file"
-                    accept="image/*"
+                    accept="image/jpeg,image/png,image/webp"
                     multiple
                     onChange={e => setPhotos(e.target.files)}
                 />
