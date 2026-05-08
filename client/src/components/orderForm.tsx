@@ -13,9 +13,19 @@ export default function OrderForm(): ReactElement {
     const ALLOWED_TYPES = ["image/jpeg", "image/png", "image/webp"];
     const MAX_FILE_SIZE = 10 * 1024 * 1024;
 
+    function validatePhone(raw: string): boolean {
+        const digits = raw.replace(/\D/g, "");
+        return digits.length === 10 || (digits.length === 11 && digits.startsWith("1"));
+    }
+
     async function handleSubmit(e: FormEvent) {
         e.preventDefault();
         setError("");
+
+        if (!validatePhone(phone)) {
+            setError("Please enter a valid 10-digit US phone number.");
+            return;
+        }
 
         if (photos) {
             for (const photo of Array.from(photos)) {

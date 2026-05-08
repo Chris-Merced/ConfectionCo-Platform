@@ -30,6 +30,10 @@ public class StripeService {
         return createCheckoutSession(orderId, amountInCents, "final", "Final Payment");
     }
 
+    public String getSessionUrl(String sessionId) throws Exception {
+        return Session.retrieve(sessionId).getUrl();
+    }
+
     public void createRefund(String sessionId, long amountInCents) throws Exception {
         Session session = Session.retrieve(sessionId);
         String paymentIntentId = session.getPaymentIntent();
