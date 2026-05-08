@@ -23,6 +23,7 @@ import com.chrismerced.projects.confectionco.model.OrderStatus;
 import com.chrismerced.projects.confectionco.repository.OrderRepository;
 import com.chrismerced.projects.confectionco.services.EmailService;
 import com.chrismerced.projects.confectionco.services.OrderService;
+import com.chrismerced.projects.confectionco.services.StripeService;
 import com.chrismerced.projects.confectionco.services.TextingService;
 
 @RestController
@@ -38,13 +39,15 @@ public class AdminController {
 
     private final OrderRepository orderRepository;
     private final OrderService orderService;
+    private final StripeService stripeService;
     private final EmailService emailService;
     private final TextingService textingService;
 
     AdminController(OrderRepository orderRepository, OrderService orderService,
-            EmailService emailService, TextingService textingService) {
+            StripeService stripeService, EmailService emailService, TextingService textingService) {
         this.orderRepository = orderRepository;
         this.orderService = orderService;
+        this.stripeService = stripeService;
         this.emailService = emailService;
         this.textingService = textingService;
     }
@@ -97,6 +100,23 @@ public class AdminController {
             return ResponseEntity.ok(Map.of("status", OrderStatus.COMPLETED.name()));
         } catch (ResourceNotFoundException e) {
             return ResponseEntity.notFound().build();
+        }
+    }
+
+    @GetMapping("/orders/{id}/payment-url")
+    public ResponseEntity<?> getPaymentUrl(@PathVariable Long id) {
+        try {
+            com.chrismerced.projects.confectionco.model.Order order = orderRepository.findById(id)
+                    .orElseThrow(() -> new ResourceNotFoundException("Order not found: " + id));
+            if (order.getStripeSessionId() == null) {
+                return ResponseEntity.badRequest().body("No payment session on file for this order.");
+            }
+            String url = stripeService.getSessionUrl(order.getStripeSessionId());
+            return ResponseEntity.ok(Map.of("url", url));
+        } catch (ResourceNotFoundException e) {
+            return ResponseEntity.notFound().build();
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to retrieve payment URL");
         }
     }
 

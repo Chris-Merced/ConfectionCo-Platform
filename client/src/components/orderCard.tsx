@@ -85,6 +85,16 @@ export default function OrderCard({ order, token, onUpdate }: OrderCardProps): R
       onUpdate();
     });
 
+  const handleGetPaymentUrl = () =>
+    run(async () => {
+      const res = await fetch(`http://localhost:8080/api/admin/orders/${order.id}/payment-url`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      if (!res.ok) throw new Error(await res.text());
+      const data = await res.json();
+      setPaymentUrl(data.url);
+    });
+
   const handleRefund = () =>
     run(async () => {
       await post(`/api/admin/orders/${order.id}/refund`, {
@@ -138,7 +148,12 @@ export default function OrderCard({ order, token, onUpdate }: OrderCardProps): R
       )}
 
       {order.status === "AWAITING_DEPOSIT" && (
-        <p style={styles.waiting}>Waiting for customer to pay deposit.</p>
+        <div style={styles.actions}>
+          <p style={{ ...styles.waiting, margin: 0 }}>Waiting for customer to pay deposit.</p>
+          <button style={styles.btnCopy} onClick={handleGetPaymentUrl} disabled={loading}>
+            Show Link
+          </button>
+        </div>
       )}
 
       {order.status === "IN_PROGRESS" && (
@@ -168,8 +183,13 @@ export default function OrderCard({ order, token, onUpdate }: OrderCardProps): R
         </button>
       )}
 
-      {["IN_PROGRESS", "AWAITING_FINAL_PAYMENT", "PAID_IN_FULL"].includes(order.status) && (
+      {order.status === "PAID_IN_FULL" && (
         <div style={{ ...styles.actions, marginTop: "1rem", borderTop: "1px solid #374151", paddingTop: "0.75rem" }}>
+          {order.totalAmount != null && (
+            <span style={{ fontSize: "0.85rem", color: "#9ca3af" }}>
+              Order total: ${order.totalAmount.toFixed(2)}
+            </span>
+          )}
           <input
             style={styles.input}
             type="number"
