@@ -8,6 +8,7 @@ import com.chrismerced.projects.confectionco.exceptions.ResourceNotFoundExceptio
 import com.chrismerced.projects.confectionco.model.Order;
 import com.chrismerced.projects.confectionco.model.OrderStatus;
 import com.chrismerced.projects.confectionco.repository.OrderRepository;
+import com.google.gson.JsonParser;
 import com.stripe.model.Event;
 import com.stripe.model.checkout.Session;
 
@@ -60,14 +61,20 @@ public class OrderService {
         return session.getUrl();
     }
 
-    public void handleStripeEvent(Event event) {
+    public void handleStripeEvent(Event event, String rawPayload) {
         switch (event.getType()) {
             case "checkout.session.completed" -> {
                 try {
-                    Session session = (Session) event.getDataObjectDeserializer().deserializeUnsafe();
+                    String sessionId = JsonParser.parseString(rawPayload)
+                            .getAsJsonObject()
+                            .getAsJsonObject("data")
+                            .getAsJsonObject("object")
+                            .get("id")
+                            .getAsString();
+                    Session session = Session.retrieve(sessionId);
                     handleStripeCheckoutCompleted(session);
                 } catch (Exception e) {
-                    System.out.println("Failed to deserialize event " + event.getId() + ": " + e.getMessage());
+                    System.out.println("Failed to process checkout.session.completed " + event.getId() + ": " + e.getMessage());
                 }
             }
 
