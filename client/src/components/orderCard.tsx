@@ -175,7 +175,12 @@ export default function OrderCard({ order, token, onUpdate }: OrderCardProps): R
       )}
 
       {order.status === "AWAITING_FINAL_PAYMENT" && (
-        <p style={styles.waiting}>Waiting for customer to pay final balance.</p>
+        <div style={styles.actions}>
+          <p style={{ ...styles.waiting, margin: 0 }}>Waiting for customer to pay final balance.</p>
+          <button style={styles.btnCopy} onClick={handleGetPaymentUrl} disabled={loading}>
+            Show Link
+          </button>
+        </div>
       )}
 
       {order.status === "PAID_IN_FULL" && (
