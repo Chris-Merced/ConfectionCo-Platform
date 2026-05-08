@@ -27,7 +27,7 @@ public class OrderDTO {
         this.id = order.getId();
         this.email = order.getEmail();
         this.phoneNumber = order.getPhoneNumber();
-        this.status = order.getStatus();
+        this.status = order.getStatus().name();
         this.totalAmount = order.getTotalAmount();
         this.depositPaid = order.isDepositPaid();
         this.fullPaymentPaid = order.isFullPaymentPaid();
