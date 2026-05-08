@@ -67,15 +67,15 @@ public class OrderService {
         switch (event.getType()) {
             case "checkout.session.completed" -> {
                 try {
-                    String sessionId = objectMapper.readTree(rawPayload)
-                            .path("data").path("object").path("id")
-                            .asText(null);
-                    if (sessionId == null) {
-                        System.out.println("No session ID in event: " + event.getId());
+                    com.fasterxml.jackson.databind.JsonNode dataObject = objectMapper.readTree(rawPayload)
+                            .path("data").path("object");
+                    String orderId = dataObject.path("metadata").path("orderId").asText(null);
+                    String orderType = dataObject.path("metadata").path("orderType").asText(null);
+                    if (orderId == null || orderType == null) {
+                        System.out.println("Missing metadata in event: " + event.getId());
                         return;
                     }
-                    Session session = Session.retrieve(sessionId);
-                    handleStripeCheckoutCompleted(session);
+                    handleStripeCheckoutCompleted(Long.valueOf(orderId), orderType);
                 } catch (Exception e) {
                     System.out.println("Failed to process checkout.session.completed " + event.getId() + ": " + e.getMessage());
                 }
@@ -85,10 +85,7 @@ public class OrderService {
         }
     }
 
-    private void handleStripeCheckoutCompleted(Session session) {
-        Long orderId = Long.valueOf(session.getMetadata().get("orderId"));
-        String orderType = session.getMetadata().get("orderType");
-
+    private void handleStripeCheckoutCompleted(Long orderId, String orderType) {
         Order order = orderRepository.findById(orderId)
                 .orElseThrow(() -> new RuntimeException("Order not found: " + orderId));
 
