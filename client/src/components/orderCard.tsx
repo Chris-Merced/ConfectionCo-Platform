@@ -54,6 +54,18 @@ export default function OrderCard({ order, token, onUpdate }: OrderCardProps): R
     }
   };
 
+  const handleDelete = () => {
+    if (!window.confirm(`Remove order #${order.id}? This cannot be undone.`)) return;
+    run(async () => {
+      const res = await fetch(`http://localhost:8080/api/admin/orders/${order.id}`, {
+        method: "DELETE",
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      if (!res.ok) throw new Error(await res.text());
+      onUpdate();
+    });
+  };
+
   const handleReject = () =>
     run(async () => {
       await post(`/api/admin/orders/${order.id}/reject`);
@@ -109,7 +121,12 @@ export default function OrderCard({ order, token, onUpdate }: OrderCardProps): R
     <div style={styles.card}>
       <div style={styles.row}>
         <strong>Order #{order.id}</strong>
-        <span style={styles.date}>{new Date(order.createdAt).toLocaleDateString()}</span>
+        <div style={{ display: "flex", gap: "0.5rem", alignItems: "center" }}>
+          <span style={styles.date}>{new Date(order.createdAt).toLocaleDateString()}</span>
+          <button style={styles.btnDelete} onClick={handleDelete} disabled={loading} title="Remove order">
+            ✕
+          </button>
+        </div>
       </div>
 
       <p style={styles.field}>Email: {order.email}</p>
@@ -247,6 +264,7 @@ const styles: Record<string, React.CSSProperties> = {
   btnReject: { padding: "0.4rem 0.9rem", background: "#dc2626", color: "#fff", border: "none", borderRadius: "4px", cursor: "pointer" },
   btnCopy: { padding: "0.3rem 0.7rem", background: "#1d4ed8", color: "#fff", border: "none", borderRadius: "4px", cursor: "pointer", flexShrink: 0 },
   btnRefund: { padding: "0.4rem 0.9rem", background: "#b45309", color: "#fff", border: "none", borderRadius: "4px", cursor: "pointer" },
+  btnDelete: { padding: "0.2rem 0.5rem", background: "transparent", color: "#6b7280", border: "1px solid #374151", borderRadius: "4px", cursor: "pointer", fontSize: "0.75rem", lineHeight: 1 },
   waiting: { color: "#6b7280", fontStyle: "italic", marginTop: "0.5rem" },
   photos: { display: "flex", gap: "0.5rem", flexWrap: "wrap" as const, marginTop: "0.75rem" },
   thumbnail: { width: "80px", height: "80px", objectFit: "cover" as const, borderRadius: "4px", display: "block" },
