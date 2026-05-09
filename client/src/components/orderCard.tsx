@@ -150,7 +150,17 @@ export default function OrderCard({ order, token, onUpdate }: OrderCardProps): R
         Fulfillment: {order.fulfillmentType === "DROPOFF" ? "Delivery" : "Pickup"}
       </p>
       {order.deliveryAddress && (
-        <p style={styles.field}>Delivery Address: {order.deliveryAddress}</p>
+        <p style={styles.field}>
+          Delivery Address:{" "}
+          <a
+            href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(order.deliveryAddress)}`}
+            target="_blank"
+            rel="noreferrer"
+            style={{ color: "#93c5fd" }}
+          >
+            {order.deliveryAddress}
+          </a>
+        </p>
       )}
       {order.totalAmount != null && <p style={styles.field}>Total: ${order.totalAmount.toFixed(2)}</p>}
 
