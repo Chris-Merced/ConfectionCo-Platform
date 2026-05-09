@@ -1,6 +1,7 @@
 package com.chrismerced.projects.confectionco.api;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -36,10 +37,32 @@ public class OrderController {
     private final S3Service s3Service;
     private final EmailService emailService;
 
+    // JPEG, PNG, WebP magic bytes
+    private static final byte[] MAGIC_JPEG = {(byte) 0xFF, (byte) 0xD8, (byte) 0xFF};
+    private static final byte[] MAGIC_PNG  = {(byte) 0x89, 0x50, 0x4E, 0x47};
+    private static final byte[] MAGIC_WEBP = {0x52, 0x49, 0x46, 0x46};
+
     OrderController(OrderRepository orderRepository, S3Service s3Service, EmailService emailService) {
         this.orderRepository = orderRepository;
         this.s3Service = s3Service;
         this.emailService = emailService;
+    }
+
+    private boolean hasValidImageMagic(MultipartFile file) throws IOException {
+        byte[] header = new byte[4];
+        try (InputStream is = file.getInputStream()) {
+            if (is.read(header) < 3) return false;
+        }
+        return startsWith(header, MAGIC_JPEG)
+            || startsWith(header, MAGIC_PNG)
+            || startsWith(header, MAGIC_WEBP);
+    }
+
+    private boolean startsWith(byte[] data, byte[] prefix) {
+        for (int i = 0; i < prefix.length; i++) {
+            if (data[i] != prefix[i]) return false;
+        }
+        return true;
     }
 
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
@@ -53,18 +76,17 @@ public class OrderController {
             @RequestParam LocalDate fulfillmentDate,
             @RequestParam(required = false) List<MultipartFile> photos) throws IOException {
 
-        List<String> allowedTypes = List.of("image/jpeg", "image/png", "image/webp");
-        long maxBytes = 10 * 1024 * 1024; // 10MB
+        long maxBytes = 10 * 1024 * 1024;
 
         List<String> photoKeys = new ArrayList<>();
         if (photos != null) {
             for (MultipartFile photo : photos) {
                 if (!photo.isEmpty()) {
-                    if (!allowedTypes.contains(photo.getContentType())) {
-                        throw new IllegalArgumentException("Only JPEG, PNG, and WebP images are allowed.");
-                    }
                     if (photo.getSize() > maxBytes) {
                         throw new IllegalArgumentException("Each photo must be under 10MB.");
+                    }
+                    if (!hasValidImageMagic(photo)) {
+                        throw new IllegalArgumentException("Only JPEG, PNG, and WebP images are allowed.");
                     }
                     photoKeys.add(s3Service.uploadFile(photo, inspoBucket));
                 }
@@ -85,7 +107,7 @@ public class OrderController {
         try {
             emailService.sendOrderConfirmation(email);
         } catch (Exception e) {
-            System.err.println("Order confirmation email failed for " + email + ": " + e.getMessage());
+            // Non-fatal — order is saved, email failure is logged by EmailService
         }
         return ResponseEntity.ok(Map.of("orderId", saved.getId()));
     }

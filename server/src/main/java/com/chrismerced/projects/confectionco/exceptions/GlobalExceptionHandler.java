@@ -1,5 +1,7 @@
 package com.chrismerced.projects.confectionco.exceptions;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -7,24 +9,28 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 
 @ControllerAdvice
 public class GlobalExceptionHandler {
-    
+
+    private static final Logger log = LoggerFactory.getLogger(GlobalExceptionHandler.class);
+
     @ExceptionHandler(ResourceNotFoundException.class)
-    public ResponseEntity<String> handleNotFound(ResourceNotFoundException ex){
+    public ResponseEntity<String> handleNotFound(ResourceNotFoundException ex) {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
     }
 
     @ExceptionHandler(IllegalArgumentException.class)
-    public ResponseEntity<String> handleBadRequest(IllegalArgumentException ex){
+    public ResponseEntity<String> handleBadRequest(IllegalArgumentException ex) {
         return ResponseEntity.badRequest().body(ex.getMessage());
     }
 
     @ExceptionHandler(EmailServiceException.class)
-    public ResponseEntity<String> handleEmailError(EmailServiceException ex){
-        return ResponseEntity.internalServerError().body(ex.getMessage());
-    }
-    @ExceptionHandler(Exception.class)
-    public ResponseEntity<String> handleGeneral(Exception ex){
-        return ResponseEntity.internalServerError().body(ex.getMessage());
+    public ResponseEntity<String> handleEmailError(EmailServiceException ex) {
+        log.error("Email service error", ex);
+        return ResponseEntity.internalServerError().body("A messaging error occurred. Please try again.");
     }
 
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<String> handleGeneral(Exception ex) {
+        log.error("Unhandled exception", ex);
+        return ResponseEntity.internalServerError().body("An unexpected error occurred. Please try again.");
+    }
 }
