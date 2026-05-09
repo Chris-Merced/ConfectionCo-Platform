@@ -7,6 +7,7 @@ export default function OrderForm(): ReactElement {
     const [comments, setComments] = useState("");
     const [fulfillmentType, setFulfillmentType] = useState<"PICKUP" | "DROPOFF">("PICKUP");
     const [deliveryAddress, setDeliveryAddress] = useState("");
+    const [fulfillmentDate, setFulfillmentDate] = useState("");
     const [photos, setPhotos] = useState<FileList | null>(null);
     const [submitted, setSubmitted] = useState(false);
     const [error, setError] = useState("");
@@ -34,6 +35,11 @@ export default function OrderForm(): ReactElement {
             return;
         }
 
+        if (!fulfillmentDate) {
+            setError("Please select a date.");
+            return;
+        }
+
         if (photos) {
             for (const photo of Array.from(photos)) {
                 if (!ALLOWED_TYPES.includes(photo.type)) {
@@ -54,6 +60,7 @@ export default function OrderForm(): ReactElement {
         formData.append("phoneNumber", phone);
         formData.append("servingCount", servingCount);
         formData.append("fulfillmentType", fulfillmentType);
+        formData.append("fulfillmentDate", fulfillmentDate);
         if (fulfillmentType === "DROPOFF") formData.append("deliveryAddress", deliveryAddress);
         if (comments) formData.append("comments", comments);
         if (photos) {
@@ -66,10 +73,14 @@ export default function OrderForm(): ReactElement {
                 body: formData,
             });
 
-            if (!res.ok) throw new Error("Submission failed");
+            if (!res.ok) {
+                const message = await res.text();
+                setError(message || "Something went wrong. Please try again.");
+                return;
+            }
             setSubmitted(true);
         } catch {
-            setError("Something went wrong. Please try again.");
+            setError("Could not reach the server. Please check your connection and try again.");
         } finally {
             setLoading(false);
         }
@@ -150,6 +161,19 @@ export default function OrderForm(): ReactElement {
                     />
                 </div>
             )}
+            <div>
+                <label htmlFor="fulfillmentDate">
+                    {fulfillmentType === "DROPOFF" ? "Delivery Date" : "Pickup Date"}
+                </label>
+                <input
+                    id="fulfillmentDate"
+                    type="date"
+                    value={fulfillmentDate}
+                    onChange={e => setFulfillmentDate(e.target.value)}
+                    min={new Date().toISOString().split("T")[0]}
+                    required
+                />
+            </div>
             <div>
                 <label htmlFor="photos">Inspiration Photos</label>
                 <input
