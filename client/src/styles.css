@@ -30,6 +30,14 @@
     padding: 0;
 }
 
+html,
+body,
+#root {
+    width: 100%;
+    max-width: 100%;
+    overflow-x: hidden;
+}
+
 body {
     font-family: var(--font-sans);
     background-color: var(--bg);
@@ -37,6 +45,10 @@ body {
     line-height: 1.6;
     font-size: 16px;
     -webkit-font-smoothing: antialiased;
+}
+
+img, iframe, input, textarea, select, button {
+    max-width: 100%;
 }
 
 /* ── Header ──────────────────────────────────────────────────── */
@@ -75,7 +87,7 @@ body {
 
 .hero-title {
     font-family: var(--font-serif);
-    font-size: clamp(2rem, 5vw, 3.2rem);
+    font-size: clamp(1.4rem, 5vw, 3.2rem);
     font-weight: 600;
     color: var(--brown-dark);
     margin-bottom: 0.75rem;
@@ -215,6 +227,13 @@ body {
 }
 
 /* ── File Input ──────────────────────────────────────────────── */
+input[type="file"].form-input {
+    padding: 0.45rem 0.6rem;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
 .form-file-hint {
     font-size: 0.78rem;
     color: var(--text-muted);
@@ -319,17 +338,55 @@ body {
 
     .order-section-map {
         position: static;
+        width: 100%;
     }
 
     .hero {
-        padding: 2.5rem 1.25rem 2rem;
+        padding: 1.5rem 1rem;
+    }
+
+    .hero-subtitle {
+        font-size: 0.9rem;
     }
 
     .page-content {
-        padding: 2rem 1.25rem 3rem;
+        padding: 1.25rem 0.75rem 2rem;
     }
 
     .form-card {
-        padding: 1.5rem;
+        padding: 1rem 0.875rem;
+        border-radius: var(--radius-sm);
+        box-shadow: var(--shadow-sm);
+    }
+
+    .form-field {
+        margin-bottom: 1rem;
+    }
+
+    .header {
+        height: 52px;
+        padding: 0 1rem;
+    }
+
+    .header-brand {
+        font-size: 1.35rem;
+    }
+
+    .section-heading {
+        font-size: 1.2rem;
+        margin-bottom: 1rem;
+    }
+
+    .order-section-map-label {
+        font-size: 0.95rem;
+    }
+
+    .form-radio-group {
+        flex-wrap: wrap;
+    }
+
+    .form-submit {
+        font-size: 0.85rem;
+        padding: 0.7rem 1rem;
     }
 }
