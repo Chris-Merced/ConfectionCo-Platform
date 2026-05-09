@@ -14,6 +14,7 @@ export interface Order {
   comments: string | null;
   fulfillmentType: string;
   deliveryAddress: string | null;
+  fulfillmentDate: string | null;
   createdAt: string;
   photoUrls: string[];
 }
@@ -160,6 +161,12 @@ export default function OrderCard({ order, token, onUpdate }: OrderCardProps): R
           >
             {order.deliveryAddress}
           </a>
+        </p>
+      )}
+      {order.fulfillmentDate && (
+        <p style={styles.field}>
+          {order.fulfillmentType === "DROPOFF" ? "Delivery Date" : "Pickup Date"}:{" "}
+          {new Date(order.fulfillmentDate + "T00:00:00").toLocaleDateString()}
         </p>
       )}
       {order.totalAmount != null && <p style={styles.field}>Total: ${order.totalAmount.toFixed(2)}</p>}

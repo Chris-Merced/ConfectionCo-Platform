@@ -16,9 +16,6 @@ const STATUS_SECTIONS: { key: string; label: string }[] = [
 
 
 //TODO:
-// add region locking to orders
-// add date to order
-// hodges bayou plantation
 // beige/brown base, pink accent, black lettering
 // make sure failure events are communicated to the front end like order not going through etc 
 // see if we can set up an inbox for emails to come in for support in case wrong phone number
