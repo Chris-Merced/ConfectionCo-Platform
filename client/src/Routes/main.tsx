@@ -5,23 +5,34 @@ import LocationMap from "../components/LocationMap";
 import "../styles.css";
 
 export default function Main(): ReactElement {
-
     return (
         <>
-            <div className="main">We have made it to main display</div>
-            <div style={{ display: "flex", gap: "2rem", alignItems: "flex-start" }}>
-                <div style={{ flex: 1 }}>
-                    <OrderForm />
-                </div>
-                <div style={{ flex: 1 }}>
-                    <LocationMap />
+            <section className="hero">
+                <h1 className="hero-title">Custom Cakes &amp; Confections</h1>
+                <p className="hero-subtitle">
+                    Handcrafted with love for every occasion. Place your order below and we'll be in touch to bring your vision to life.
+                </p>
+            </section>
+
+            <div className="page-content">
+                <div className="order-section">
+                    <div className="order-section-form">
+                        <h2 className="section-heading">Place an Order</h2>
+                        <OrderForm />
+                    </div>
+                    <div className="order-section-map">
+                        <p className="order-section-map-label">Hodges Bayou Plantation — Panama City, FL</p>
+                        <LocationMap />
+                    </div>
                 </div>
             </div>
-            <div>
-                <Link to="/privacy-policy">Privacy Policy</Link>
-                {" · "}
-                <Link to="/terms-and-conditions">Terms &amp; Conditions</Link>
-            </div>
+
+            <footer className="footer">
+                <nav className="footer-links">
+                    <Link to="/privacy-policy">Privacy Policy</Link>
+                    <Link to="/terms-and-conditions">Terms &amp; Conditions</Link>
+                </nav>
+            </footer>
         </>
-    )
+    );
 }

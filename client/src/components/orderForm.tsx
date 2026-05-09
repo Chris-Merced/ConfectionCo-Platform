@@ -87,14 +87,20 @@ export default function OrderForm(): ReactElement {
     }
 
     if (submitted) {
-        return <p>Your order has been submitted! We'll be in touch soon.</p>;
+        return (
+            <div className="form-card form-success">
+                <p className="form-success-title">Order Received!</p>
+                <p className="form-success-text">Thank you — we'll be in touch soon to confirm the details.</p>
+            </div>
+        );
     }
 
     return (
-        <form onSubmit={handleSubmit}>
-            <div>
-                <label htmlFor="email">Email</label>
+        <form className="form-card" onSubmit={handleSubmit}>
+            <div className="form-field">
+                <label className="form-label" htmlFor="email">Email</label>
                 <input
+                    className="form-input"
                     id="email"
                     type="email"
                     value={email}
@@ -102,19 +108,24 @@ export default function OrderForm(): ReactElement {
                     required
                 />
             </div>
-            <div>
-                <label htmlFor="phone">Phone Number</label>
+
+            <div className="form-field">
+                <label className="form-label" htmlFor="phone">Phone Number</label>
                 <input
+                    className="form-input"
                     id="phone"
                     type="tel"
                     value={phone}
                     onChange={e => setPhone(e.target.value)}
+                    placeholder="(555) 555-5555"
                     required
                 />
             </div>
-            <div>
-                <label htmlFor="servingCount">Number of People Serving</label>
+
+            <div className="form-field">
+                <label className="form-label" htmlFor="servingCount">Number of Guests</label>
                 <input
+                    className="form-input"
                     id="servingCount"
                     type="number"
                     min="1"
@@ -123,10 +134,11 @@ export default function OrderForm(): ReactElement {
                     required
                 />
             </div>
-            <div>
-                <label>Fulfillment</label>
-                <div>
-                    <label>
+
+            <div className="form-field">
+                <label className="form-label">Fulfillment</label>
+                <div className="form-radio-group">
+                    <label className={`form-radio-option${fulfillmentType === "PICKUP" ? " selected" : ""}`}>
                         <input
                             type="radio"
                             name="fulfillmentType"
@@ -134,9 +146,9 @@ export default function OrderForm(): ReactElement {
                             checked={fulfillmentType === "PICKUP"}
                             onChange={() => setFulfillmentType("PICKUP")}
                         />
-                        {" "}Pickup
+                        Pickup
                     </label>
-                    <label style={{ marginLeft: "1rem" }}>
+                    <label className={`form-radio-option${fulfillmentType === "DROPOFF" ? " selected" : ""}`}>
                         <input
                             type="radio"
                             name="fulfillmentType"
@@ -144,14 +156,16 @@ export default function OrderForm(): ReactElement {
                             checked={fulfillmentType === "DROPOFF"}
                             onChange={() => setFulfillmentType("DROPOFF")}
                         />
-                        {" "}Delivery
+                        Delivery
                     </label>
                 </div>
             </div>
+
             {fulfillmentType === "DROPOFF" && (
-                <div>
-                    <label htmlFor="deliveryAddress">Delivery Address</label>
+                <div className="form-field">
+                    <label className="form-label" htmlFor="deliveryAddress">Delivery Address</label>
                     <input
+                        className="form-input"
                         id="deliveryAddress"
                         type="text"
                         value={deliveryAddress}
@@ -161,11 +175,13 @@ export default function OrderForm(): ReactElement {
                     />
                 </div>
             )}
-            <div>
-                <label htmlFor="fulfillmentDate">
+
+            <div className="form-field">
+                <label className="form-label" htmlFor="fulfillmentDate">
                     {fulfillmentType === "DROPOFF" ? "Delivery Date" : "Pickup Date"}
                 </label>
                 <input
+                    className="form-input"
                     id="fulfillmentDate"
                     type="date"
                     value={fulfillmentDate}
@@ -174,27 +190,34 @@ export default function OrderForm(): ReactElement {
                     required
                 />
             </div>
-            <div>
-                <label htmlFor="photos">Inspiration Photos</label>
+
+            <div className="form-field">
+                <label className="form-label" htmlFor="photos">Inspiration Photos</label>
                 <input
+                    className="form-input"
                     id="photos"
                     type="file"
                     accept="image/jpeg,image/png,image/webp"
                     multiple
                     onChange={e => setPhotos(e.target.files)}
                 />
+                <span className="form-file-hint">JPEG, PNG, or WebP · max 10MB each</span>
             </div>
-            <div>
-                <label htmlFor="comments">Order Details</label>
+
+            <div className="form-field">
+                <label className="form-label" htmlFor="comments">Order Details</label>
                 <textarea
+                    className="form-textarea"
                     id="comments"
                     value={comments}
                     onChange={e => setComments(e.target.value)}
-                    rows={5}
+                    placeholder="Tell us about your vision — flavors, theme, any special requests..."
                 />
             </div>
-            {error && <p>{error}</p>}
-            <button type="submit" disabled={loading}>
+
+            {error && <p className="form-error">{error}</p>}
+
+            <button className="form-submit" type="submit" disabled={loading}>
                 {loading ? "Submitting..." : "Submit Order"}
             </button>
         </form>

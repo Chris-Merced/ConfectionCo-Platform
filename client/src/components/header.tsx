@@ -3,8 +3,10 @@ import "../styles.css";
 
 export default function Header(): ReactElement {
     return (
-        <>
-            <div className="header">Confection Co</div>
-        </>
-    )
+        <header className="header">
+            <span className="header-brand">
+                Confection <span>Co</span>
+            </span>
+        </header>
+    );
 }

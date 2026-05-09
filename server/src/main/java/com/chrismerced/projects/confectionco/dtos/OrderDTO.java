@@ -1,6 +1,7 @@
 package com.chrismerced.projects.confectionco.dtos;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.time.OffsetDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -23,6 +24,7 @@ public class OrderDTO {
     private String comments;
     private String fulfillmentType;
     private String deliveryAddress;
+    private LocalDate fulfillmentDate;
     private OffsetDateTime createdAt;
     private List<String> photoUrls;
 
@@ -39,6 +41,7 @@ public class OrderDTO {
         this.comments = order.getComments();
         this.fulfillmentType = order.getFulfillmentType();
         this.deliveryAddress = order.getDeliveryAddress();
+        this.fulfillmentDate = order.getFulfillmentDate();
         this.createdAt = order.getCreatedAt();
         this.photoUrls = order.getPhotoUrls()
                 .stream()
@@ -58,6 +61,7 @@ public class OrderDTO {
     public String getComments() { return comments; }
     public String getFulfillmentType() { return fulfillmentType; }
     public String getDeliveryAddress() { return deliveryAddress; }
+    public LocalDate getFulfillmentDate() { return fulfillmentDate; }
     public OffsetDateTime getCreatedAt() { return createdAt; }
     public List<String> getPhotoUrls() { return photoUrls; }
 }

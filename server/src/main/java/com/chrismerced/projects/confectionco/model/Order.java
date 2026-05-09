@@ -1,6 +1,7 @@
 package com.chrismerced.projects.confectionco.model;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -60,6 +61,9 @@ public class Order {
     @Column(name = "delivery_address")
     private String deliveryAddress;
 
+    @Column(name = "fulfillment_date")
+    private LocalDate fulfillmentDate;
+
     @Column(name = "created_at", insertable = false, updatable = false)
     private OffsetDateTime createdAt;
 
@@ -96,6 +100,8 @@ public class Order {
     public void setFulfillmentType(String fulfillmentType) { this.fulfillmentType = fulfillmentType; }
     public String getDeliveryAddress() { return deliveryAddress; }
     public void setDeliveryAddress(String deliveryAddress) { this.deliveryAddress = deliveryAddress; }
+    public LocalDate getFulfillmentDate() { return fulfillmentDate; }
+    public void setFulfillmentDate(LocalDate fulfillmentDate) { this.fulfillmentDate = fulfillmentDate; }
     public OffsetDateTime getCreatedAt() { return createdAt; }
     public OffsetDateTime getUpdatedAt() { return updatedAt; }
     public List<String> getPhotoUrls() { return photoUrls; }

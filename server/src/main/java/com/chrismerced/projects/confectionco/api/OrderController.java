@@ -1,6 +1,7 @@
 package com.chrismerced.projects.confectionco.api;
 
 import java.io.IOException;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -49,6 +50,7 @@ public class OrderController {
             @RequestParam(required = false) String comments,
             @RequestParam(defaultValue = "PICKUP") String fulfillmentType,
             @RequestParam(required = false) String deliveryAddress,
+            @RequestParam LocalDate fulfillmentDate,
             @RequestParam(required = false) List<MultipartFile> photos) throws IOException {
 
         List<String> allowedTypes = List.of("image/jpeg", "image/png", "image/webp");
@@ -76,6 +78,7 @@ public class OrderController {
         order.setComments(comments);
         order.setFulfillmentType(fulfillmentType.toUpperCase());
         order.setDeliveryAddress("DROPOFF".equalsIgnoreCase(fulfillmentType) ? deliveryAddress : null);
+        order.setFulfillmentDate(fulfillmentDate);
         order.setPhotoUrls(photoKeys);
 
         Order saved = orderRepository.save(order);
