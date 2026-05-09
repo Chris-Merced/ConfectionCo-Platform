@@ -47,6 +47,8 @@ public class OrderController {
             @RequestParam String phoneNumber,
             @RequestParam int servingCount,
             @RequestParam(required = false) String comments,
+            @RequestParam(defaultValue = "PICKUP") String fulfillmentType,
+            @RequestParam(required = false) String deliveryAddress,
             @RequestParam(required = false) List<MultipartFile> photos) throws IOException {
 
         List<String> allowedTypes = List.of("image/jpeg", "image/png", "image/webp");
@@ -72,6 +74,8 @@ public class OrderController {
         order.setPhoneNumber(phoneNumber);
         order.setServingCount(servingCount);
         order.setComments(comments);
+        order.setFulfillmentType(fulfillmentType.toUpperCase());
+        order.setDeliveryAddress("DROPOFF".equalsIgnoreCase(fulfillmentType) ? deliveryAddress : null);
         order.setPhotoUrls(photoKeys);
 
         Order saved = orderRepository.save(order);
