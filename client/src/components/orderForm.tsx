@@ -5,6 +5,8 @@ export default function OrderForm(): ReactElement {
     const [phone, setPhone] = useState("");
     const [servingCount, setServingCount] = useState("");
     const [comments, setComments] = useState("");
+    const [fulfillmentType, setFulfillmentType] = useState<"PICKUP" | "DROPOFF">("PICKUP");
+    const [deliveryAddress, setDeliveryAddress] = useState("");
     const [photos, setPhotos] = useState<FileList | null>(null);
     const [submitted, setSubmitted] = useState(false);
     const [error, setError] = useState("");
@@ -27,6 +29,11 @@ export default function OrderForm(): ReactElement {
             return;
         }
 
+        if (fulfillmentType === "DROPOFF" && !deliveryAddress.trim()) {
+            setError("Please enter a delivery address.");
+            return;
+        }
+
         if (photos) {
             for (const photo of Array.from(photos)) {
                 if (!ALLOWED_TYPES.includes(photo.type)) {
@@ -46,6 +53,8 @@ export default function OrderForm(): ReactElement {
         formData.append("email", email);
         formData.append("phoneNumber", phone);
         formData.append("servingCount", servingCount);
+        formData.append("fulfillmentType", fulfillmentType);
+        if (fulfillmentType === "DROPOFF") formData.append("deliveryAddress", deliveryAddress);
         if (comments) formData.append("comments", comments);
         if (photos) {
             Array.from(photos).forEach(photo => formData.append("photos", photo));
@@ -103,6 +112,44 @@ export default function OrderForm(): ReactElement {
                     required
                 />
             </div>
+            <div>
+                <label>Fulfillment</label>
+                <div>
+                    <label>
+                        <input
+                            type="radio"
+                            name="fulfillmentType"
+                            value="PICKUP"
+                            checked={fulfillmentType === "PICKUP"}
+                            onChange={() => setFulfillmentType("PICKUP")}
+                        />
+                        {" "}Pickup
+                    </label>
+                    <label style={{ marginLeft: "1rem" }}>
+                        <input
+                            type="radio"
+                            name="fulfillmentType"
+                            value="DROPOFF"
+                            checked={fulfillmentType === "DROPOFF"}
+                            onChange={() => setFulfillmentType("DROPOFF")}
+                        />
+                        {" "}Delivery
+                    </label>
+                </div>
+            </div>
+            {fulfillmentType === "DROPOFF" && (
+                <div>
+                    <label htmlFor="deliveryAddress">Delivery Address</label>
+                    <input
+                        id="deliveryAddress"
+                        type="text"
+                        value={deliveryAddress}
+                        onChange={e => setDeliveryAddress(e.target.value)}
+                        placeholder="123 Main St, City, State, ZIP"
+                        required
+                    />
+                </div>
+            )}
             <div>
                 <label htmlFor="photos">Inspiration Photos</label>
                 <input

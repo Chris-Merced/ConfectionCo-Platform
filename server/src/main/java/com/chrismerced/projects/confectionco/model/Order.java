@@ -54,6 +54,12 @@ public class Order {
 
     private String comments;
 
+    @Column(name = "fulfillment_type")
+    private String fulfillmentType = "PICKUP";
+
+    @Column(name = "delivery_address")
+    private String deliveryAddress;
+
     @Column(name = "created_at", insertable = false, updatable = false)
     private OffsetDateTime createdAt;
 
@@ -86,6 +92,10 @@ public class Order {
     public void setServingCount(Integer servingCount) { this.servingCount = servingCount; }
     public String getComments() { return comments; }
     public void setComments(String comments) { this.comments = comments; }
+    public String getFulfillmentType() { return fulfillmentType; }
+    public void setFulfillmentType(String fulfillmentType) { this.fulfillmentType = fulfillmentType; }
+    public String getDeliveryAddress() { return deliveryAddress; }
+    public void setDeliveryAddress(String deliveryAddress) { this.deliveryAddress = deliveryAddress; }
     public OffsetDateTime getCreatedAt() { return createdAt; }
     public OffsetDateTime getUpdatedAt() { return updatedAt; }
     public List<String> getPhotoUrls() { return photoUrls; }

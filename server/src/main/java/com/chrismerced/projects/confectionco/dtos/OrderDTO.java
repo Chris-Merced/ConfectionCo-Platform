@@ -21,6 +21,8 @@ public class OrderDTO {
     private boolean fullPaymentPaid;
     private Integer servingCount;
     private String comments;
+    private String fulfillmentType;
+    private String deliveryAddress;
     private OffsetDateTime createdAt;
     private List<String> photoUrls;
 
@@ -35,6 +37,8 @@ public class OrderDTO {
         this.fullPaymentPaid = order.isFullPaymentPaid();
         this.servingCount = order.getServingCount();
         this.comments = order.getComments();
+        this.fulfillmentType = order.getFulfillmentType();
+        this.deliveryAddress = order.getDeliveryAddress();
         this.createdAt = order.getCreatedAt();
         this.photoUrls = order.getPhotoUrls()
                 .stream()
@@ -52,6 +56,8 @@ public class OrderDTO {
     public boolean isFullPaymentPaid() { return fullPaymentPaid; }
     public Integer getServingCount() { return servingCount; }
     public String getComments() { return comments; }
+    public String getFulfillmentType() { return fulfillmentType; }
+    public String getDeliveryAddress() { return deliveryAddress; }
     public OffsetDateTime getCreatedAt() { return createdAt; }
     public List<String> getPhotoUrls() { return photoUrls; }
 }

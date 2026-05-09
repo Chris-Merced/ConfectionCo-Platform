@@ -12,6 +12,8 @@ export interface Order {
   fullPaymentPaid: boolean;
   servingCount: number;
   comments: string | null;
+  fulfillmentType: string;
+  deliveryAddress: string | null;
   createdAt: string;
   photoUrls: string[];
 }
@@ -144,6 +146,12 @@ export default function OrderCard({ order, token, onUpdate }: OrderCardProps): R
       <p style={styles.field}>Email: {order.email}</p>
       <p style={styles.field}>Phone: {order.phoneNumber}</p>
       <p style={styles.field}>Servings: {order.servingCount}</p>
+      <p style={styles.field}>
+        Fulfillment: {order.fulfillmentType === "DROPOFF" ? "Delivery" : "Pickup"}
+      </p>
+      {order.deliveryAddress && (
+        <p style={styles.field}>Delivery Address: {order.deliveryAddress}</p>
+      )}
       {order.totalAmount != null && <p style={styles.field}>Total: ${order.totalAmount.toFixed(2)}</p>}
 
       <div style={{ margin: "0.2rem 0" }}>
