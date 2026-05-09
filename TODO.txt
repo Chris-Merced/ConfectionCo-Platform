@@ -9,3 +9,11 @@ PAID_IN_FULL
 COMPLETED
 
 ConfectionCo.Bakery
+
+Appropriate commit messaging: 
+feat: — new feature
+fix: — bug fix
+style: — formatting/visual changes
+refactor: — code restructure, no behavior change
+chore: — maintenance, config, dependencies
+docs: — documentation
