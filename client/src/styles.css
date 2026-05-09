@@ -330,6 +330,487 @@ input[type="file"].form-input {
     color: var(--pink-light);
 }
 
+/* ── Status Pages (payment success / cancel) ─────────────────── */
+.status-page {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    background: var(--bg);
+}
+
+.status-body {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem 1rem;
+}
+
+.status-card {
+    background: #fff;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    padding: 3rem 2.5rem;
+    text-align: center;
+    max-width: 460px;
+    width: 100%;
+    box-shadow: var(--shadow-md);
+}
+
+.status-icon {
+    font-size: 2.75rem;
+    margin-bottom: 1rem;
+    display: block;
+}
+
+.status-title {
+    font-family: var(--font-serif);
+    font-size: 1.75rem;
+    color: var(--brown-dark);
+    margin-bottom: 0.75rem;
+}
+
+.status-text {
+    color: var(--text-muted);
+    font-size: 0.95rem;
+    line-height: 1.6;
+}
+
+.status-countdown {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--surface-alt);
+    color: var(--brown);
+    font-weight: 700;
+    border-radius: 50%;
+    width: 1.75rem;
+    height: 1.75rem;
+    font-size: 0.85rem;
+    vertical-align: middle;
+}
+
+/* ── Policy / Legal Pages ─────────────────────────────────────── */
+.policy-page {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    background: var(--bg);
+}
+
+.policy-content {
+    flex: 1;
+    max-width: 760px;
+    margin: 0 auto;
+    padding: 3rem 2rem 4rem;
+    width: 100%;
+}
+
+.policy-title {
+    font-family: var(--font-serif);
+    font-size: 2rem;
+    color: var(--brown-dark);
+    margin-bottom: 0.35rem;
+}
+
+.policy-meta {
+    color: var(--text-muted);
+    font-size: 0.83rem;
+    margin-bottom: 1.5rem;
+}
+
+.policy-summary {
+    background: var(--surface);
+    border-left: 3px solid var(--pink);
+    border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+    padding: 0.9rem 1.2rem;
+    font-size: 0.88rem;
+    color: var(--brown);
+    margin-bottom: 2.5rem;
+    line-height: 1.65;
+}
+
+.policy-section {
+    margin-bottom: 2rem;
+}
+
+.policy-section h2 {
+    font-family: var(--font-serif);
+    font-size: 1.1rem;
+    color: var(--brown-dark);
+    margin-bottom: 0.55rem;
+    padding-bottom: 0.35rem;
+    border-bottom: 1px solid var(--border);
+}
+
+.policy-section p {
+    color: var(--black);
+    font-size: 0.9rem;
+    line-height: 1.75;
+    margin-bottom: 0.65rem;
+}
+
+.policy-section ul {
+    padding-left: 1.25rem;
+    margin-bottom: 0.65rem;
+}
+
+.policy-section li {
+    color: var(--black);
+    font-size: 0.9rem;
+    line-height: 1.75;
+    margin-bottom: 0.25rem;
+}
+
+.policy-section a {
+    color: var(--pink-dark);
+    text-decoration: underline;
+}
+
+.policy-footer {
+    text-align: center;
+    padding: 1.25rem 2rem;
+    color: var(--text-muted);
+    font-size: 0.78rem;
+    border-top: 1px solid var(--border);
+    margin-top: 1.5rem;
+}
+
+/* ── Admin Dashboard ─────────────────────────────────────────── */
+.admin-page {
+    min-height: 100vh;
+    background: var(--surface);
+    font-family: var(--font-sans);
+}
+
+.admin-topbar {
+    background: var(--brown-dark);
+    padding: 0 2rem;
+    height: 64px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    flex-wrap: wrap;
+    box-shadow: var(--shadow-md);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+
+.admin-topbar-brand {
+    font-family: var(--font-serif);
+    font-size: 1.2rem;
+    color: var(--bg);
+    letter-spacing: 0.03em;
+}
+
+.admin-topbar-brand span {
+    color: var(--pink-light);
+}
+
+.admin-topbar-right {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.admin-user-email {
+    font-size: 0.78rem;
+    color: var(--surface-alt);
+}
+
+.admin-logout-btn {
+    padding: 0.3rem 0.75rem;
+    background: transparent;
+    color: var(--surface-alt);
+    border: 1px solid rgba(255,255,255,0.2);
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    font-size: 0.78rem;
+    font-family: var(--font-sans);
+    transition: background 0.15s, color 0.15s;
+}
+
+.admin-logout-btn:hover {
+    background: rgba(255,255,255,0.1);
+    color: #fff;
+}
+
+.admin-body {
+    padding: 2rem;
+    max-width: 1400px;
+    margin: 0 auto;
+}
+
+.admin-status-msg {
+    color: var(--text-muted);
+    font-size: 0.9rem;
+    padding: 0.5rem 0;
+}
+
+.admin-error {
+    color: #9b3a50;
+    font-size: 0.875rem;
+}
+
+.admin-board {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.admin-column {
+    background: #fff;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    padding: 1.25rem;
+    box-shadow: var(--shadow-sm);
+}
+
+.admin-column-header {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 1rem;
+    font-family: var(--font-serif);
+    font-size: 1rem;
+    color: var(--brown-dark);
+}
+
+.admin-badge {
+    background: var(--surface-alt);
+    color: var(--brown);
+    border-radius: 12px;
+    padding: 0.1rem 0.55rem;
+    font-size: 0.72rem;
+    font-weight: 700;
+    font-family: var(--font-sans);
+}
+
+.admin-login-page {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background: var(--bg);
+    gap: 1.25rem;
+}
+
+.admin-login-title {
+    font-family: var(--font-serif);
+    font-size: 1.5rem;
+    color: var(--brown-dark);
+}
+
+.admin-login-btn {
+    padding: 0.7rem 1.75rem;
+    background: var(--brown-dark);
+    color: var(--bg);
+    border: none;
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    font-family: var(--font-sans);
+    font-size: 0.88rem;
+    font-weight: 700;
+    letter-spacing: 0.07em;
+    text-transform: uppercase;
+    transition: background 0.15s;
+}
+
+.admin-login-btn:hover {
+    background: var(--brown);
+}
+
+/* ── Order Card (admin) ──────────────────────────────────────── */
+.order-card {
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 1rem;
+    margin-bottom: 0.75rem;
+    color: var(--black);
+}
+
+.order-card-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.5rem;
+}
+
+.order-card-id {
+    font-family: var(--font-serif);
+    font-size: 0.95rem;
+    color: var(--brown-dark);
+    font-weight: 600;
+}
+
+.order-card-meta {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.order-card-date {
+    color: var(--text-muted);
+    font-size: 0.78rem;
+}
+
+.order-card-field {
+    font-size: 0.855rem;
+    color: var(--black);
+    margin: 0.2rem 0;
+}
+
+.order-card-field a {
+    color: var(--pink-dark);
+    text-decoration: underline;
+}
+
+.order-card-comments-edit {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+}
+
+.order-card-comments-view {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.5rem;
+}
+
+.order-card-comments-text {
+    font-size: 0.855rem;
+    color: var(--black);
+    flex: 1;
+    margin: 0.2rem 0;
+}
+
+.order-card-comments-none {
+    color: var(--text-muted);
+    font-style: italic;
+}
+
+.order-card-comments-actions {
+    display: flex;
+    gap: 0.4rem;
+}
+
+.order-card-textarea {
+    width: 100%;
+    padding: 0.4rem 0.6rem;
+    border: 1.5px solid var(--border);
+    border-radius: var(--radius-sm);
+    background: #fff;
+    color: var(--black);
+    font-family: var(--font-sans);
+    font-size: 0.855rem;
+    resize: vertical;
+    min-height: 60px;
+    outline: none;
+}
+
+.order-card-textarea:focus {
+    border-color: var(--border-focus);
+}
+
+.order-card-photos {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+    margin-top: 0.75rem;
+}
+
+.order-card-thumbnail {
+    width: 80px;
+    height: 80px;
+    object-fit: cover;
+    border-radius: var(--radius-sm);
+    display: block;
+    border: 1px solid var(--border);
+}
+
+.order-card-actions {
+    margin-top: 0.75rem;
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.order-card-input {
+    padding: 0.38rem 0.6rem;
+    border: 1.5px solid var(--border);
+    border-radius: var(--radius-sm);
+    background: #fff;
+    color: var(--black);
+    font-family: var(--font-sans);
+    font-size: 0.855rem;
+    width: 180px;
+    outline: none;
+    max-width: 100%;
+}
+
+.order-card-input:focus {
+    border-color: var(--border-focus);
+}
+
+.order-card-waiting {
+    color: var(--text-muted);
+    font-style: italic;
+    font-size: 0.83rem;
+    margin: 0;
+}
+
+.order-card-url-box {
+    margin-top: 0.75rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: var(--surface);
+    padding: 0.5rem 0.75rem;
+    border-radius: var(--radius-sm);
+    border: 1px solid var(--border);
+}
+
+.order-card-url-text {
+    font-size: 0.78rem;
+    word-break: break-all;
+    flex: 1;
+    color: var(--brown);
+}
+
+.order-card-refund-section {
+    margin-top: 1rem;
+    border-top: 1px solid var(--border);
+    padding-top: 0.75rem;
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.order-card-refund-label {
+    font-size: 0.8rem;
+    color: var(--text-muted);
+}
+
+.order-card-error {
+    color: #9b3a50;
+    font-size: 0.83rem;
+    margin-top: 0.5rem;
+}
+
+.btn-accept  { padding: 0.38rem 0.85rem; background: #16a34a; color: #fff; border: none; border-radius: var(--radius-sm); cursor: pointer; font-size: 0.83rem; font-family: var(--font-sans); }
+.btn-reject  { padding: 0.38rem 0.85rem; background: #dc2626; color: #fff; border: none; border-radius: var(--radius-sm); cursor: pointer; font-size: 0.83rem; font-family: var(--font-sans); }
+.btn-copy    { padding: 0.32rem 0.65rem; background: var(--brown); color: #fff; border: none; border-radius: var(--radius-sm); cursor: pointer; font-size: 0.78rem; font-family: var(--font-sans); flex-shrink: 0; }
+.btn-refund  { padding: 0.38rem 0.85rem; background: #b45309; color: #fff; border: none; border-radius: var(--radius-sm); cursor: pointer; font-size: 0.83rem; font-family: var(--font-sans); }
+.btn-icon    { padding: 0.2rem 0.45rem; background: transparent; color: var(--text-muted); border: 1px solid var(--border); border-radius: var(--radius-sm); cursor: pointer; font-size: 0.72rem; line-height: 1; font-family: var(--font-sans); }
+.btn-icon:hover { border-color: var(--brown-light); color: var(--brown); }
+.btn-accept:disabled, .btn-reject:disabled, .btn-copy:disabled, .btn-refund:disabled { opacity: 0.55; cursor: not-allowed; }
+
 /* ── Responsive ──────────────────────────────────────────────── */
 @media (max-width: 768px) {
     .order-section {
