@@ -211,7 +211,7 @@ export default function OrderForm(): ReactElement {
                     id="comments"
                     value={comments}
                     onChange={e => setComments(e.target.value)}
-                    placeholder="Tell us about your vision — flavors, theme, any special requests..."
+                    placeholder="Tell us about your vision — Items you want to order: how many, flavors, theme, any special requests..."
                 />
             </div>
 

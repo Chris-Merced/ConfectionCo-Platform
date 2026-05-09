@@ -28,6 +28,10 @@ export default function Main(): ReactElement {
             </div>
 
             <footer className="footer">
+                <p className="footer-contact">
+                    Have questions about ordering?{" "}
+                    <a href="mailto:hello@confectioncobakery.com">hello@confectioncobakery.com</a>
+                </p>
                 <nav className="footer-links">
                     <Link to="/privacy-policy">Privacy Policy</Link>
                     <Link to="/terms-and-conditions">Terms &amp; Conditions</Link>

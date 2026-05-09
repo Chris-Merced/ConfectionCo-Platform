@@ -330,6 +330,22 @@ input[type="file"].form-input {
     color: var(--pink-light);
 }
 
+.footer-contact {
+    font-size: 0.85rem;
+    color: var(--surface-alt);
+    margin-bottom: 0.75rem;
+}
+
+.footer-contact a {
+    color: var(--pink-light);
+    text-decoration: none;
+    transition: opacity 0.15s;
+}
+
+.footer-contact a:hover {
+    opacity: 0.8;
+}
+
 /* ── Status Pages (payment success / cancel) ─────────────────── */
 .status-page {
     min-height: 100vh;
