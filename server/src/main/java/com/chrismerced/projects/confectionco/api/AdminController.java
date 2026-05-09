@@ -5,6 +5,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -32,6 +34,8 @@ import com.chrismerced.projects.confectionco.services.TextingService;
 @RequestMapping("api/admin")
 @PreAuthorize("hasRole('ADMIN')")
 public class AdminController {
+
+    private static final Logger log = LoggerFactory.getLogger(AdminController.class);
 
     @Value("${aws.bucket-inspo}")
     private String inspoBucket;
@@ -183,15 +187,10 @@ public class AdminController {
         }
     }
 
-    @GetMapping("/sendReceipt")
+    @PostMapping("/sendReceipt")
     public ResponseEntity<Map<String, Boolean>> sendReceipt(@RequestBody SendReceiptRequest sendReceiptRequest) {
-        System.out.println("sendReceipt Invoked");
+        log.info("sendReceipt invoked for recipient: {}", sendReceiptRequest.getRecipient());
         emailService.sendReceipt(sendReceiptRequest.getRecipient(), sendReceiptRequest.getReceipt());
-        return ResponseEntity.status(200).body(Map.of("EmailSent", true));
-    }
-
-    @GetMapping("/authentication")
-    public Map<String, String> auth() {
-        return Map.of("Success", "ok");
+        return ResponseEntity.ok(Map.of("EmailSent", true));
     }
 }

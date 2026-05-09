@@ -2,20 +2,22 @@ package com.chrismerced.projects.confectionco.services;
 
 import java.math.BigDecimal;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import com.chrismerced.projects.confectionco.exceptions.ResourceNotFoundException;
 import com.chrismerced.projects.confectionco.model.Order;
 import com.chrismerced.projects.confectionco.model.OrderStatus;
 import com.chrismerced.projects.confectionco.repository.OrderRepository;
-import com.chrismerced.projects.confectionco.services.EmailService;
-import com.chrismerced.projects.confectionco.services.TextingService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.stripe.model.Event;
 import com.stripe.model.checkout.Session;
 
 @Service
 public class OrderService {
+
+    private static final Logger log = LoggerFactory.getLogger(OrderService.class);
 
     private final OrderRepository orderRepository;
     private final StripeService stripeService;
@@ -85,6 +87,14 @@ public class OrderService {
             throw new IllegalArgumentException("No payment session found for this order.");
         }
 
+        if (amount == null || amount.compareTo(BigDecimal.ZERO) <= 0) {
+            throw new IllegalArgumentException("Refund amount must be greater than zero.");
+        }
+
+        if (order.getTotalAmount() != null && amount.compareTo(order.getTotalAmount()) > 0) {
+            throw new IllegalArgumentException("Refund amount cannot exceed the order total.");
+        }
+
         long amountInCents = amount.multiply(BigDecimal.valueOf(100)).longValue();
         stripeService.createRefund(order.getStripeSessionId(), amountInCents);
 
@@ -99,19 +109,18 @@ public class OrderService {
                 try {
                     dataObject = objectMapper.readTree(rawPayload).path("data").path("object");
                 } catch (Exception e) {
-                    System.err.println("Failed to parse webhook payload for event " + event.getId() + ": " + e.getMessage());
+                    log.error("Failed to parse webhook payload for event {}", event.getId(), e);
                     return;
                 }
                 String orderId = dataObject.path("client_reference_id").asText(null);
                 if (orderId == null) {
-                    System.err.println("Missing client_reference_id in event: " + event.getId());
+                    log.error("Missing client_reference_id in event: {}", event.getId());
                     return;
                 }
-                // DB failures propagate — Stripe will retry on non-2xx response
                 handleStripeCheckoutCompleted(Long.valueOf(orderId));
             }
 
-            default -> System.out.println("Unhandled event: " + event.getType());
+            default -> log.info("Unhandled Stripe event: {}", event.getType());
         }
     }
 
@@ -127,12 +136,12 @@ public class OrderService {
                 textingService.sendText(order.getPhoneNumber(),
                         "Great news! Your deposit has been received by Confection Co. Bakery. We're now working on your order!");
             } catch (Exception e) {
-                System.err.println("Failed to send deposit text to " + order.getPhoneNumber() + ": " + e.getMessage());
+                log.error("Failed to send deposit text to order {}", orderId, e);
             }
             try {
                 emailService.sendDepositReceipt(order.getEmail());
             } catch (Exception e) {
-                System.err.println("Failed to send deposit receipt email to " + order.getEmail() + ": " + e.getMessage());
+                log.error("Failed to send deposit receipt email for order {}", orderId, e);
             }
         } else if (order.getStatus() == OrderStatus.AWAITING_FINAL_PAYMENT) {
             order.setFullPaymentPaid(true);
@@ -142,15 +151,15 @@ public class OrderService {
                 textingService.sendText(order.getPhoneNumber(),
                         "Your final payment has been received by Confection Co. Bakery. Your order is paid in full — thank you!");
             } catch (Exception e) {
-                System.err.println("Failed to send final payment text to " + order.getPhoneNumber() + ": " + e.getMessage());
+                log.error("Failed to send final payment text for order {}", orderId, e);
             }
             try {
                 emailService.sendFullPaymentConfirmation(order.getEmail());
             } catch (Exception e) {
-                System.err.println("Failed to send final payment email to " + order.getEmail() + ": " + e.getMessage());
+                log.error("Failed to send final payment email for order {}", orderId, e);
             }
         } else {
-            System.err.println("checkout.session.completed for order " + orderId + " in unexpected status: " + order.getStatus());
+            log.warn("checkout.session.completed for order {} in unexpected status: {}", orderId, order.getStatus());
         }
     }
 }
