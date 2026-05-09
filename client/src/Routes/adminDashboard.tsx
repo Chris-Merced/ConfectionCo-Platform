@@ -14,12 +14,6 @@ const STATUS_SECTIONS: { key: string; label: string }[] = [
     { key: "REJECTED", label: "Rejected" },
 ];
 
-
-//TODO:
-// beige/brown base, pink accent, black lettering
-// make sure failure events are communicated to the front end like order not going through etc 
-// see if we can set up an inbox for emails to come in for support in case wrong phone number
- 
 export default function AdminDashboard(): ReactElement {
     const { isLoading, isAuthenticated, error, loginWithRedirect: login, logout: auth0Logout, user, getAccessTokenSilently } = useAuth0();
 
@@ -46,13 +40,14 @@ export default function AdminDashboard(): ReactElement {
     const handleLogin = () => login({ appState: { returnTo: "/admin" } });
     const logout = () => auth0Logout({ logoutParams: { returnTo: window.location.origin } });
 
-    if (isLoading) return <p>Loading...</p>;
+    if (isLoading) return <div className="admin-login-page"><p className="admin-status-msg">Loading...</p></div>;
 
     if (!isAuthenticated) {
         return (
-            <div style={styles.centered}>
-                {error && <p style={styles.error}>Error: {error.message}</p>}
-                <button style={styles.btn} onClick={handleLogin}>Admin Login</button>
+            <div className="admin-login-page">
+                {error && <p className="admin-error">Error: {error.message}</p>}
+                <p className="admin-login-title">Confection Co — Admin</p>
+                <button className="admin-login-btn" onClick={handleLogin}>Admin Login</button>
             </div>
         );
     }
@@ -63,50 +58,37 @@ export default function AdminDashboard(): ReactElement {
     }, {});
 
     return (
-        <div style={styles.page}>
-            <div style={styles.topBar}>
-                <h1 style={styles.heading}>Order Dashboard</h1>
-                <div>
-                    <span style={styles.userEmail}>{user?.email}</span>
-                    <button style={styles.logoutBtn} onClick={logout}>Logout</button>
+        <div className="admin-page">
+            <div className="admin-topbar">
+                <span className="admin-topbar-brand">Confection <span>Co</span> — Orders</span>
+                <div className="admin-topbar-right">
+                    <span className="admin-user-email">{user?.email}</span>
+                    <button className="admin-logout-btn" onClick={logout}>Logout</button>
                 </div>
             </div>
 
-            {ordersLoading && <p>Loading orders...</p>}
-            {ordersError && <p style={styles.error}>Failed to load orders.</p>}
+            <div className="admin-body">
+                {ordersLoading && <p className="admin-status-msg">Loading orders...</p>}
+                {ordersError && <p className="admin-error">Failed to load orders.</p>}
 
-            {!ordersLoading && orders && (
-                <div style={styles.board}>
-                    {STATUS_SECTIONS.map(({ key, label }) =>
-                        grouped[key].length === 0 ? null : (
-                            <div key={key} style={styles.column}>
-                                <h2 style={styles.columnHeader}>
-                                    {label}
-                                    <span style={styles.badge}>{grouped[key].length}</span>
-                                </h2>
-                                {grouped[key].map((order) => (
-                                    <OrderCard key={order.id} order={order} token={token} onUpdate={refetch} />
-                                ))}
-                            </div>
-                        )
-                    )}
-                </div>
-            )}
+                {!ordersLoading && orders && (
+                    <div className="admin-board">
+                        {STATUS_SECTIONS.map(({ key, label }) =>
+                            grouped[key].length === 0 ? null : (
+                                <div key={key} className="admin-column">
+                                    <h2 className="admin-column-header">
+                                        {label}
+                                        <span className="admin-badge">{grouped[key].length}</span>
+                                    </h2>
+                                    {grouped[key].map((order) => (
+                                        <OrderCard key={order.id} order={order} token={token} onUpdate={refetch} />
+                                    ))}
+                                </div>
+                            )
+                        )}
+                    </div>
+                )}
+            </div>
         </div>
     );
 }
-
-const styles: Record<string, React.CSSProperties> = {
-    page: { padding: "1.5rem", fontFamily: "sans-serif", background: "#111827", minHeight: "100vh", color: "#f3f4f6", boxSizing: "border-box", width: "100%" },
-    topBar: { display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "1.5rem", flexWrap: "wrap", gap: "0.5rem" },
-    heading: { margin: 0, color: "#f9fafb" },
-    userEmail: { marginRight: "1rem", fontSize: "0.9rem", color: "#9ca3af" },
-    logoutBtn: { padding: "0.4rem 0.8rem", background: "#374151", color: "#f3f4f6", border: "none", borderRadius: "4px", cursor: "pointer" },
-    board: { display: "flex", flexDirection: "column", gap: "2rem" },
-    column: { background: "#1f2937", borderRadius: "8px", padding: "1rem", boxShadow: "0 1px 3px rgba(0,0,0,0.4)" },
-    columnHeader: { margin: "0 0 1rem", fontSize: "1rem", fontWeight: 600, display: "flex", alignItems: "center", gap: "0.5rem", color: "#e5e7eb" },
-    badge: { background: "#374151", color: "#9ca3af", borderRadius: "12px", padding: "0.1rem 0.5rem", fontSize: "0.8rem", fontWeight: 400 },
-    centered: { display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", height: "100vh", background: "#111827" },
-    btn: { padding: "0.6rem 1.2rem", background: "#374151", color: "#f3f4f6", border: "none", borderRadius: "4px", cursor: "pointer" },
-    error: { color: "#f87171" },
-};

@@ -29,10 +29,10 @@ function App(): ReactElement {
                 <Routes>
                   <Route path="/" element={<><Header /><Main /></>} />
                   <Route path="/admin" element={<AdminDashboard />} />
-                  <Route path="/payment-success" element={<PaymentSuccess />} />
-                  <Route path="/payment-cancel" element={<PaymentCancel />} />
-                  <Route path="/privacy-policy" element={<PrivacyPolicy />} />
-                  <Route path="/terms-and-conditions" element={<TermsAndConditions />} />
+                  <Route path="/payment-success" element={<><Header /><PaymentSuccess /></>} />
+                  <Route path="/payment-cancel" element={<><Header /><PaymentCancel /></>} />
+                  <Route path="/privacy-policy" element={<><Header /><PrivacyPolicy /></>} />
+                  <Route path="/terms-and-conditions" element={<><Header /><TermsAndConditions /></>} />
                   <Route path="*" element={<div>Page not found</div>} />
                 </Routes>
               </Suspense>

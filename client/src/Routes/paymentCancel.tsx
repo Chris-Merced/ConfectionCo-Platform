@@ -17,9 +17,17 @@ export default function PaymentCancel() {
   }, []);
 
   return (
-    <div>
-      <h1>Payment Cancelled</h1>
-      <p>You can try again when you're ready. Redirecting you home in {seconds}…</p>
+    <div className="status-page">
+      <div className="status-body">
+        <div className="status-card">
+          <span className="status-icon">🍪</span>
+          <h1 className="status-title">Payment Cancelled</h1>
+          <p className="status-text">
+            No worries — you can try again whenever you're ready. Redirecting you home in{" "}
+            <span className="status-countdown">{seconds}</span>…
+          </p>
+        </div>
+      </div>
     </div>
   );
 }

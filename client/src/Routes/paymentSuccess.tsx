@@ -19,10 +19,22 @@ export default function PaymentSuccess() {
   }, []);
 
   return (
-    <div>
-      <h1>Payment Successful</h1>
-      {orderId && <p>Order ID: {orderId}</p>}
-      <p>We’re confirming your payment. Redirecting you home in {seconds}…</p>
+    <div className="status-page">
+      <div className="status-body">
+        <div className="status-card">
+          <span className="status-icon">🎂</span>
+          <h1 className="status-title">Payment Successful</h1>
+          {orderId && (
+            <p className="status-text" style={{ marginBottom: "0.5rem" }}>
+              Order #{orderId}
+            </p>
+          )}
+          <p className="status-text">
+            We're confirming your payment and will be in touch soon. Redirecting you home in{" "}
+            <span className="status-countdown">{seconds}</span>…
+          </p>
+        </div>
+      </div>
     </div>
   );
 }
