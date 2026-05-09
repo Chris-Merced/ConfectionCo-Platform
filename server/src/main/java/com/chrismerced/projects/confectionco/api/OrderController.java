@@ -37,7 +37,6 @@ public class OrderController {
     private final S3Service s3Service;
     private final EmailService emailService;
 
-    // JPEG, PNG, WebP magic bytes
     private static final byte[] MAGIC_JPEG = {(byte) 0xFF, (byte) 0xD8, (byte) 0xFF};
     private static final byte[] MAGIC_PNG  = {(byte) 0x89, 0x50, 0x4E, 0x47};
     private static final byte[] MAGIC_WEBP = {0x52, 0x49, 0x46, 0x46};
