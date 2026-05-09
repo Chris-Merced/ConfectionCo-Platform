@@ -25,7 +25,11 @@ public class ResendEmailService implements EmailService {
                 "<p>Hi there!</p>" +
                 "<p>Thank you for placing your order with <strong>Confection Co. Bakery</strong>. " +
                 "We've received your request and it is currently awaiting our review.</p>" +
-                "<p>We'll reach out soon with next steps. We can't wait to create something sweet for you!</p>" +
+                "<p>You should receive a text message shortly with your order confirmation. " +
+                "If you didn't receive one, feel free to reach out to us at " +
+                "<a href=\"mailto:hello@confectioncobakery.com\">hello@confectioncobakery.com</a> " +
+                "with your order ID and we'll make sure you're taken care of.</p>" +
+                "<p>We can't wait to create something sweet for you!</p>" +
                 "<p>— The Confection Co. Team</p>");
     }
 
