@@ -29,6 +29,7 @@ import com.chrismerced.projects.confectionco.services.EmailService;
 import com.chrismerced.projects.confectionco.services.OrderService;
 import com.chrismerced.projects.confectionco.services.StripeService;
 import com.chrismerced.projects.confectionco.services.TextingService;
+import com.chrismerced.projects.confectionco.model.Order;
 
 @RestController
 @RequestMapping("api/admin")
@@ -77,7 +78,7 @@ public class AdminController {
             @PathVariable Long id,
             @RequestBody Map<String, String> body) {
         try {
-            com.chrismerced.projects.confectionco.model.Order order = orderRepository.findById(id)
+             Order order = orderRepository.findById(id)
                     .orElseThrow(() -> new ResourceNotFoundException("Order not found: " + id));
             order.setComments(body.get("comments"));
             orderRepository.save(order);
@@ -142,7 +143,7 @@ public class AdminController {
     @GetMapping("/orders/{id}/payment-url")
     public ResponseEntity<?> getPaymentUrl(@PathVariable Long id) {
         try {
-            com.chrismerced.projects.confectionco.model.Order order = orderRepository.findById(id)
+            Order order = orderRepository.findById(id)
                     .orElseThrow(() -> new ResourceNotFoundException("Order not found: " + id));
             if (order.getStripeSessionId() == null) {
                 return ResponseEntity.badRequest().body("No payment session on file for this order.");
