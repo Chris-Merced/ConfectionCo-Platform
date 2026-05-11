@@ -214,6 +214,17 @@ img, iframe, input, textarea, select, button {
     color: var(--pink);
 }
 
+.hero-title-by {
+    display: block;
+    font-size: 0.38em;
+    font-weight: 400;
+    font-style: italic;
+    color: var(--brown);
+    letter-spacing: 0.04em;
+    margin-top: 0.5em;
+    opacity: 0.85;
+}
+
 .hero-divider {
     display: flex;
     align-items: center;
