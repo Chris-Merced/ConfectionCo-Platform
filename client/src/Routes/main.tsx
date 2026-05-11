@@ -12,8 +12,8 @@ export default function Main(): ReactElement {
                 <div className="hero-inner">
                     <span className="hero-eyebrow">handcrafted with love</span>
                     <h1 className="hero-title">
-                        Custom Cakes<br />
-                        &amp; <em>Confections</em>
+                        Custom Cakes &amp; <em>Confections</em><br />
+                        <span className="hero-title-by">by Confection Co. Bakery</span>
                     </h1>
                     <div className="hero-divider" aria-hidden="true">
                         <span className="hero-divider-dot" />
@@ -44,8 +44,8 @@ export default function Main(): ReactElement {
                     <div className="process-arrow" aria-hidden="true">&#8212;&#8212;</div>
                     <div className="process-step">
                         <div className="process-step-num">03</div>
-                        <div className="process-step-title">Pick Up &amp; Enjoy</div>
-                        <p className="process-step-desc">Collect your one-of-a-kind creation and celebrate every moment in style.</p>
+                        <div className="process-step-title">Pick Up or Delivery!</div>
+                        <p className="process-step-desc">Either pickup or delivery for your one-of-a-kind creation and celebrate in style.</p>
                     </div>
                 </div>
             </div>
