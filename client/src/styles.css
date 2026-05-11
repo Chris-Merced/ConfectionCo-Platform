@@ -152,6 +152,8 @@ img, iframe, input, textarea, select, button {
         62px 14px,
         22px 68px,
         52px 36px;
+    transform: translateY(var(--dot-parallax, 0px));
+    will-change: transform;
     pointer-events: none;
     z-index: 0;
 }

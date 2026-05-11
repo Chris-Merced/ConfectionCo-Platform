@@ -1,13 +1,35 @@
 import type { ReactElement } from "react";
+import { useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
 import OrderForm from "../components/orderForm";
 import LocationMap from "../components/LocationMap";
 import "../styles.css";
 
 export default function Main(): ReactElement {
+    const heroRef = useRef<HTMLElement>(null);
+
+    useEffect(() => {
+        const el = heroRef.current;
+        if (!el) return;
+
+        let rafId: number;
+        const onScroll = () => {
+            if (window.innerWidth <= 768) return;
+            rafId = requestAnimationFrame(() => {
+                el.style.setProperty("--dot-parallax", `${window.scrollY * 0.5}px`);
+            });
+        };
+
+        window.addEventListener("scroll", onScroll, { passive: true });
+        return () => {
+            window.removeEventListener("scroll", onScroll);
+            cancelAnimationFrame(rafId);
+        };
+    }, []);
+
     return (
         <>
-            <section className="hero">
+            <section className="hero" ref={heroRef}>
                 <div className="hero-blob" aria-hidden="true" />
                 <div className="hero-inner">
                     <span className="hero-eyebrow">handcrafted with love</span>
