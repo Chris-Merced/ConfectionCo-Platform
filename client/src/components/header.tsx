@@ -7,6 +7,9 @@ export default function Header(): ReactElement {
             <span className="header-brand">
                 Confection <span>Co</span>
             </span>
+            <nav className="header-nav">
+                <a href="#order" className="header-nav-cta">Order Now</a>
+            </nav>
         </header>
     );
 }
