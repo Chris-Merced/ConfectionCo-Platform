@@ -11,8 +11,7 @@ const CAKE_IMAGES = [
     "https://confectioncobakery-assets-859780942726-us-east-2-an.s3.us-east-2.amazonaws.com/cakes/IMG_20260512_124349_1.jpg",
     "https://confectioncobakery-assets-859780942726-us-east-2-an.s3.us-east-2.amazonaws.com/cakes/IMG_20260512_124349_2.jpg",
     "https://confectioncobakery-assets-859780942726-us-east-2-an.s3.us-east-2.amazonaws.com/cakes/IMG_20260512_124349_3.jpg",
-        "https://confectioncobakery-assets-859780942726-us-east-2-an.s3.us-east-2.amazonaws.com/cakes/IMG_20260512_124350_4.jpg",
-
+    "https://confectioncobakery-assets-859780942726-us-east-2-an.s3.us-east-2.amazonaws.com/cakes/IMG_20260512_124350_4.jpg",
     "https://confectioncobakery-assets-859780942726-us-east-2-an.s3.us-east-2.amazonaws.com/cakes/IMG_20260512_124349_6.jpg",
     "https://confectioncobakery-assets-859780942726-us-east-2-an.s3.us-east-2.amazonaws.com/cakes/IMG_20260512_124349_7.jpg",
     "https://confectioncobakery-assets-859780942726-us-east-2-an.s3.us-east-2.amazonaws.com/cakes/IMG_20260512_124349_8.jpg",
@@ -40,23 +39,26 @@ export default function Cakes(): ReactElement {
                 </p>
             </section>
 
-            <div className="gallery-grid">
-                {CAKE_IMAGES.map((src, i) => (
-                    <div key={i} className="gallery-item">
-                        <img
-                            src={src}
-                            alt={`Custom cake ${i + 1}`}
-                            className="gallery-img"
-                            loading="lazy"
-                        />
-                    </div>
-                ))}
-            </div>
+            <section className="gallery-canvas">
+                <div className="gallery-grid">
+                    {CAKE_IMAGES.map((src, i) => (
+                        <div key={i} className="gallery-item">
+                            <img
+                                src={src}
+                                alt={`Custom cake ${i + 1}`}
+                                className="gallery-img"
+                                loading="lazy"
+                                onLoad={(e) => e.currentTarget.classList.add("loaded")}
+                            />
+                        </div>
+                    ))}
+                </div>
 
-            <div className="gallery-cta-wrap">
-                <p className="gallery-cta-text">Love what you see?</p>
-                <Link to="/#order" className="hero-cta">Place an Order</Link>
-            </div>
+                <div className="gallery-cta-wrap">
+                    <p className="gallery-cta-text">Love what you see?</p>
+                    <Link to="/#order" className="hero-cta">Place an Order</Link>
+                </div>
+            </section>
         </>
     );
 }
