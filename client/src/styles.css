@@ -1385,6 +1385,89 @@ input[type="file"].form-input {
     line-height: 1.85;
 }
 
+/* ── Cake Gallery ────────────────────────────────────────────── */
+.gallery-hero {
+    background: var(--surface);
+    text-align: center;
+    padding: 5rem 2rem 3.5rem;
+}
+
+.gallery-eyebrow {
+    display: block;
+    font-family: var(--font-script);
+    font-size: clamp(1.4rem, 3vw, 2rem);
+    color: var(--pink);
+    margin-bottom: 0.35rem;
+}
+
+.gallery-heading {
+    font-family: var(--font-serif);
+    font-size: clamp(2rem, 5vw, 3.25rem);
+    font-weight: 600;
+    color: var(--brown-dark);
+    line-height: 1.1;
+    margin-bottom: 1.25rem;
+}
+
+.gallery-rule {
+    width: 48px;
+    height: 2px;
+    background: linear-gradient(90deg, var(--pink), var(--pink-light));
+    border-radius: 2px;
+    margin: 0 auto 1.25rem;
+}
+
+.gallery-subtext {
+    font-size: clamp(0.92rem, 1.8vw, 1.02rem);
+    color: var(--text-muted);
+    max-width: 480px;
+    margin: 0 auto;
+    line-height: 1.75;
+}
+
+.gallery-grid {
+    columns: 3 260px;
+    gap: 0.85rem;
+    padding: 2.5rem 2rem;
+    max-width: 1300px;
+    margin: 0 auto;
+}
+
+.gallery-item {
+    break-inside: avoid;
+    margin-bottom: 0.85rem;
+    border-radius: var(--radius-md);
+    overflow: hidden;
+    box-shadow: var(--shadow-sm);
+}
+
+.gallery-img {
+    width: 100%;
+    display: block;
+    border-radius: var(--radius-md);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.gallery-item:hover .gallery-img {
+    transform: scale(1.025);
+    box-shadow: var(--shadow-lg);
+}
+
+.gallery-cta-wrap {
+    text-align: center;
+    padding: 1rem 2rem 5rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1.25rem;
+}
+
+.gallery-cta-text {
+    font-family: var(--font-script);
+    font-size: clamp(1.4rem, 3vw, 1.9rem);
+    color: var(--brown);
+}
+
 /* ── Responsive ──────────────────────────────────────────────── */
 @media (max-width: 768px) {
     .order-section {
@@ -1508,5 +1591,14 @@ input[type="file"].form-input {
     .policies-photo-wrap::after {
         top: 12px;
         right: 12px;
+    }
+
+    .gallery-grid {
+        columns: 2 160px;
+        padding: 1.5rem 1rem;
+    }
+
+    .gallery-hero {
+        padding: 3.5rem 1.25rem 2.5rem;
     }
 }
