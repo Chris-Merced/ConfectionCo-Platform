@@ -910,6 +910,39 @@ input[type="file"].form-input {
     font-size: 0.875rem;
 }
 
+.admin-section-nav {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    padding: 0.75rem 1rem;
+    margin-bottom: 1rem;
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    position: sticky;
+    top: 0;
+    z-index: 10;
+}
+
+.admin-section-nav-btn {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.35rem 0.85rem;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    font-size: 0.8rem;
+    font-weight: 500;
+    color: var(--text);
+    cursor: pointer;
+    transition: background 0.15s, border-color 0.15s;
+}
+
+.admin-section-nav-btn:hover {
+    background: var(--pink-light);
+    border-color: var(--pink);
+}
+
 .admin-board {
     display: flex;
     flex-direction: column;
@@ -1042,6 +1075,17 @@ input[type="file"].form-input {
     color: var(--black);
     flex: 1;
     margin: 0.2rem 0;
+}
+
+.order-card-comments-label {
+    display: block;
+    font-weight: 600;
+    margin-bottom: 0.2rem;
+}
+
+.order-card-comments-body {
+    margin: 0;
+    white-space: pre-wrap;
 }
 
 .order-card-comments-none {

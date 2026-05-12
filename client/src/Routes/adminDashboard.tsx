@@ -72,21 +72,35 @@ export default function AdminDashboard(): ReactElement {
                 {ordersError && <p className="admin-error">Failed to load orders.</p>}
 
                 {!ordersLoading && orders && (
-                    <div className="admin-board">
-                        {STATUS_SECTIONS.map(({ key, label }) =>
-                            grouped[key].length === 0 ? null : (
-                                <div key={key} className="admin-column">
-                                    <h2 className="admin-column-header">
-                                        {label}
-                                        <span className="admin-badge">{grouped[key].length}</span>
-                                    </h2>
-                                    {grouped[key].map((order) => (
-                                        <OrderCard key={order.id} order={order} token={token} onUpdate={refetch} />
-                                    ))}
-                                </div>
-                            )
-                        )}
-                    </div>
+                    <>
+                        <div className="admin-section-nav">
+                            {STATUS_SECTIONS.filter(({ key }) => grouped[key].length > 0).map(({ key, label }) => (
+                                <button
+                                    key={key}
+                                    className="admin-section-nav-btn"
+                                    onClick={() => document.getElementById(`section-${key}`)?.scrollIntoView({ behavior: "smooth" })}
+                                >
+                                    {label}
+                                    <span className="admin-badge">{grouped[key].length}</span>
+                                </button>
+                            ))}
+                        </div>
+                        <div className="admin-board">
+                            {STATUS_SECTIONS.map(({ key, label }) =>
+                                grouped[key].length === 0 ? null : (
+                                    <div key={key} id={`section-${key}`} className="admin-column">
+                                        <h2 className="admin-column-header">
+                                            {label}
+                                            <span className="admin-badge">{grouped[key].length}</span>
+                                        </h2>
+                                        {grouped[key].map((order) => (
+                                            <OrderCard key={order.id} order={order} token={token} onUpdate={refetch} />
+                                        ))}
+                                    </div>
+                                )
+                            )}
+                        </div>
+                    </>
                 )}
             </div>
         </div>
