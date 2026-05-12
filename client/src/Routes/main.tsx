@@ -1,19 +1,21 @@
 import type { ReactElement } from "react";
 import { useEffect, useRef } from "react";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import OrderForm from "../components/orderForm";
 import LocationMap from "../components/LocationMap";
 import "../styles.css";
 
 export default function Main(): ReactElement {
     const heroRef = useRef<HTMLElement>(null);
+    const { hash } = useLocation();
 
     useEffect(() => {
-        if (window.location.hash) {
-            const el = document.querySelector(window.location.hash);
+        if (hash) {
+            const el = document.querySelector(hash);
             if (el) el.scrollIntoView({ behavior: "smooth" });
+            window.history.replaceState(null, "", window.location.pathname);
         }
-    }, []);
+    }, [hash]);
 
     useEffect(() => {
         const el = heroRef.current;
