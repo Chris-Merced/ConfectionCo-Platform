@@ -68,7 +68,7 @@ export default function OrderForm(): ReactElement {
         }
 
         try {
-            const res = await fetch("http://localhost:8080/api/orders", {
+            const res = await fetch("/api/orders", {
                 method: "POST",
                 body: formData,
             });
