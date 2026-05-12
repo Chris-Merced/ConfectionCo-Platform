@@ -37,7 +37,7 @@ export default function OrderCard({ order, token, onUpdate }: OrderCardProps): R
   };
 
   const post = async (path: string, body?: object) => {
-    const res = await fetch(`http://localhost:8080${path}`, {
+    const res = await fetch(path, {
       method: "POST",
       headers,
       body: body ? JSON.stringify(body) : undefined,
@@ -73,7 +73,7 @@ export default function OrderCard({ order, token, onUpdate }: OrderCardProps): R
 
   const paymentUrlMutation = useMutation({
     mutationFn: async () => {
-      const res = await fetch(`http://localhost:8080/api/admin/orders/${order.id}/payment-url`, {
+      const res = await fetch(`/api/admin/orders/${order.id}/payment-url`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       if (!res.ok) throw new Error(await res.text());
@@ -84,7 +84,7 @@ export default function OrderCard({ order, token, onUpdate }: OrderCardProps): R
 
   const commentsMutation = useMutation({
     mutationFn: async () => {
-      const res = await fetch(`http://localhost:8080/api/admin/orders/${order.id}/comments`, {
+      const res = await fetch(`/api/admin/orders/${order.id}/comments`, {
         method: "PATCH",
         headers,
         body: JSON.stringify({ comments }),
@@ -97,7 +97,7 @@ export default function OrderCard({ order, token, onUpdate }: OrderCardProps): R
 
   const deleteMutation = useMutation({
     mutationFn: async () => {
-      const res = await fetch(`http://localhost:8080/api/admin/orders/${order.id}`, {
+      const res = await fetch(`/api/admin/orders/${order.id}`, {
         method: "DELETE",
         headers: { Authorization: `Bearer ${token}` },
       });

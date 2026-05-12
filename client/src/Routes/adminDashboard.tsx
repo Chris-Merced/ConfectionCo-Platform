@@ -28,7 +28,7 @@ export default function AdminDashboard(): ReactElement {
     const { data: orders, isLoading: ordersLoading, error: ordersError, refetch } = useQuery<Order[]>({
         queryKey: ["orders"],
         queryFn: async () => {
-            const res = await fetch("http://localhost:8080/api/admin/orders", {
+            const res = await fetch("/api/admin/orders", {
                 headers: { Authorization: `Bearer ${token}` },
             });
             if (!res.ok) throw new Error("Failed to retrieve orders");
