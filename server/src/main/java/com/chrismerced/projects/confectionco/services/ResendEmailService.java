@@ -62,13 +62,19 @@ public class ResendEmailService implements EmailService {
                 "<p>Here are the details of your order:</p><p>" + receipt + "</p>");
     }
 
+    private static final String FOOTER =
+            "<hr style=\"margin-top:32px\">" +
+            "<p style=\"font-size:13px;color:#555\">If there is ever a problem with your order or you have not " +
+            "received a payment link, feel free to contact us at " +
+            "<a href=\"tel:8506307355\">850-630-7355</a>.</p>";
+
     private void send(String recipient, String subject, String html) {
         try {
             resend.emails().send(CreateEmailOptions.builder()
                     .from(from)
                     .to(recipient)
                     .subject(subject)
-                    .html(html)
+                    .html(html + FOOTER)
                     .build());
         } catch (ResendException e) {
             throw new EmailServiceException("Failed to send email: " + e.getMessage());
