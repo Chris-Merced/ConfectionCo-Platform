@@ -27,6 +27,7 @@ import com.chrismerced.projects.confectionco.model.OrderStatus;
 import com.chrismerced.projects.confectionco.repository.OrderRepository;
 import com.chrismerced.projects.confectionco.services.EmailService;
 import com.chrismerced.projects.confectionco.services.OrderService;
+import com.chrismerced.projects.confectionco.services.S3Service;
 import com.chrismerced.projects.confectionco.services.StripeService;
 import com.chrismerced.projects.confectionco.services.TextingService;
 import com.chrismerced.projects.confectionco.model.Order;
@@ -49,14 +50,17 @@ public class AdminController {
     private final StripeService stripeService;
     private final EmailService emailService;
     private final TextingService textingService;
+    private final S3Service s3Service;
 
     AdminController(OrderRepository orderRepository, OrderService orderService,
-            StripeService stripeService, EmailService emailService, TextingService textingService) {
+            StripeService stripeService, EmailService emailService, TextingService textingService,
+            S3Service s3Service) {
         this.orderRepository = orderRepository;
         this.orderService = orderService;
         this.stripeService = stripeService;
         this.emailService = emailService;
         this.textingService = textingService;
+        this.s3Service = s3Service;
     }
 
     @GetMapping("/orders")
@@ -133,7 +137,19 @@ public class AdminController {
     @PostMapping("/orders/{id}/complete")
     public ResponseEntity<?> completeOrder(@PathVariable Long id) {
         try {
+            Order order = orderRepository.findById(id)
+                    .orElseThrow(() -> new ResourceNotFoundException("Order not found: " + id));
+
             orderService.updateOrderStatus(id, OrderStatus.COMPLETED);
+
+            for (String key : order.getPhotoUrls()) {
+                try {
+                    s3Service.deleteFile(key, inspoBucket);
+                } catch (Exception e) {
+                    log.error("Failed to delete S3 object {} for order {}: {}", key, id, e.getMessage());
+                }
+            }
+
             return ResponseEntity.ok(Map.of("status", OrderStatus.COMPLETED.name()));
         } catch (ResourceNotFoundException e) {
             return ResponseEntity.notFound().build();
