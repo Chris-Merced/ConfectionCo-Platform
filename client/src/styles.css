@@ -33,6 +33,7 @@
 
 html {
     scroll-behavior: smooth;
+    scrollbar-gutter: stable;
 }
 
 html,
@@ -1386,10 +1387,20 @@ input[type="file"].form-input {
 }
 
 /* ── Cake Gallery ────────────────────────────────────────────── */
+@keyframes galleryFadeIn {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+}
+
 .gallery-hero {
     background: var(--surface);
     text-align: center;
     padding: 5rem 2rem 3.5rem;
+    animation: galleryFadeIn 0.6s ease-out both;
+}
+
+.gallery-canvas {
+    animation: galleryFadeIn 0.6s ease-out 0.15s both;
 }
 
 .gallery-eyebrow {
@@ -1425,7 +1436,41 @@ input[type="file"].form-input {
     line-height: 1.75;
 }
 
+.gallery-canvas {
+    position: relative;
+    background: linear-gradient(160deg, var(--bg) 0%, var(--surface) 50%, var(--bg) 100%);
+    overflow: hidden;
+}
+
+.gallery-canvas::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image:
+        radial-gradient(circle, rgba(196, 118, 138, 0.75) 4px,   transparent 4px),
+        radial-gradient(circle, rgba(184, 133, 90,  0.55) 3.5px, transparent 3.5px),
+        radial-gradient(circle, rgba(74,  37,  18,  0.20) 3px,   transparent 3px),
+        radial-gradient(circle, rgba(232, 180, 192, 0.80) 3px,   transparent 3px),
+        radial-gradient(circle, rgba(168, 92,  114, 0.50) 2.5px, transparent 2.5px);
+    background-size:
+        311px 293px,
+        257px 271px,
+        383px 367px,
+        199px 211px,
+        431px 419px;
+    background-position:
+        10px 20px,
+        80px 140px,
+        160px 60px,
+        40px 180px,
+        220px 100px;
+    pointer-events: none;
+    z-index: 0;
+}
+
 .gallery-grid {
+    position: relative;
+    z-index: 1;
     columns: 3 260px;
     gap: 0.85rem;
     padding: 2.5rem 2rem;
@@ -1445,7 +1490,12 @@ input[type="file"].form-input {
     width: 100%;
     display: block;
     border-radius: var(--radius-md);
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    opacity: 0;
+    transition: opacity 0.45s ease, transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.gallery-img.loaded {
+    opacity: 1;
 }
 
 .gallery-item:hover .gallery-img {
@@ -1453,7 +1503,40 @@ input[type="file"].form-input {
     box-shadow: var(--shadow-lg);
 }
 
+.bakes-section {
+    position: relative;
+    z-index: 1;
+    max-width: 1300px;
+    margin: 0 auto;
+    padding-top: 2rem;
+}
+
+.bakes-section-header {
+    display: flex;
+    align-items: center;
+    gap: 1.25rem;
+    padding: 0 2rem;
+    margin-bottom: 0.5rem;
+}
+
+.bakes-section-label {
+    font-family: var(--font-script);
+    font-size: clamp(1.6rem, 3vw, 2.2rem);
+    color: var(--brown-dark);
+    white-space: nowrap;
+}
+
+.bakes-section-rule {
+    flex: 1;
+    height: 1.5px;
+    background: linear-gradient(90deg, var(--brown-light), transparent);
+    border-radius: 2px;
+    opacity: 0.45;
+}
+
 .gallery-cta-wrap {
+    position: relative;
+    z-index: 1;
     text-align: center;
     padding: 1rem 2rem 5rem;
     display: flex;

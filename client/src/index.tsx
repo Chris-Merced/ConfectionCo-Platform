@@ -8,6 +8,7 @@ import { BrowserRouter, Route, Routes } from "react-router-dom";
 import AuthWrapper from "./components/authWrapper";
 import Header from "./components/header";
 import Cakes from "./Routes/cakes";
+import MyBakes from "./Routes/myBakes";
 import Main from "./Routes/main";
 import PaymentCancel from "./Routes/paymentCancel";
 import PaymentSuccess from "./Routes/paymentSuccess";
@@ -30,6 +31,7 @@ function App(): ReactElement {
                 <Routes>
                   <Route path="/" element={<><Header /><Main /></>} />
                   <Route path="/cakes" element={<><Header /><Cakes /></>} />
+                  <Route path="/my-bakes" element={<><Header /><MyBakes /></>} />
                   <Route path="/admin" element={<AdminDashboard />} />
                   <Route path="/payment-success" element={<><Header /><PaymentSuccess /></>} />
                   <Route path="/payment-cancel" element={<><Header /><PaymentCancel /></>} />
