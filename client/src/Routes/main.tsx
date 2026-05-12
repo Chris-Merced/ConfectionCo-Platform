@@ -158,6 +158,64 @@ export default function Main(): ReactElement {
                 </div>
             </section>
 
+            <section className="preview-section preview-section--alt">
+                <div className="preview-header">
+                    <div>
+                        <span className="preview-eyebrow">custom creations</span>
+                        <h2 className="preview-heading">My Cakes</h2>
+                    </div>
+                    <Link to="/cakes" className="preview-view-all">View Gallery →</Link>
+                </div>
+                <div className="preview-body">
+                    <div className="preview-strip">
+                        {[
+                            "https://confectioncobakery-assets-859780942726-us-east-2-an.s3.us-east-2.amazonaws.com/cakes/IMG_20260512_124350_4.jpg",
+                            "https://confectioncobakery-assets-859780942726-us-east-2-an.s3.us-east-2.amazonaws.com/cakes/IMG_20260512_124350_7.jpg",
+                            "https://confectioncobakery-assets-859780942726-us-east-2-an.s3.us-east-2.amazonaws.com/cakes/IMG_20260512_124348_3.jpg",
+                        ].map((src, i) => (
+                            <div key={i} className="preview-card">
+                                <img
+                                    src={src}
+                                    alt={`Cake ${i + 1}`}
+                                    className="preview-img"
+                                    loading="lazy"
+                                    onLoad={(e) => e.currentTarget.classList.add("loaded")}
+                                />
+                            </div>
+                        ))}
+                    </div>
+                </div>
+            </section>
+
+            <section className="preview-section">
+                <div className="preview-header">
+                    <div>
+                        <span className="preview-eyebrow">from my kitchen</span>
+                        <h2 className="preview-heading">My Bakes</h2>
+                    </div>
+                    <Link to="/my-bakes" className="preview-view-all">View Gallery →</Link>
+                </div>
+                <div className="preview-body">
+                    <div className="preview-strip">
+                        {[
+                            "https://confectioncobakery-assets-859780942726-us-east-2-an.s3.us-east-2.amazonaws.com/miscellaneous/IMG_20260512_160144.jpg",
+                            "https://confectioncobakery-assets-859780942726-us-east-2-an.s3.us-east-2.amazonaws.com/pies/12351232.jpg",
+                            "https://confectioncobakery-assets-859780942726-us-east-2-an.s3.us-east-2.amazonaws.com/macarons/IMG_20260512_124351_1.jpg",
+                        ].map((src, i) => (
+                            <div key={i} className="preview-card">
+                                <img
+                                    src={src}
+                                    alt={`Bake ${i + 1}`}
+                                    className="preview-img"
+                                    loading="lazy"
+                                    onLoad={(e) => e.currentTarget.classList.add("loaded")}
+                                />
+                            </div>
+                        ))}
+                    </div>
+                </div>
+            </section>
+
             <div id="order" className="page-content">
                 <div className="order-section">
                     <div className="order-section-form">
