@@ -1,4 +1,4 @@
-import type { ReactElement } from "react";
+import { useRef, useState, type ReactElement } from "react";
 import { Link } from "react-router-dom";
 import "../styles.css";
 
@@ -42,9 +42,23 @@ const SECTIONS = [
     },
 ];
 
+const TOTAL_IMAGES = SECTIONS.reduce((sum, s) => sum + s.images.length, 0);
+const THRESHOLD = 3;
+
 export default function MyBakes(): ReactElement {
+    const [ready, setReady] = useState(false);
+    const loadedCount = useRef(0);
+
+    const handleLoad = (e: React.SyntheticEvent<HTMLImageElement>) => {
+        e.currentTarget.classList.add("loaded");
+        loadedCount.current += 1;
+        if (!ready && loadedCount.current >= Math.min(THRESHOLD, TOTAL_IMAGES)) {
+            setReady(true);
+        }
+    };
+
     return (
-        <>
+        <div className={`gallery-page${ready ? " gallery-page--ready" : ""}`}>
             <section className="gallery-hero">
                 <span className="gallery-eyebrow">from my kitchen</span>
                 <h1 className="gallery-heading">My Bakes</h1>
@@ -69,7 +83,7 @@ export default function MyBakes(): ReactElement {
                                         alt={`${label} ${i + 1}`}
                                         className="gallery-img"
                                         loading="lazy"
-                                        onLoad={(e) => e.currentTarget.classList.add("loaded")}
+                                        onLoad={handleLoad}
                                     />
                                 </div>
                             ))}
@@ -82,6 +96,6 @@ export default function MyBakes(): ReactElement {
                     <Link to="/#order" className="hero-cta">Order Now</Link>
                 </div>
             </section>
-        </>
+        </div>
     );
 }
