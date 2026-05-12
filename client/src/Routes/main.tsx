@@ -72,6 +72,40 @@ export default function Main(): ReactElement {
                 </div>
             </div>
 
+            <section className="story-section">
+                <div className="story-inner">
+                    <div className="story-content">
+                        <span className="story-eyebrow">meet the baker</span>
+                        <h2 className="story-heading">Hello, I'm Isabel.</h2>
+                        <div className="story-rule" aria-hidden="true" />
+                        <p className="story-body">
+                            Born and raised on the shores of Panama City Beach, Florida,
+                            Isabel discovered her love for confections long before she ever put
+                            on a chef's coat. A trained pastry chef, devoted wife, and proud mother of
+                            two, she pours the same warmth into every bake that she gives to the people
+                            she loves most. Confection Co. Bakery is her way of sharing that sweetness
+                            with her community with one handcrafted creation at a time. From showstopping
+                            custom cakes and dainty macarons to silky cheesecakes and flaky pies, every
+                            bake is made entirely from scratch. Each order is a little piece of her heart,
+                            crafted just for you.
+                        </p>
+                        <div className="story-tags">
+                            <span className="story-tag">Cakes</span>
+                            <span className="story-tag">Macarons</span>
+                            <span className="story-tag">Cheesecakes</span>
+                            <span className="story-tag">Pies</span>
+                        </div>
+                    </div>
+                    <div className="story-photo-wrap">
+                        <img
+                            className="story-photo"
+                            src="https://confectioncobakery-assets-859780942726-us-east-2-an.s3.us-east-2.amazonaws.com/headshots/IMG_20260512_131123.jpg"
+                            alt="Isabel Merced, founder of Confection Co. Bakery"
+                        />
+                    </div>
+                </div>
+            </section>
+
             <div id="order" className="page-content">
                 <div className="order-section">
                     <div className="order-section-form">
