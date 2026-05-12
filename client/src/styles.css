@@ -89,6 +89,23 @@ img, iframe, input, textarea, select, button {
     gap: 2rem;
 }
 
+.header-nav-link {
+    font-family: var(--font-sans);
+    font-size: 0.8rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--surface-alt);
+    text-decoration: none;
+    opacity: 0.75;
+    transition: color 0.15s, opacity 0.15s;
+}
+
+.header-nav-link:hover {
+    color: var(--pink-light);
+    opacity: 1;
+}
+
 .header-nav-cta {
     padding: 0.55rem 1.35rem;
     background: var(--pink);
@@ -390,6 +407,25 @@ img, iframe, input, textarea, select, button {
     margin-bottom: 1.5rem;
     padding-bottom: 0.5rem;
     border-bottom: 2px solid var(--surface-alt);
+}
+
+/* ── Order Policy Notice ─────────────────────────────────────── */
+.order-policy-notice {
+    font-size: 0.78rem;
+    color: var(--text-muted);
+    margin-bottom: 1.25rem;
+    line-height: 1.5;
+}
+
+.order-policy-link {
+    color: var(--pink-dark);
+    text-decoration: underline;
+    text-underline-offset: 2px;
+    transition: color 0.15s;
+}
+
+.order-policy-link:hover {
+    color: var(--pink);
 }
 
 /* ── Form Card ───────────────────────────────────────────────── */
@@ -1232,6 +1268,10 @@ input[type="file"].form-input {
 }
 
 /* ── Policies & Booking ──────────────────────────────────────── */
+#policies {
+    scroll-margin-top: 96px;
+}
+
 .policies-section {
     background: var(--bg);
     padding: 6rem 2rem;

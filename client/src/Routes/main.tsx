@@ -107,7 +107,7 @@ export default function Main(): ReactElement {
                 </div>
             </section>
 
-            <section className="policies-section">
+            <section id="policies" className="policies-section">
                 <div className="policies-inner">
                     <div className="policies-photo-wrap">
                         <img
@@ -162,6 +162,13 @@ export default function Main(): ReactElement {
                 <div className="order-section">
                     <div className="order-section-form">
                         <h2 className="section-heading">Place an Order</h2>
+                        <p className="order-policy-notice">
+                            By ordering you agree that you have read the{" "}
+                            <a href="#policies" className="order-policy-link">
+                                Policies &amp; Booking
+                            </a>{" "}
+                            section.
+                        </p>
                         <OrderForm />
                     </div>
                     <div className="order-section-map">
