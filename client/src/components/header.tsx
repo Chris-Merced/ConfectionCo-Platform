@@ -8,6 +8,7 @@ export default function Header(): ReactElement {
                 Confection <span>Co</span>
             </span>
             <nav className="header-nav">
+                <a href="#policies" className="header-nav-link">Policies</a>
                 <a href="#order" className="header-nav-cta">Order Now</a>
             </nav>
         </header>

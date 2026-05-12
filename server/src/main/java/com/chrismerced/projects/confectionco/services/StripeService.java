@@ -17,6 +17,9 @@ public class StripeService {
     @Value("${stripe.api.key}")
     private String apiKey;
 
+    @Value("${app.base-url}")
+    private String baseUrl;
+
     @PostConstruct
     public void init() {
         Stripe.apiKey = apiKey;
@@ -54,8 +57,8 @@ public class StripeService {
                 .setBillingAddressCollection(SessionCreateParams.BillingAddressCollection.AUTO)
                 .putMetadata("orderId", String.valueOf(orderId))
                 .putMetadata("orderType", orderType)
-                .setSuccessUrl("http://localhost:5173/payment-success?orderId=" + orderId)
-                .setCancelUrl("http://localhost:5173/payment-cancel")
+                .setSuccessUrl(baseUrl + "/payment-success?orderId=" + orderId)
+                .setCancelUrl(baseUrl + "/payment-cancel")
                 .addLineItem(
                         SessionCreateParams.LineItem.builder()
                                 .setQuantity(1L)
