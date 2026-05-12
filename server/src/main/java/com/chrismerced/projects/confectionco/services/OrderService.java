@@ -139,7 +139,9 @@ public class OrderService {
                 log.error("Failed to send deposit text to order {}", orderId, e);
             }
             try {
+                log.info("Sending deposit receipt email to {} for order {}", order.getEmail(), orderId);
                 emailService.sendDepositReceipt(order.getEmail());
+                log.info("Deposit receipt email sent successfully for order {}", orderId);
             } catch (Exception e) {
                 log.error("Failed to send deposit receipt email for order {}", orderId, e);
             }

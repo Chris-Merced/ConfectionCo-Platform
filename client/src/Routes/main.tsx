@@ -94,6 +94,7 @@ export default function Main(): ReactElement {
                             <span className="story-tag">Macarons</span>
                             <span className="story-tag">Cheesecakes</span>
                             <span className="story-tag">Pies</span>
+                            <span className="story-tag">And More!</span>
                         </div>
                     </div>
                     <div className="story-photo-wrap">
@@ -102,6 +103,57 @@ export default function Main(): ReactElement {
                             src="https://confectioncobakery-assets-859780942726-us-east-2-an.s3.us-east-2.amazonaws.com/headshots/IMG_20260512_131123.jpg"
                             alt="Isabel Merced, founder of Confection Co. Bakery"
                         />
+                    </div>
+                </div>
+            </section>
+
+            <section className="policies-section">
+                <div className="policies-inner">
+                    <div className="policies-photo-wrap">
+                        <img
+                            className="policies-photo"
+                            src="https://confectioncobakery-assets-859780942726-us-east-2-an.s3.us-east-2.amazonaws.com/cakes/msedge_D5fL9k2ng0.png"
+                            alt="Confection Co. Bakery custom cake"
+                        />
+                    </div>
+                    <div className="policies-content">
+                        <span className="policies-eyebrow">before you order</span>
+                        <h2 className="policies-heading">Policies &amp; Booking</h2>
+                        <div className="policies-rule" aria-hidden="true" />
+                        <ul className="policies-list">
+                            <li className="policies-item">
+                                <span className="policies-item-label">Deposit</span>
+                                <span className="policies-item-text">
+                                    Non-refundable 40% of your order is required to secure the date.
+                                    Remaining balance is due a week before pick up/delivery! Orders less
+                                    than a week away must pay in full, no exceptions, and are subject to a
+                                    rush fee. No deposit, no order.
+                                </span>
+                            </li>
+                            <li className="policies-item">
+                                <span className="policies-item-label">Pick Up</span>
+                                <span className="policies-item-text">
+                                    Pick up is between the hours of 10am–4pm, located in Hodges Bayou
+                                    Plantation in Southport. Address will be given once full payment has
+                                    been completed! Late pick ups will be charged a late fee of $20/hr
+                                    (w/ 10–15 min grace period).
+                                </span>
+                            </li>
+                            <li className="policies-item">
+                                <span className="policies-item-label">Cancellations</span>
+                                <span className="policies-item-text">
+                                    Deposits are final. Cancellations less than a week's notice will
+                                    result in no refund, no exceptions!
+                                </span>
+                            </li>
+                            <li className="policies-item">
+                                <span className="policies-item-label">Changes</span>
+                                <span className="policies-item-text">
+                                    You are able to make changes to your order up to two weeks prior to
+                                    pick up or delivery!
+                                </span>
+                            </li>
+                        </ul>
                     </div>
                 </div>
             </section>
