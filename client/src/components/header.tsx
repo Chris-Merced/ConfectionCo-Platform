@@ -11,8 +11,8 @@ export default function Header(): ReactElement {
             <nav className="header-nav">
                 <Link to="/cakes" className="header-nav-link">My Cakes</Link>
                 <Link to="/my-bakes" className="header-nav-link">My Bakes</Link>
-                <a href="#policies" className="header-nav-link">Policies</a>
-                <a href="#order" className="header-nav-cta">Order Now</a>
+                <Link to={{ pathname: "/", hash: "#policies" }} className="header-nav-link">Policies</Link>
+                <Link to={{ pathname: "/", hash: "#order" }} className="header-nav-cta">Order Now</Link>
             </nav>
         </header>
     );
