@@ -142,15 +142,15 @@ export default function OrderCard({ order, token, onUpdate }: OrderCardProps): R
         </div>
       </div>
 
-      <p className="order-card-field">Email: {order.email}</p>
-      <p className="order-card-field">Phone: {order.phoneNumber}</p>
-      <p className="order-card-field">Servings: {order.servingCount}</p>
+      <p className="order-card-field"><strong>Email:</strong> {order.email}</p>
+      <p className="order-card-field"><strong>Phone:</strong> {order.phoneNumber}</p>
+      <p className="order-card-field"><strong>Servings:</strong> {order.servingCount}</p>
       <p className="order-card-field">
-        Fulfillment: {order.fulfillmentType === "DROPOFF" ? "Delivery" : "Pickup"}
+        <strong>Fulfillment:</strong> {order.fulfillmentType === "DROPOFF" ? "Delivery" : "Pickup"}
       </p>
       {order.deliveryAddress && (
         <p className="order-card-field">
-          Delivery Address:{" "}
+          <strong>Delivery Address:</strong>{" "}
           <a
             href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(order.deliveryAddress)}`}
             target="_blank"
@@ -162,12 +162,12 @@ export default function OrderCard({ order, token, onUpdate }: OrderCardProps): R
       )}
       {order.fulfillmentDate && (
         <p className="order-card-field">
-          {order.fulfillmentType === "DROPOFF" ? "Delivery Date" : "Pickup Date"}:{" "}
+          <strong>{order.fulfillmentType === "DROPOFF" ? "Delivery Date" : "Pickup Date"}:</strong>{" "}
           {new Date(order.fulfillmentDate + "T00:00:00").toLocaleDateString()}
         </p>
       )}
       {order.totalAmount != null && (
-        <p className="order-card-field">Total: ${order.totalAmount.toFixed(2)}</p>
+        <p className="order-card-field"><strong>Total:</strong> ${order.totalAmount.toFixed(2)}</p>
       )}
 
       <div style={{ margin: "0.2rem 0" }}>
@@ -185,10 +185,12 @@ export default function OrderCard({ order, token, onUpdate }: OrderCardProps): R
           </div>
         ) : (
           <div className="order-card-comments-view">
-            <p className="order-card-comments-text">
-              Comments:{" "}
-              {comments || <em className="order-card-comments-none">none</em>}
-            </p>
+            <div className="order-card-comments-text">
+              <span className="order-card-comments-label">Comments:</span>
+              <p className="order-card-comments-body">
+                {comments || <em className="order-card-comments-none">none</em>}
+              </p>
+            </div>
             <button className="btn-icon" onClick={() => setEditingComments(true)}>Edit</button>
           </div>
         )}
