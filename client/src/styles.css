@@ -1386,6 +1386,125 @@ input[type="file"].form-input {
     line-height: 1.85;
 }
 
+/* ── Gallery Preview Strips ──────────────────────────────────── */
+.preview-section {
+    padding: 4rem 0 3rem;
+    background: var(--bg);
+}
+
+.preview-section--alt {
+    background: var(--surface);
+}
+
+.preview-header {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 0 2rem 1.25rem;
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 1rem;
+}
+
+.preview-eyebrow {
+    display: block;
+    font-family: var(--font-script);
+    font-size: clamp(1.1rem, 2.5vw, 1.5rem);
+    color: var(--pink);
+    margin-bottom: 0.2rem;
+}
+
+.preview-heading {
+    font-family: var(--font-serif);
+    font-size: clamp(1.6rem, 3vw, 2.2rem);
+    font-weight: 600;
+    color: var(--brown-dark);
+    line-height: 1.1;
+    margin: 0;
+}
+
+.preview-view-all {
+    font-family: var(--font-sans);
+    font-size: 0.8rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--brown-light);
+    text-decoration: none;
+    white-space: nowrap;
+    transition: color 0.15s;
+    padding-bottom: 0.2rem;
+}
+
+.preview-view-all:hover {
+    color: var(--pink);
+}
+
+/* sidebar will slot in here as a sibling to preview-strip later */
+.preview-body {
+    position: relative;
+    display: flex;
+}
+
+/* right-edge fade hints at more content */
+.preview-body::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    width: 80px;
+    background: linear-gradient(to right, transparent, var(--bg));
+    pointer-events: none;
+    z-index: 1;
+}
+
+.preview-section--alt .preview-body::after {
+    background: linear-gradient(to right, transparent, var(--surface));
+}
+
+.preview-strip {
+    display: flex;
+    gap: 1rem;
+    overflow-x: auto;
+    padding: 0.5rem 2rem 1.5rem;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    flex: 1;
+    min-width: 0;
+}
+
+.preview-strip::-webkit-scrollbar {
+    display: none;
+}
+
+.preview-card {
+    flex: 0 0 clamp(220px, 70vw, 300px);
+    scroll-snap-align: start;
+    border-radius: var(--radius-md);
+    overflow: hidden;
+    box-shadow: 0 8px 28px rgba(74, 37, 18, 0.18), 0 2px 8px rgba(74, 37, 18, 0.10);
+    border: 2.5px solid var(--border);
+}
+
+.preview-img {
+    width: 100%;
+    aspect-ratio: 3 / 4;
+    object-fit: cover;
+    display: block;
+    opacity: 0;
+    transition: opacity 0.45s ease, transform 0.3s ease;
+}
+
+.preview-img.loaded {
+    opacity: 1;
+}
+
+.preview-card:hover .preview-img {
+    transform: scale(1.03);
+}
+
 /* ── Cake Gallery ────────────────────────────────────────────── */
 @keyframes galleryFadeIn {
     from { opacity: 0; }
@@ -1683,5 +1802,11 @@ input[type="file"].form-input {
 
     .gallery-hero {
         padding: 3.5rem 1.25rem 2.5rem;
+    }
+}
+
+@media (min-width: 769px) {
+    .preview-strip {
+        justify-content: center;
     }
 }

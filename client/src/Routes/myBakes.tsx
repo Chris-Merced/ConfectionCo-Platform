@@ -27,6 +27,13 @@ const SECTIONS = [
         ],
     },
     {
+        label: "Cheesecakes",
+        images: [
+            "https://confectioncobakery-assets-859780942726-us-east-2-an.s3.us-east-2.amazonaws.com/cakes/IMG_20260512_124349_1.jpg",
+            "https://confectioncobakery-assets-859780942726-us-east-2-an.s3.us-east-2.amazonaws.com/cakes/IMG_20260512_124349_2.jpg",
+        ],
+    },
+    {
         label: "More Treats",
         images: [
             "https://confectioncobakery-assets-859780942726-us-east-2-an.s3.us-east-2.amazonaws.com/miscellaneous/IMG_20260512_160144.jpg",
