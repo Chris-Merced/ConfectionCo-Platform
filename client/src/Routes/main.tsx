@@ -9,6 +9,13 @@ export default function Main(): ReactElement {
     const heroRef = useRef<HTMLElement>(null);
 
     useEffect(() => {
+        if (window.location.hash) {
+            const el = document.querySelector(window.location.hash);
+            if (el) el.scrollIntoView({ behavior: "smooth" });
+        }
+    }, []);
+
+    useEffect(() => {
         const el = heroRef.current;
         if (!el) return;
 
