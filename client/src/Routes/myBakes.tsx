@@ -1,4 +1,4 @@
-import { useRef, useState, type ReactElement } from "react";
+import { useLayoutEffect, useRef, useState, type ReactElement } from "react";
 import { Link } from "react-router-dom";
 import "../styles.css";
 
@@ -46,6 +46,7 @@ const TOTAL_IMAGES = SECTIONS.reduce((sum, s) => sum + s.images.length, 0);
 const THRESHOLD = 3;
 
 export default function MyBakes(): ReactElement {
+    useLayoutEffect(() => { window.scrollTo({ top: 0, behavior: "instant" }); }, []);
     const [ready, setReady] = useState(false);
     const loadedCount = useRef(0);
 

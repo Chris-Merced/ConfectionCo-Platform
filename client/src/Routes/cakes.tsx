@@ -1,4 +1,4 @@
-import { useRef, useState, type ReactElement } from "react";
+import { useLayoutEffect, useRef, useState, type ReactElement } from "react";
 import { Link } from "react-router-dom";
 import "../styles.css";
 
@@ -29,6 +29,7 @@ const CAKE_IMAGES = [
 const THRESHOLD = 3;
 
 export default function Cakes(): ReactElement {
+    useLayoutEffect(() => { window.scrollTo({ top: 0, behavior: "instant" }); }, []);
     const [ready, setReady] = useState(false);
     const loadedCount = useRef(0);
 
