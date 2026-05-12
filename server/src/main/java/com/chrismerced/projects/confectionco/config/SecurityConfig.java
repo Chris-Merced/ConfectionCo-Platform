@@ -22,8 +22,14 @@ public class SecurityConfig {
 
         http
                 .cors(cors -> {
-                }) // enables CORS support
+                })
                 .csrf(csrf -> csrf.disable())
+                .headers(headers -> headers
+                        .frameOptions(frame -> frame.deny())
+                        .contentTypeOptions(cto -> {})
+                        .httpStrictTransportSecurity(hsts -> hsts
+                                .maxAgeInSeconds(31536000)
+                                .includeSubDomains(true)))
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/", "/index.html", "/assets/**").permitAll()
                         .requestMatchers("/api/stripe/webhook", "/api/orders").permitAll()
