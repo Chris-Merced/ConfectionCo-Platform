@@ -1,9 +1,8 @@
-import type { ReactElement } from "react";
+import { useRef, useState, type ReactElement } from "react";
 import { Link } from "react-router-dom";
 import "../styles.css";
 
 const CAKE_IMAGES = [
-    
     "https://confectioncobakery-assets-859780942726-us-east-2-an.s3.us-east-2.amazonaws.com/cakes/IMG_20260512_124337_6.jpg",
     "https://confectioncobakery-assets-859780942726-us-east-2-an.s3.us-east-2.amazonaws.com/cakes/IMG_20260512_124348_10.jpg",
     "https://confectioncobakery-assets-859780942726-us-east-2-an.s3.us-east-2.amazonaws.com/cakes/IMG_20260512_124348_3.jpg",
@@ -25,11 +24,24 @@ const CAKE_IMAGES = [
     "https://confectioncobakery-assets-859780942726-us-east-2-an.s3.us-east-2.amazonaws.com/cakes/IMG_20260512_124351.jpg",
     "https://confectioncobakery-assets-859780942726-us-east-2-an.s3.us-east-2.amazonaws.com/cakes/IMG_20260512_124337_1.jpg",
     "https://confectioncobakery-assets-859780942726-us-east-2-an.s3.us-east-2.amazonaws.com/cakes/IMG_20260512_124349_4.jpg",
-
 ];
+
+const THRESHOLD = 3;
+
 export default function Cakes(): ReactElement {
+    const [ready, setReady] = useState(false);
+    const loadedCount = useRef(0);
+
+    const handleLoad = (e: React.SyntheticEvent<HTMLImageElement>) => {
+        e.currentTarget.classList.add("loaded");
+        loadedCount.current += 1;
+        if (!ready && loadedCount.current >= Math.min(THRESHOLD, CAKE_IMAGES.length)) {
+            setReady(true);
+        }
+    };
+
     return (
-        <>
+        <div className={`gallery-page${ready ? " gallery-page--ready" : ""}`}>
             <section className="gallery-hero">
                 <span className="gallery-eyebrow">handcrafted with love</span>
                 <h1 className="gallery-heading">The Cake Gallery</h1>
@@ -48,7 +60,7 @@ export default function Cakes(): ReactElement {
                                 alt={`Custom cake ${i + 1}`}
                                 className="gallery-img"
                                 loading="lazy"
-                                onLoad={(e) => e.currentTarget.classList.add("loaded")}
+                                onLoad={handleLoad}
                             />
                         </div>
                     ))}
@@ -59,6 +71,6 @@ export default function Cakes(): ReactElement {
                     <Link to="/#order" className="hero-cta">Place an Order</Link>
                 </div>
             </section>
-        </>
+        </div>
     );
 }
