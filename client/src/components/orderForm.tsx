@@ -129,6 +129,7 @@ export default function OrderForm(): ReactElement {
                     id="servingCount"
                     type="number"
                     min="1"
+                    max="500"
                     value={servingCount}
                     onChange={e => setServingCount(e.target.value)}
                     required
@@ -171,6 +172,7 @@ export default function OrderForm(): ReactElement {
                         value={deliveryAddress}
                         onChange={e => setDeliveryAddress(e.target.value)}
                         placeholder="123 Main St, City, State, ZIP"
+                        maxLength={500}
                         required
                     />
                 </div>
@@ -212,6 +214,7 @@ export default function OrderForm(): ReactElement {
                     value={comments}
                     onChange={e => setComments(e.target.value)}
                     placeholder="Tell us about your vision — Items you want to order (Cakes, Cupcakes, Pies, Macaron's etc..): Amount, flavors, theme, any special requests..."
+                    maxLength={2000}
                 />
             </div>
 
