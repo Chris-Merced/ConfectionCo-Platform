@@ -75,6 +75,7 @@ public class OrderController {
 
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<Map<String, Long>> createOrder(
+            @RequestParam @NotBlank @Size(max = 100) String customerName,
             @RequestParam @Email @NotBlank String email,
             @RequestParam @NotBlank String phoneNumber,
             @RequestParam @Min(1) @Max(500) int servingCount,
@@ -84,6 +85,7 @@ public class OrderController {
             @RequestParam LocalDate fulfillmentDate,
             @RequestParam(required = false) List<MultipartFile> photos) throws IOException {
 
+        String cleanCustomerName = InputSanitizer.stripHtml(customerName);
         String cleanEmail = InputSanitizer.stripHtml(email).toLowerCase();
         String cleanPhone = InputSanitizer.sanitizePhone(phoneNumber);
         String cleanComments = InputSanitizer.stripHtml(comments);
@@ -119,6 +121,7 @@ public class OrderController {
         }
 
         Order order = new Order();
+        order.setCustomerName(cleanCustomerName);
         order.setEmail(cleanEmail);
         order.setPhoneNumber(cleanPhone);
         order.setServingCount(servingCount);

@@ -26,6 +26,9 @@ public class Order {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(name = "customer_name")
+    private String customerName;
+
     @Column(name = "user_email")
     private String email;
 
@@ -79,6 +82,8 @@ public class Order {
     private List<String> photoUrls = new ArrayList<>();
 
     public Long getId() { return id; }
+    public String getCustomerName() { return customerName; }
+    public void setCustomerName(String customerName) { this.customerName = customerName; }
     public String getEmail() { return email; }
     public void setEmail(String email) { this.email = email; }
     public String getPhoneNumber() { return phoneNumber; }
