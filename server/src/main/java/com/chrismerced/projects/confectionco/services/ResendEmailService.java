@@ -55,6 +55,19 @@ public class ResendEmailService implements EmailService {
     }
 
     @Override
+    public void sendRefundConfirmation(String recipient) {
+        send(recipient,
+                "Your Refund Has Been Processed",
+                "<p>Hi there!</p>" +
+                "<p>We wanted to let you know that your refund from <strong>Confection Co. Bakery</strong> " +
+                "has been successfully processed.</p>" +
+                "<p>Please allow 5–10 business days for the funds to appear back in your account, " +
+                "depending on your bank or card issuer.</p>" +
+                "<p>If you have any questions, don't hesitate to reach out — we're happy to help.</p>" +
+                "<p>— The Confection Co. Team</p>");
+    }
+
+    @Override
     public void sendReceipt(String recipient, String receipt) {
         send(recipient,
                 "Confection Co. Order Receipt",
