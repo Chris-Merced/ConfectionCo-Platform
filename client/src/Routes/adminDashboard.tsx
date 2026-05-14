@@ -14,6 +14,7 @@ const STATUS_SECTIONS: { key: string; label: string }[] = [
     { key: "REJECTED", label: "Rejected" },
 ];
 
+
 export default function AdminDashboard(): ReactElement {
     const { isLoading, isAuthenticated, error, loginWithRedirect: login, logout: auth0Logout, user, getAccessTokenSilently } = useAuth0();
 

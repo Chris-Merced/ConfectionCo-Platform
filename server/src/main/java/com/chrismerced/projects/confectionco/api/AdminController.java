@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.chrismerced.projects.confectionco.dtos.OrderDTO;
 import com.chrismerced.projects.confectionco.dtos.SendReceiptRequest;
+import com.chrismerced.projects.confectionco.util.InputSanitizer;
 import com.chrismerced.projects.confectionco.exceptions.ResourceNotFoundException;
 import com.chrismerced.projects.confectionco.model.OrderStatus;
 import com.chrismerced.projects.confectionco.repository.OrderRepository;
@@ -84,7 +85,7 @@ public class AdminController {
         try {
              Order order = orderRepository.findById(id)
                     .orElseThrow(() -> new ResourceNotFoundException("Order not found: " + id));
-            order.setComments(body.get("comments"));
+            order.setComments(InputSanitizer.stripHtml(body.get("comments")));
             orderRepository.save(order);
             return ResponseEntity.ok(Map.of("comments", order.getComments() != null ? order.getComments() : ""));
         } catch (ResourceNotFoundException e) {

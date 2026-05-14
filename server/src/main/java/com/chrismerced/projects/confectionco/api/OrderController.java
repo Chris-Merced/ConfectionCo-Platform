@@ -6,10 +6,18 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -20,7 +28,9 @@ import com.chrismerced.projects.confectionco.model.Order;
 import com.chrismerced.projects.confectionco.repository.OrderRepository;
 import com.chrismerced.projects.confectionco.services.EmailService;
 import com.chrismerced.projects.confectionco.services.S3Service;
+import com.chrismerced.projects.confectionco.util.InputSanitizer;
 
+@Validated
 @RestController
 @RequestMapping("/api/orders")
 public class OrderController {
@@ -38,6 +48,7 @@ public class OrderController {
     private static final byte[] MAGIC_JPEG = {(byte) 0xFF, (byte) 0xD8, (byte) 0xFF};
     private static final byte[] MAGIC_PNG  = {(byte) 0x89, 0x50, 0x4E, 0x47};
     private static final byte[] MAGIC_WEBP = {0x52, 0x49, 0x46, 0x46};
+    private static final Set<String> VALID_FULFILLMENT_TYPES = Set.of("PICKUP", "DROPOFF");
 
     OrderController(OrderRepository orderRepository, S3Service s3Service, EmailService emailService) {
         this.orderRepository = orderRepository;
@@ -64,17 +75,34 @@ public class OrderController {
 
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<Map<String, Long>> createOrder(
-            @RequestParam String email,
-            @RequestParam String phoneNumber,
-            @RequestParam int servingCount,
-            @RequestParam(required = false) String comments,
+            @RequestParam @Email @NotBlank String email,
+            @RequestParam @NotBlank String phoneNumber,
+            @RequestParam @Min(1) @Max(500) int servingCount,
+            @RequestParam(required = false) @Size(max = 2000) String comments,
             @RequestParam(defaultValue = "PICKUP") String fulfillmentType,
-            @RequestParam(required = false) String deliveryAddress,
+            @RequestParam(required = false) @Size(max = 500) String deliveryAddress,
             @RequestParam LocalDate fulfillmentDate,
             @RequestParam(required = false) List<MultipartFile> photos) throws IOException {
 
-        long maxBytes = 10 * 1024 * 1024;
+        String cleanEmail = InputSanitizer.stripHtml(email).toLowerCase();
+        String cleanPhone = InputSanitizer.sanitizePhone(phoneNumber);
+        String cleanComments = InputSanitizer.stripHtml(comments);
+        String cleanDeliveryAddress = InputSanitizer.stripHtml(deliveryAddress);
+        String cleanFulfillmentType = InputSanitizer.stripHtml(fulfillmentType).toUpperCase();
 
+        if (cleanPhone == null || cleanPhone.length() != 10) {
+            throw new IllegalArgumentException("Phone number must be a valid 10-digit US number.");
+        }
+
+        if (!VALID_FULFILLMENT_TYPES.contains(cleanFulfillmentType)) {
+            throw new IllegalArgumentException("Invalid fulfillment type.");
+        }
+
+        if (!fulfillmentDate.isAfter(LocalDate.now())) {
+            throw new IllegalArgumentException("Fulfillment date must be in the future.");
+        }
+
+        long maxBytes = 10 * 1024 * 1024;
         List<String> photoKeys = new ArrayList<>();
         if (photos != null) {
             for (MultipartFile photo : photos) {
@@ -91,18 +119,18 @@ public class OrderController {
         }
 
         Order order = new Order();
-        order.setEmail(email);
-        order.setPhoneNumber(phoneNumber);
+        order.setEmail(cleanEmail);
+        order.setPhoneNumber(cleanPhone);
         order.setServingCount(servingCount);
-        order.setComments(comments);
-        order.setFulfillmentType(fulfillmentType.toUpperCase());
-        order.setDeliveryAddress("DROPOFF".equalsIgnoreCase(fulfillmentType) ? deliveryAddress : null);
+        order.setComments(cleanComments);
+        order.setFulfillmentType(cleanFulfillmentType);
+        order.setDeliveryAddress("DROPOFF".equals(cleanFulfillmentType) ? cleanDeliveryAddress : null);
         order.setFulfillmentDate(fulfillmentDate);
         order.setPhotoUrls(photoKeys);
 
         Order saved = orderRepository.save(order);
         try {
-            emailService.sendOrderConfirmation(email);
+            emailService.sendOrderConfirmation(cleanEmail);
         } catch (Exception e) {
             // Non-fatal — order is saved, email failure is logged by EmailService
         }
