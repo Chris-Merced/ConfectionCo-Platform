@@ -204,7 +204,7 @@ export default function OrderCard({ order, token, onUpdate }: OrderCardProps): R
         )}
       </div>
 
-      {order.photoUrls.length > 0 && (
+      {order.photoUrls.length > 0 && order.status !== "REFUNDED" && (
         <div className="order-card-photos">
           {order.photoUrls.map((url, i) => (
             <a key={i} href={url} target="_blank" rel="noreferrer">
