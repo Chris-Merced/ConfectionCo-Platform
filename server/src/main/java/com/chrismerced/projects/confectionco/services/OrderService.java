@@ -45,7 +45,7 @@ public class OrderService {
         Order order = orderRepository.findById(orderId)
                 .orElseThrow(() -> new ResourceNotFoundException("Order not found: " + orderId));
 
-        order.setTotalAmount(totalAmount);
+        order.setDepositAmount(totalAmount);
         order.setStatus(OrderStatus.AWAITING_DEPOSIT);
 
         long amountInCents = totalAmount.multiply(BigDecimal.valueOf(100)).longValue();
@@ -91,8 +91,8 @@ public class OrderService {
             throw new IllegalArgumentException("Refund amount must be greater than zero.");
         }
 
-        if (order.getTotalAmount() != null && amount.compareTo(order.getTotalAmount()) > 0) {
-            throw new IllegalArgumentException("Refund amount cannot exceed the order total.");
+        if (order.getFinalPaymentAmount() != null && amount.compareTo(order.getFinalPaymentAmount()) > 0) {
+            throw new IllegalArgumentException("Refund amount cannot exceed the final payment amount.");
         }
 
         long amountInCents = amount.multiply(BigDecimal.valueOf(100)).longValue();
