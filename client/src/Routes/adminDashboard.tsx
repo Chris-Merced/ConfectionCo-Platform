@@ -14,7 +14,7 @@ const STATUS_SECTIONS: { key: string; label: string; collapsible?: boolean }[] =
     { key: "REFUNDED", label: "Refunded", collapsible: true },
     { key: "REJECTED", label: "Rejected" },
 ];
-
+// TODO: Ensure we have idompotency handled for stripe interactions
 export default function AdminDashboard(): ReactElement {
     const { isLoading, isAuthenticated, error, loginWithRedirect: login, logout: auth0Logout, user, getAccessTokenSilently } = useAuth0();
 
