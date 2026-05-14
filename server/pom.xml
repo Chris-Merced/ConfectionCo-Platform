@@ -147,6 +147,7 @@
 
 				<configuration>
 					<workingDirectory>${project.basedir}/../client</workingDirectory>
+					<skip>${skipFrontend}</skip>
 				</configuration>
 
 				<executions>					
