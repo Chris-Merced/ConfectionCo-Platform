@@ -78,7 +78,7 @@
 		<dependency>
     		<groupId>com.resend</groupId>
     		<artifactId>resend-java</artifactId>
-    		<version>3.0.0</version>
+    		<version>4.13.0</version>
 		</dependency>
 
 		<!-- Load .env file into Spring properties -->
