@@ -112,6 +112,10 @@ export default function OrderCard({ order, token, onUpdate }: OrderCardProps): R
     deleteMutation.mutate();
   };
 
+  const isUrgent = order.fulfillmentDate
+    ? (new Date(order.fulfillmentDate + "T00:00:00").getTime() - new Date(order.createdAt).getTime()) / (1000 * 60 * 60 * 24) < 7
+    : false;
+
   const isAnyPending =
     rejectMutation.isPending ||
     depositLinkMutation.isPending ||
@@ -215,14 +219,18 @@ export default function OrderCard({ order, token, onUpdate }: OrderCardProps): R
           <input
             className="order-card-input"
             type="number"
-            placeholder="Total amount (e.g. 150.00)"
+            placeholder={isUrgent ? "Full payment amount" : "Deposit amount"}
             value={amount}
             onChange={(e) => setAmount(e.target.value)}
             step="0.01"
             min="0"
           />
-          <button className="btn-accept" onClick={() => depositLinkMutation.mutate()} disabled={isAnyPending || !amount}>
-            Accept
+          <button
+            className="btn-accept"
+            onClick={() => isUrgent ? finalLinkMutation.mutate() : depositLinkMutation.mutate()}
+            disabled={isAnyPending || !amount}
+          >
+            {isUrgent ? "Accept — Full Payment" : "Accept"}
           </button>
           <button className="btn-reject" onClick={() => rejectMutation.mutate()} disabled={isAnyPending}>
             Reject
