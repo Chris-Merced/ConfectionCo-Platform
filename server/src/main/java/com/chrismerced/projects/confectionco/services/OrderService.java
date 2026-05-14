@@ -166,6 +166,17 @@ public class OrderService {
             order.setStatus(OrderStatus.REFUNDED);
             orderRepository.save(order);
             log.info("Refund {} succeeded for order {}", refundId, order.getId());
+            try {
+                textingService.sendText(order.getPhoneNumber(),
+                        "Your refund from Confection Co. Bakery has been processed. Please allow 5–10 business days for it to appear in your account.");
+            } catch (Exception e) {
+                log.error("Failed to send refund text for order {}", order.getId(), e);
+            }
+            try {
+                emailService.sendRefundConfirmation(order.getEmail());
+            } catch (Exception e) {
+                log.error("Failed to send refund confirmation email for order {}", order.getId(), e);
+            }
         } else if ("failed".equals(refundStatus)) {
             order.setStatus(OrderStatus.PAID_IN_FULL);
             order.setStripeRefundId(null);
