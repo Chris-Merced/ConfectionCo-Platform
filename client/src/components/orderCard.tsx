@@ -6,7 +6,7 @@ export interface Order {
   email: string;
   phoneNumber: string;
   status: string;
-  totalAmount: number | null;
+  depositAmount: number | null;
   finalPaymentAmount: number | null;
   depositPaid: boolean;
   fullPaymentPaid: boolean;
@@ -52,7 +52,7 @@ export default function OrderCard({ order, token, onUpdate }: OrderCardProps): R
   });
 
   const depositLinkMutation = useMutation({
-    mutationFn: () => post(`/api/admin/orders/${order.id}/deposit-link`, { totalAmount: parseFloat(amount) }),
+    mutationFn: () => post(`/api/admin/orders/${order.id}/deposit-link`, { depositAmount: parseFloat(amount) }),
     onSuccess: (data) => { setPaymentUrl(data.url); setAmount(""); onUpdate(); },
   });
 
@@ -166,8 +166,8 @@ export default function OrderCard({ order, token, onUpdate }: OrderCardProps): R
           {new Date(order.fulfillmentDate + "T00:00:00").toLocaleDateString()}
         </p>
       )}
-      {order.totalAmount != null && (
-        <p className="order-card-field"><strong>Total:</strong> ${order.totalAmount.toFixed(2)}</p>
+      {order.depositAmount != null && (
+        <p className="order-card-field"><strong>Deposit:</strong> ${order.depositAmount.toFixed(2)}</p>
       )}
 
       <div style={{ margin: "0.2rem 0" }}>
