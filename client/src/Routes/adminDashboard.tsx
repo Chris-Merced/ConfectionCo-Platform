@@ -14,7 +14,7 @@ const STATUS_SECTIONS: { key: string; label: string }[] = [
     { key: "REJECTED", label: "Rejected" },
 ];
 
-
+//TODO: Make sure to add text/email integration on refund paths
 export default function AdminDashboard(): ReactElement {
     const { isLoading, isAuthenticated, error, loginWithRedirect: login, logout: auth0Logout, user, getAccessTokenSilently } = useAuth0();
 
