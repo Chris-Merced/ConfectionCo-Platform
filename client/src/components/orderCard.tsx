@@ -269,6 +269,12 @@ export default function OrderCard({ order, token, onUpdate }: OrderCardProps): R
         </div>
       )}
 
+      {order.status === "REFUND_PENDING" && (
+        <div className="order-card-actions">
+          <p className="order-card-waiting">Refund submitted — awaiting Stripe confirmation.</p>
+        </div>
+      )}
+
       {order.status === "PAID_IN_FULL" && (
         <div className="order-card-refund-section">
           {order.finalPaymentAmount != null && (

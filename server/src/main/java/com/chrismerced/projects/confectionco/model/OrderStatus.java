@@ -8,5 +8,6 @@ public enum OrderStatus {
     AWAITING_FINAL_PAYMENT,
     PAID_IN_FULL,
     COMPLETED,
+    REFUND_PENDING,
     REFUNDED
 }
