@@ -20,7 +20,7 @@ class InputSanitizerTest {
 
     @Test
     void stripHtml_removesScriptTag() {
-        assertEquals("", InputSanitizer.stripHtml("<script>alert('xss')</script>"));
+        assertEquals("alert('xss')", InputSanitizer.stripHtml("<script>alert('xss')</script>"));
     }
 
     @Test

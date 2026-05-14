@@ -162,7 +162,6 @@ class OrderServiceTest {
 
         Event event = mock(Event.class);
         when(event.getType()).thenReturn("charge.refund.updated");
-        when(event.getId()).thenReturn("evt_test");
 
         String payload = """
                 {"data":{"object":{"id":"re_test123","status":"succeeded"}}}
@@ -186,7 +185,6 @@ class OrderServiceTest {
 
         Event event = mock(Event.class);
         when(event.getType()).thenReturn("charge.refund.updated");
-        when(event.getId()).thenReturn("evt_test");
 
         String payload = """
                 {"data":{"object":{"id":"re_test123","status":"failed"}}}
@@ -207,7 +205,6 @@ class OrderServiceTest {
 
         Event event = mock(Event.class);
         when(event.getType()).thenReturn("charge.refund.updated");
-        when(event.getId()).thenReturn("evt_test");
 
         String payload = """
                 {"data":{"object":{"id":"re_unknown","status":"succeeded"}}}
@@ -230,7 +227,6 @@ class OrderServiceTest {
 
         Event event = mock(Event.class);
         when(event.getType()).thenReturn("checkout.session.completed");
-        when(event.getId()).thenReturn("evt_test");
 
         String payload = """
                 {"data":{"object":{"client_reference_id":"1"}}}
@@ -254,7 +250,6 @@ class OrderServiceTest {
 
         Event event = mock(Event.class);
         when(event.getType()).thenReturn("checkout.session.completed");
-        when(event.getId()).thenReturn("evt_test");
 
         String payload = """
                 {"data":{"object":{"client_reference_id":"1"}}}
