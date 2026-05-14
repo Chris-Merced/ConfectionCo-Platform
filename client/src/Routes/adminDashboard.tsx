@@ -15,8 +15,6 @@ const STATUS_SECTIONS: { key: string; label: string; collapsible?: boolean }[] =
     { key: "REJECTED", label: "Rejected" },
 ];
 
-//TODO: Make sure to add text/email integration on refund paths
-// probably shouldnt delete order information, instead add enums refunded/removed
 export default function AdminDashboard(): ReactElement {
     const { isLoading, isAuthenticated, error, loginWithRedirect: login, logout: auth0Logout, user, getAccessTokenSilently } = useAuth0();
 
