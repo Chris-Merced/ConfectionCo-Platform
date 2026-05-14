@@ -44,6 +44,9 @@ public class Order {
     @Column(name = "stripe_session_id")
     private String stripeSessionId;
 
+    @Column(name = "stripe_refund_id")
+    private String stripeRefundId;
+
     @Column(name = "deposit_paid")
     private boolean depositPaid;
 
@@ -88,6 +91,8 @@ public class Order {
     public void setFinalPaymentAmount(BigDecimal finalPaymentAmount) { this.finalPaymentAmount = finalPaymentAmount; }
     public String getStripeSessionId() { return stripeSessionId; }
     public void setStripeSessionId(String stripeSessionId) { this.stripeSessionId = stripeSessionId; }
+    public String getStripeRefundId() { return stripeRefundId; }
+    public void setStripeRefundId(String stripeRefundId) { this.stripeRefundId = stripeRefundId; }
     public boolean isDepositPaid() { return depositPaid; }
     public void setDepositPaid(boolean depositPaid) { this.depositPaid = depositPaid; }
     public boolean isFullPaymentPaid() { return fullPaymentPaid; }

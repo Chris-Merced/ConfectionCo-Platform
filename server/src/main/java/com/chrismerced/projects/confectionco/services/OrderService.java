@@ -12,6 +12,7 @@ import com.chrismerced.projects.confectionco.model.OrderStatus;
 import com.chrismerced.projects.confectionco.repository.OrderRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.stripe.model.Event;
+import com.stripe.model.Refund;
 import com.stripe.model.checkout.Session;
 
 @Service
@@ -96,9 +97,10 @@ public class OrderService {
         }
 
         long amountInCents = amount.multiply(BigDecimal.valueOf(100)).longValue();
-        stripeService.createRefund(order.getStripeSessionId(), amountInCents);
+        Refund refund = stripeService.createRefund(order.getStripeSessionId(), amountInCents);
 
-        order.setStatus(OrderStatus.REFUNDED);
+        order.setStripeRefundId(refund.getId());
+        order.setStatus(OrderStatus.REFUND_PENDING);
         orderRepository.save(order);
     }
 
@@ -120,7 +122,42 @@ public class OrderService {
                 handleStripeCheckoutCompleted(Long.valueOf(orderId));
             }
 
+            case "charge.refund.updated" -> {
+                com.fasterxml.jackson.databind.JsonNode dataObject;
+                try {
+                    dataObject = objectMapper.readTree(rawPayload).path("data").path("object");
+                } catch (Exception e) {
+                    log.error("Failed to parse refund webhook payload for event {}", event.getId(), e);
+                    return;
+                }
+                String refundId = dataObject.path("id").asText(null);
+                String refundStatus = dataObject.path("status").asText(null);
+                if (refundId == null || refundStatus == null) {
+                    log.error("Missing refund id or status in event: {}", event.getId());
+                    return;
+                }
+                handleStripeRefundUpdated(refundId, refundStatus);
+            }
+
             default -> log.info("Unhandled Stripe event: {}", event.getType());
+        }
+    }
+
+    private void handleStripeRefundUpdated(String refundId, String refundStatus) {
+        Order order = orderRepository.findByStripeRefundId(refundId).orElse(null);
+        if (order == null) {
+            log.warn("charge.refund.updated for unknown refund id: {}", refundId);
+            return;
+        }
+        if ("succeeded".equals(refundStatus)) {
+            order.setStatus(OrderStatus.REFUNDED);
+            orderRepository.save(order);
+            log.info("Refund {} succeeded for order {}", refundId, order.getId());
+        } else if ("failed".equals(refundStatus)) {
+            order.setStatus(OrderStatus.PAID_IN_FULL);
+            order.setStripeRefundId(null);
+            orderRepository.save(order);
+            log.error("Refund {} failed for order {} — status reverted to PAID_IN_FULL", refundId, order.getId());
         }
     }
 

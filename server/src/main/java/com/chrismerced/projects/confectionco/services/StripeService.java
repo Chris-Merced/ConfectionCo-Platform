@@ -37,11 +37,11 @@ public class StripeService {
         return Session.retrieve(sessionId).getUrl();
     }
 
-    public void createRefund(String sessionId, long amountInCents) throws Exception {
+    public Refund createRefund(String sessionId, long amountInCents) throws Exception {
         Session session = Session.retrieve(sessionId);
         String paymentIntentId = session.getPaymentIntent();
 
-        Refund.create(RefundCreateParams.builder()
+        return Refund.create(RefundCreateParams.builder()
                 .setPaymentIntent(paymentIntentId)
                 .setAmount(amountInCents)
                 .build());
