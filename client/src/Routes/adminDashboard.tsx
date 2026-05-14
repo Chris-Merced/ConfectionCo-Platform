@@ -10,11 +10,13 @@ const STATUS_SECTIONS: { key: string; label: string }[] = [
     { key: "IN_PROGRESS", label: "In Progress" },
     { key: "AWAITING_FINAL_PAYMENT", label: "Awaiting Final Payment" },
     { key: "PAID_IN_FULL", label: "Paid in Full" },
+    { key: "REFUND_PENDING", label: "Refund Pending" },
     { key: "REFUNDED", label: "Refunded" },
     { key: "REJECTED", label: "Rejected" },
 ];
 
 //TODO: Make sure to add text/email integration on refund paths
+// probably shouldnt delete order information, instead add enums refunded/removed
 export default function AdminDashboard(): ReactElement {
     const { isLoading, isAuthenticated, error, loginWithRedirect: login, logout: auth0Logout, user, getAccessTokenSilently } = useAuth0();
 
