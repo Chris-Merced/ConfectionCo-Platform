@@ -1,6 +1,7 @@
 import { useState, type FormEvent, type ReactElement } from "react";
 
 export default function OrderForm(): ReactElement {
+    const [customerName, setCustomerName] = useState("");
     const [email, setEmail] = useState("");
     const [phone, setPhone] = useState("");
     const [servingCount, setServingCount] = useState("");
@@ -56,6 +57,7 @@ export default function OrderForm(): ReactElement {
         setLoading(true);
 
         const formData = new FormData();
+        formData.append("customerName", customerName);
         formData.append("email", email);
         formData.append("phoneNumber", phone);
         formData.append("servingCount", servingCount);
@@ -97,6 +99,19 @@ export default function OrderForm(): ReactElement {
 
     return (
         <form className="form-card" onSubmit={handleSubmit}>
+            <div className="form-field">
+                <label className="form-label" htmlFor="customerName">Name</label>
+                <input
+                    className="form-input"
+                    id="customerName"
+                    type="text"
+                    value={customerName}
+                    onChange={e => setCustomerName(e.target.value)}
+                    maxLength={100}
+                    required
+                />
+            </div>
+
             <div className="form-field">
                 <label className="form-label" htmlFor="email">Email</label>
                 <input

@@ -3,6 +3,7 @@ import { useMutation } from "@tanstack/react-query";
 
 export interface Order {
   id: number;
+  customerName: string | null;
   email: string;
   phoneNumber: string;
   status: string;
@@ -142,6 +143,9 @@ export default function OrderCard({ order, token, onUpdate }: OrderCardProps): R
         </div>
       </div>
 
+      {order.customerName && (
+        <p className="order-card-field"><strong>Name:</strong> {order.customerName}</p>
+      )}
       <p className="order-card-field"><strong>Email:</strong> {order.email}</p>
       <p className="order-card-field"><strong>Phone:</strong> {order.phoneNumber}</p>
       <p className="order-card-field"><strong>Servings:</strong> {order.servingCount}</p>

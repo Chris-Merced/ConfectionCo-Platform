@@ -13,6 +13,7 @@ public class OrderDTO {
 
 
     private Long id;
+    private String customerName;
     private String email;
     private String phoneNumber;
     private String status;
@@ -30,6 +31,7 @@ public class OrderDTO {
 
     public OrderDTO(Order order, String bucketUrl) {
         this.id = order.getId();
+        this.customerName = order.getCustomerName();
         this.email = order.getEmail();
         this.phoneNumber = order.getPhoneNumber();
         this.status = order.getStatus().name();
@@ -50,6 +52,7 @@ public class OrderDTO {
     }
 
     public Long getId() { return id; }
+    public String getCustomerName() { return customerName; }
     public String getEmail() { return email; }
     public String getPhoneNumber() { return phoneNumber; }
     public String getStatus() { return status; }
