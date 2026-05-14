@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import com.chrismerced.projects.confectionco.exceptions.ResourceNotFoundException;
@@ -20,19 +21,24 @@ public class OrderService {
 
     private static final Logger log = LoggerFactory.getLogger(OrderService.class);
 
+    @Value("${aws.bucket-inspo}")
+    private String inspoBucket;
+
     private final OrderRepository orderRepository;
     private final StripeService stripeService;
     private final ObjectMapper objectMapper;
     private final EmailService emailService;
     private final TextingService textingService;
+    private final S3Service s3Service;
 
     OrderService(OrderRepository orderRepository, StripeService stripeService, ObjectMapper objectMapper,
-            EmailService emailService, TextingService textingService) {
+            EmailService emailService, TextingService textingService, S3Service s3Service) {
         this.orderRepository = orderRepository;
         this.stripeService = stripeService;
         this.objectMapper = objectMapper;
         this.emailService = emailService;
         this.textingService = textingService;
+        this.s3Service = s3Service;
     }
 
     public void updateOrderStatus(Long orderId, OrderStatus status) {
@@ -150,6 +156,13 @@ public class OrderService {
             return;
         }
         if ("succeeded".equals(refundStatus)) {
+            for (String key : order.getPhotoUrls()) {
+                try {
+                    s3Service.deleteFile(key, inspoBucket);
+                } catch (Exception e) {
+                    log.error("Failed to delete S3 object {} for order {}: {}", key, order.getId(), e.getMessage());
+                }
+            }
             order.setStatus(OrderStatus.REFUNDED);
             orderRepository.save(order);
             log.info("Refund {} succeeded for order {}", refundId, order.getId());

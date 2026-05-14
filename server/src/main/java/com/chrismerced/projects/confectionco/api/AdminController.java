@@ -5,6 +5,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import static java.util.List.of;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -68,7 +70,7 @@ public class AdminController {
     public ResponseEntity<?> getActiveOrders() {
         try {
             String inspoBaseUrl = "https://" + inspoBucket + ".s3." + awsRegion + ".amazonaws.com";
-            List<OrderDTO> orders = orderRepository.findByStatusNot(OrderStatus.COMPLETED)
+            List<OrderDTO> orders = orderRepository.findByStatusNotIn(of(OrderStatus.COMPLETED, OrderStatus.REMOVED))
                     .stream()
                     .map(order -> new OrderDTO(order, inspoBaseUrl))
                     .collect(Collectors.toList());
@@ -96,15 +98,26 @@ public class AdminController {
     }
 
     @DeleteMapping("/orders/{id}")
-    public ResponseEntity<?> deleteOrder(@PathVariable Long id) {
+    public ResponseEntity<?> removeOrder(@PathVariable Long id) {
         try {
-            if (!orderRepository.existsById(id)) {
-                return ResponseEntity.notFound().build();
+            Order order = orderRepository.findById(id)
+                    .orElseThrow(() -> new ResourceNotFoundException("Order not found: " + id));
+
+            for (String key : order.getPhotoUrls()) {
+                try {
+                    s3Service.deleteFile(key, inspoBucket);
+                } catch (Exception e) {
+                    log.error("Failed to delete S3 object {} for order {}: {}", key, id, e.getMessage());
+                }
             }
-            orderRepository.deleteById(id);
+
+            order.setStatus(OrderStatus.REMOVED);
+            orderRepository.save(order);
             return ResponseEntity.noContent().build();
+        } catch (ResourceNotFoundException e) {
+            return ResponseEntity.notFound().build();
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to delete order");
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to remove order");
         }
     }
 

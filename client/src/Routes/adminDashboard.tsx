@@ -4,14 +4,14 @@ import { useEffect, useState, type ReactElement } from "react";
 
 import OrderCard, { type Order } from "../components/orderCard";
 
-const STATUS_SECTIONS: { key: string; label: string }[] = [
+const STATUS_SECTIONS: { key: string; label: string; collapsible?: boolean }[] = [
     { key: "PENDING", label: "Pending Review" },
     { key: "AWAITING_DEPOSIT", label: "Awaiting Deposit" },
     { key: "IN_PROGRESS", label: "In Progress" },
     { key: "AWAITING_FINAL_PAYMENT", label: "Awaiting Final Payment" },
     { key: "PAID_IN_FULL", label: "Paid in Full" },
     { key: "REFUND_PENDING", label: "Refund Pending" },
-    { key: "REFUNDED", label: "Refunded" },
+    { key: "REFUNDED", label: "Refunded", collapsible: true },
     { key: "REJECTED", label: "Rejected" },
 ];
 
@@ -21,6 +21,7 @@ export default function AdminDashboard(): ReactElement {
     const { isLoading, isAuthenticated, error, loginWithRedirect: login, logout: auth0Logout, user, getAccessTokenSilently } = useAuth0();
 
     const [token, setToken] = useState("");
+    const [collapsed, setCollapsed] = useState<Set<string>>(new Set(["REFUNDED"]));
 
     useEffect(() => {
         if (!isAuthenticated) return;
@@ -89,14 +90,26 @@ export default function AdminDashboard(): ReactElement {
                             ))}
                         </div>
                         <div className="admin-board">
-                            {STATUS_SECTIONS.map(({ key, label }) =>
+                            {STATUS_SECTIONS.map(({ key, label, collapsible }) =>
                                 grouped[key].length === 0 ? null : (
                                     <div key={key} id={`section-${key}`} className="admin-column">
                                         <h2 className="admin-column-header">
                                             {label}
                                             <span className="admin-badge">{grouped[key].length}</span>
+                                            {collapsible && (
+                                                <button
+                                                    className="btn-icon"
+                                                    onClick={() => setCollapsed(prev => {
+                                                        const next = new Set(prev);
+                                                        next.has(key) ? next.delete(key) : next.add(key);
+                                                        return next;
+                                                    })}
+                                                >
+                                                    {collapsed.has(key) ? "▸" : "▾"}
+                                                </button>
+                                            )}
                                         </h2>
-                                        {grouped[key].map((order) => (
+                                        {!collapsed.has(key) && grouped[key].map((order) => (
                                             <OrderCard key={order.id} order={order} token={token} onUpdate={refetch} />
                                         ))}
                                     </div>
