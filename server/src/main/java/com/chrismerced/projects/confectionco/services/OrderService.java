@@ -184,6 +184,12 @@ public class OrderService {
                 log.error("Failed to send refund text for order {}", order.getId(), e);
             }
             try {
+                textingService.sendText(ownerPhone,
+                        "Refund processed for order " + order.getId() + " from " + order.getCustomerName() + ".");
+            } catch (Exception e) {
+                log.error("Failed to send refund notification to owner for order {}", order.getId(), e);
+            }
+            try {
                 emailService.sendRefundConfirmation(order.getEmail());
             } catch (Exception e) {
                 log.error("Failed to send refund confirmation email for order {}", order.getId(), e);
