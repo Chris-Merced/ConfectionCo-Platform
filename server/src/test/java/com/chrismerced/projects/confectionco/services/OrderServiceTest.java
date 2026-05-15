@@ -43,6 +43,7 @@ class OrderServiceTest {
         orderService = new OrderService(orderRepository, stripeService, objectMapper,
                 emailService, textingService, s3Service, jdbcTemplate);
         ReflectionTestUtils.setField(orderService, "inspoBucket", "test-bucket");
+        ReflectionTestUtils.setField(orderService, "ownerPhone", "0000000000");
     }
 
     // --- updateOrderStatus ---
@@ -72,6 +73,7 @@ class OrderServiceTest {
     @Test
     void refundOrder_throwsWhenNoStripeSession() {
         Order order = new Order();
+        order.setStatus(OrderStatus.PAID_IN_FULL);
         order.setStripeSessionId(null);
         when(orderRepository.findById(1L)).thenReturn(Optional.of(order));
 
@@ -82,6 +84,7 @@ class OrderServiceTest {
     @Test
     void refundOrder_throwsWhenAmountIsNull() {
         Order order = new Order();
+        order.setStatus(OrderStatus.PAID_IN_FULL);
         order.setStripeSessionId("sess_123");
         when(orderRepository.findById(1L)).thenReturn(Optional.of(order));
 
@@ -92,6 +95,7 @@ class OrderServiceTest {
     @Test
     void refundOrder_throwsWhenAmountIsZero() {
         Order order = new Order();
+        order.setStatus(OrderStatus.PAID_IN_FULL);
         order.setStripeSessionId("sess_123");
         when(orderRepository.findById(1L)).thenReturn(Optional.of(order));
 
@@ -102,6 +106,7 @@ class OrderServiceTest {
     @Test
     void refundOrder_throwsWhenAmountIsNegative() {
         Order order = new Order();
+        order.setStatus(OrderStatus.PAID_IN_FULL);
         order.setStripeSessionId("sess_123");
         when(orderRepository.findById(1L)).thenReturn(Optional.of(order));
 
@@ -112,6 +117,7 @@ class OrderServiceTest {
     @Test
     void refundOrder_throwsWhenAmountExceedsFinalPayment() {
         Order order = new Order();
+        order.setStatus(OrderStatus.PAID_IN_FULL);
         order.setStripeSessionId("sess_123");
         order.setFinalPaymentAmount(new BigDecimal("50.00"));
         when(orderRepository.findById(1L)).thenReturn(Optional.of(order));
@@ -124,6 +130,7 @@ class OrderServiceTest {
     @Test
     void refundOrder_setsRefundPendingAndStoresRefundId() throws Exception {
         Order order = new Order();
+        order.setStatus(OrderStatus.PAID_IN_FULL);
         order.setStripeSessionId("sess_123");
         order.setFinalPaymentAmount(new BigDecimal("70.00"));
         when(orderRepository.findById(1L)).thenReturn(Optional.of(order));
@@ -143,6 +150,7 @@ class OrderServiceTest {
     @Test
     void refundOrder_allowsRefundEqualToFinalPayment() throws Exception {
         Order order = new Order();
+        order.setStatus(OrderStatus.PAID_IN_FULL);
         order.setStripeSessionId("sess_123");
         order.setFinalPaymentAmount(new BigDecimal("70.00"));
         when(orderRepository.findById(1L)).thenReturn(Optional.of(order));
@@ -163,7 +171,9 @@ class OrderServiceTest {
         when(orderRepository.findByStripeRefundId("re_test123")).thenReturn(Optional.of(order));
 
         Event event = mock(Event.class);
+        when(event.getId()).thenReturn("evt_refund_success");
         when(event.getType()).thenReturn("charge.refund.updated");
+        when(jdbcTemplate.update(anyString(), any(Object[].class))).thenReturn(1);
 
         String payload = """
                 {"data":{"object":{"id":"re_test123","status":"succeeded"}}}
@@ -176,7 +186,7 @@ class OrderServiceTest {
         assertEquals(OrderStatus.REFUNDED, captor.getValue().getStatus());
         verify(s3Service).deleteFile("photo-key-1", "test-bucket");
         verify(emailService).sendRefundConfirmation(any());
-        verify(textingService).sendText(any(), any());
+        verify(textingService, times(2)).sendText(any(), any());
     }
 
     @Test
@@ -186,7 +196,9 @@ class OrderServiceTest {
         when(orderRepository.findByStripeRefundId("re_test123")).thenReturn(Optional.of(order));
 
         Event event = mock(Event.class);
+        when(event.getId()).thenReturn("evt_refund_failed");
         when(event.getType()).thenReturn("charge.refund.updated");
+        when(jdbcTemplate.update(anyString(), any(Object[].class))).thenReturn(1);
 
         String payload = """
                 {"data":{"object":{"id":"re_test123","status":"failed"}}}
@@ -206,7 +218,9 @@ class OrderServiceTest {
         when(orderRepository.findByStripeRefundId("re_unknown")).thenReturn(Optional.empty());
 
         Event event = mock(Event.class);
+        when(event.getId()).thenReturn("evt_refund_unknown");
         when(event.getType()).thenReturn("charge.refund.updated");
+        when(jdbcTemplate.update(anyString(), any(Object[].class))).thenReturn(1);
 
         String payload = """
                 {"data":{"object":{"id":"re_unknown","status":"succeeded"}}}
@@ -228,7 +242,9 @@ class OrderServiceTest {
         when(orderRepository.findById(1L)).thenReturn(Optional.of(order));
 
         Event event = mock(Event.class);
+        when(event.getId()).thenReturn("evt_checkout_deposit");
         when(event.getType()).thenReturn("checkout.session.completed");
+        when(jdbcTemplate.update(anyString(), any(Object[].class))).thenReturn(1);
 
         String payload = """
                 {"data":{"object":{"client_reference_id":"1"}}}
@@ -251,7 +267,9 @@ class OrderServiceTest {
         when(orderRepository.findById(1L)).thenReturn(Optional.of(order));
 
         Event event = mock(Event.class);
+        when(event.getId()).thenReturn("evt_checkout_final");
         when(event.getType()).thenReturn("checkout.session.completed");
+        when(jdbcTemplate.update(anyString(), any(Object[].class))).thenReturn(1);
 
         String payload = """
                 {"data":{"object":{"client_reference_id":"1"}}}
