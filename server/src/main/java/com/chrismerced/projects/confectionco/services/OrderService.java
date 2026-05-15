@@ -25,6 +25,9 @@ public class OrderService {
     @Value("${aws.bucket-inspo}")
     private String inspoBucket;
 
+    @Value("${app.owner-phone}")
+    private String ownerPhone;
+
     private final OrderRepository orderRepository;
     private final StripeService stripeService;
     private final ObjectMapper objectMapper;
@@ -213,6 +216,12 @@ public class OrderService {
                         "Great news! Your deposit has been received by Confection Co. Bakery. We're now working on your order!");
             } catch (Exception e) {
                 log.error("Failed to send deposit text to order {}", orderId, e);
+            }
+            try {
+                textingService.sendText(ownerPhone,
+                        "Deposit received for order " + orderId + " from " + order.getCustomerName() + ".");
+            } catch (Exception e) {
+                log.error("Failed to send deposit notification to owner for order {}", orderId, e);
             }
             try {
                 log.info("Sending deposit receipt email to {} for order {}", order.getEmail(), orderId);
