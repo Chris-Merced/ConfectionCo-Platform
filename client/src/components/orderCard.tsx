@@ -281,8 +281,25 @@ export default function OrderCard({ order, token, onUpdate }: OrderCardProps): R
       )}
 
       {order.status === "REFUND_PENDING" && (
-        <div className="order-card-actions">
+        <div className="order-card-refund-section">
           <p className="order-card-waiting">Refund submitted — awaiting Stripe confirmation.</p>
+          {order.finalPaymentAmount != null && (
+            <span className="order-card-refund-label">
+              Final payment: ${order.finalPaymentAmount.toFixed(2)}
+            </span>
+          )}
+          <input
+            className="order-card-input"
+            type="number"
+            placeholder="Retry refund amount"
+            value={amount}
+            onChange={(e) => setAmount(e.target.value)}
+            step="0.01"
+            min="0"
+          />
+          <button className="btn-refund" onClick={() => refundMutation.mutate()} disabled={isAnyPending || !amount}>
+            Retry Refund
+          </button>
         </div>
       )}
 

@@ -97,6 +97,10 @@ public class OrderService {
         Order order = orderRepository.findById(orderId)
                 .orElseThrow(() -> new ResourceNotFoundException("Order not found: " + orderId));
 
+        if (order.getStatus() != OrderStatus.PAID_IN_FULL && order.getStatus() != OrderStatus.REFUND_PENDING) {
+            throw new IllegalArgumentException("Order is not in a refundable state.");
+        }
+
         if (order.getStripeSessionId() == null) {
             throw new IllegalArgumentException("No payment session found for this order.");
         }
