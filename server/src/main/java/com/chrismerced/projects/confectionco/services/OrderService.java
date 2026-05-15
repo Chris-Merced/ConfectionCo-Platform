@@ -193,7 +193,6 @@ public class OrderService {
         }
     }
 
-    // Returns true if this event is new and should be processed; false if already seen.
     private boolean markEventProcessed(String eventId) {
         int rows = jdbcTemplate.update(
                 "INSERT INTO stripe_processed_events(event_id) VALUES (?) ON CONFLICT (event_id) DO NOTHING",
