@@ -8,6 +8,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.stripe.model.Event;
 import com.stripe.model.Refund;
 
+import org.flywaydb.core.internal.jdbc.JdbcTemplate;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -31,6 +32,7 @@ class OrderServiceTest {
     @Mock EmailService emailService;
     @Mock TextingService textingService;
     @Mock S3Service s3Service;
+    @Mock JdbcTemplate jdbcTemplate;
 
     private final ObjectMapper objectMapper = new ObjectMapper();
 
@@ -39,7 +41,7 @@ class OrderServiceTest {
     @BeforeEach
     void setUp() {
         orderService = new OrderService(orderRepository, stripeService, objectMapper,
-                emailService, textingService, s3Service);
+                emailService, textingService, s3Service, jdbcTemplate);
         ReflectionTestUtils.setField(orderService, "inspoBucket", "test-bucket");
     }
 

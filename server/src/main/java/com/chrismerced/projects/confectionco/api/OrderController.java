@@ -28,6 +28,7 @@ import com.chrismerced.projects.confectionco.model.Order;
 import com.chrismerced.projects.confectionco.repository.OrderRepository;
 import com.chrismerced.projects.confectionco.services.EmailService;
 import com.chrismerced.projects.confectionco.services.S3Service;
+import com.chrismerced.projects.confectionco.services.TextingService;
 import com.chrismerced.projects.confectionco.util.InputSanitizer;
 
 @Validated
@@ -41,19 +42,25 @@ public class OrderController {
     @Value("${aws.bucket-assets}")
     private String assetBucket;
 
+    @Value("${app.owner-phone}")
+    private String ownerPhone;
+
     private final OrderRepository orderRepository;
     private final S3Service s3Service;
     private final EmailService emailService;
+    private final TextingService textingService;
 
     private static final byte[] MAGIC_JPEG = {(byte) 0xFF, (byte) 0xD8, (byte) 0xFF};
     private static final byte[] MAGIC_PNG  = {(byte) 0x89, 0x50, 0x4E, 0x47};
     private static final byte[] MAGIC_WEBP = {0x52, 0x49, 0x46, 0x46};
     private static final Set<String> VALID_FULFILLMENT_TYPES = Set.of("PICKUP", "DROPOFF");
 
-    OrderController(OrderRepository orderRepository, S3Service s3Service, EmailService emailService) {
+    OrderController(OrderRepository orderRepository, S3Service s3Service, EmailService emailService,
+            TextingService textingService) {
         this.orderRepository = orderRepository;
         this.s3Service = s3Service;
         this.emailService = emailService;
+        this.textingService = textingService;
     }
 
     private boolean hasValidImageMagic(MultipartFile file) throws IOException {
@@ -136,6 +143,12 @@ public class OrderController {
             emailService.sendOrderConfirmation(cleanEmail);
         } catch (Exception e) {
             // Non-fatal — order is saved, email failure is logged by EmailService
+        }
+        try {
+            textingService.sendText(ownerPhone,
+                    "New Confection Co. order from " + cleanCustomerName + " for " + fulfillmentDate + ". Order ID: " + saved.getId());
+        } catch (Exception e) {
+            // Non-fatal
         }
         return ResponseEntity.ok(Map.of("orderId", saved.getId()));
     }
