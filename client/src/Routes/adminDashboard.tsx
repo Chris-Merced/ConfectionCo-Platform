@@ -14,7 +14,7 @@ const STATUS_SECTIONS: { key: string; label: string; collapsible?: boolean }[] =
     { key: "REFUNDED", label: "Refunded", collapsible: true },
     { key: "REJECTED", label: "Rejected" },
 ];
-
+//TODO: Remember to Verify the Application in the Google OAuth Cloud Dashboard when Live
 export default function AdminDashboard(): ReactElement {
     const { isLoading, isAuthenticated, error, loginWithRedirect: login, logout: auth0Logout, user, getAccessTokenSilently } = useAuth0();
 

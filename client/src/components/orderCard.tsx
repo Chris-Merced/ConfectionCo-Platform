@@ -36,7 +36,6 @@ export default function OrderCard({ order, token, onUpdate }: OrderCardProps): R
     "Content-Type": "application/json",
     Authorization: `Bearer ${token}`,
   };
-
   const post = async (path: string, body?: object) => {
     const res = await fetch(path, {
       method: "POST",
@@ -113,7 +112,7 @@ export default function OrderCard({ order, token, onUpdate }: OrderCardProps): R
   };
 
   const isUrgent = order.fulfillmentDate
-    ? (new Date(order.fulfillmentDate + "T00:00:00").getTime() - new Date(order.createdAt).getTime()) / (1000 * 60 * 60 * 24) < 7
+    ? (new Date(order.fulfillmentDate + "T00:00:00Z").getTime() - new Date(order.createdAt).getTime()) / (1000 * 60 * 60 * 24) < 7
     : false;
 
   const isAnyPending =
