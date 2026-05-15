@@ -241,6 +241,12 @@ public class OrderService {
                 log.error("Failed to send final payment text for order {}", orderId, e);
             }
             try {
+                textingService.sendText(ownerPhone,
+                        "Full payment received for order " + orderId + " from " + order.getCustomerName() + ".");
+            } catch (Exception e) {
+                log.error("Failed to send final payment notification to owner for order {}", orderId, e);
+            }
+            try {
                 emailService.sendFullPaymentConfirmation(order.getEmail());
             } catch (Exception e) {
                 log.error("Failed to send final payment email for order {}", orderId, e);
