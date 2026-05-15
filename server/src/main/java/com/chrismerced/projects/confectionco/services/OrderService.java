@@ -5,6 +5,7 @@ import java.math.BigDecimal;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 
 import com.chrismerced.projects.confectionco.exceptions.ResourceNotFoundException;
@@ -30,15 +31,18 @@ public class OrderService {
     private final EmailService emailService;
     private final TextingService textingService;
     private final S3Service s3Service;
+    private final JdbcTemplate jdbcTemplate;
 
     OrderService(OrderRepository orderRepository, StripeService stripeService, ObjectMapper objectMapper,
-            EmailService emailService, TextingService textingService, S3Service s3Service) {
+            EmailService emailService, TextingService textingService, S3Service s3Service,
+            JdbcTemplate jdbcTemplate) {
         this.orderRepository = orderRepository;
         this.stripeService = stripeService;
         this.objectMapper = objectMapper;
         this.emailService = emailService;
         this.textingService = textingService;
         this.s3Service = s3Service;
+        this.jdbcTemplate = jdbcTemplate;
     }
 
     public void updateOrderStatus(Long orderId, OrderStatus status) {
@@ -111,6 +115,10 @@ public class OrderService {
     }
 
     public void handleStripeEvent(Event event, String rawPayload) {
+        if (!markEventProcessed(event.getId())) {
+            log.info("Duplicate Stripe event ignored: {}", event.getId());
+            return;
+        }
         switch (event.getType()) {
             case "checkout.session.completed" -> {
                 com.fasterxml.jackson.databind.JsonNode dataObject;
@@ -183,6 +191,14 @@ public class OrderService {
             orderRepository.save(order);
             log.error("Refund {} failed for order {} — status reverted to PAID_IN_FULL", refundId, order.getId());
         }
+    }
+
+    // Returns true if this event is new and should be processed; false if already seen.
+    private boolean markEventProcessed(String eventId) {
+        int rows = jdbcTemplate.update(
+                "INSERT INTO stripe_processed_events(event_id) VALUES (?) ON CONFLICT (event_id) DO NOTHING",
+                eventId);
+        return rows > 0;
     }
 
     private void handleStripeCheckoutCompleted(Long orderId) {
