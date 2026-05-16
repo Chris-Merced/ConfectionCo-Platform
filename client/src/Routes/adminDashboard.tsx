@@ -17,6 +17,7 @@ const STATUS_SECTIONS: { key: string; label: string; collapsible?: boolean }[] =
 //TODO: Remember to Verify the Application in the Google OAuth Cloud Dashboard when Live
 // When production ready; Set the completed button to send a text with a link referring
 //     the customer to a google/facebook review link
+// Add favicon with company logo
 export default function AdminDashboard(): ReactElement {
     const { isLoading, isAuthenticated, error, loginWithRedirect: login, logout: auth0Logout, user, getAccessTokenSilently } = useAuth0();
 
