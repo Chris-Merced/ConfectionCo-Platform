@@ -415,7 +415,14 @@ img, iframe, input, textarea, select, button {
     border-bottom: 2px solid var(--surface-alt);
 }
 
-/* ── Order Policy Notice ─────────────────────────────────────── */
+/* ── Order Delivery / Policy Notices ────────────────────────── */
+.order-delivery-notice {
+    font-size: 0.85rem;
+    color: var(--pink-dark);
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+}
+
 .order-policy-notice {
     font-size: 0.78rem;
     color: var(--text-muted);

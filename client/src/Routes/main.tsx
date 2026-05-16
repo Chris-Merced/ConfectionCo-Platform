@@ -229,6 +229,7 @@ export default function Main(): ReactElement {
                 <div className="order-section">
                     <div className="order-section-form">
                         <h2 className="section-heading">Place an Order</h2>
+                        <p className="order-delivery-notice">We deliver all across the Emerald Coast.</p>
                         <p className="order-policy-notice">
                             By ordering you agree that you have read the{" "}
                             <a href="#policies" className="order-policy-link">
