@@ -207,6 +207,13 @@ export default function Main(): ReactElement {
                                 </span>
                             </li>
                             <li className="policies-item">
+                                <span className="policies-item-label">Delivery</span>
+                                <span className="policies-item-text">
+                                    We deliver all across the Emerald Coast. Delivery fees vary by
+                                    distance and will be included in your order total.
+                                </span>
+                            </li>
+                            <li className="policies-item">
                                 <span className="policies-item-label">Cancellations</span>
                                 <span className="policies-item-text">
                                     Deposits are final. Cancellations less than a week's notice will
