@@ -133,6 +133,74 @@ img, iframe, input, textarea, select, button {
     box-shadow: 0 4px 14px rgba(168, 92, 114, 0.4);
 }
 
+.header-hamburger {
+    display: none;
+    flex-direction: column;
+    justify-content: center;
+    gap: 5px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 4px;
+    margin-left: 0.25rem;
+}
+
+.header-hamburger span {
+    display: block;
+    width: 22px;
+    height: 2px;
+    background: rgba(255, 255, 255, 0.85);
+    border-radius: 2px;
+    transition: transform 0.2s ease, opacity 0.2s ease;
+}
+
+.header-hamburger.is-open span:nth-child(1) {
+    transform: translateY(7px) rotate(45deg);
+}
+
+.header-hamburger.is-open span:nth-child(2) {
+    opacity: 0;
+}
+
+.header-hamburger.is-open span:nth-child(3) {
+    transform: translateY(-7px) rotate(-45deg);
+}
+
+.header-mobile-menu {
+    position: fixed;
+    top: 60px;
+    left: 0;
+    right: 0;
+    background: linear-gradient(160deg, #3a1a0a 0%, var(--brown-dark) 60%, #5a2e14 100%);
+    border-bottom: 1px solid rgba(196, 118, 138, 0.25);
+    box-shadow: 0 8px 24px rgba(30, 10, 4, 0.4);
+    z-index: 99;
+    display: flex;
+    flex-direction: column;
+}
+
+.header-mobile-menu-link {
+    padding: 1rem 1.5rem;
+    font-family: var(--font-sans);
+    font-size: 0.78rem;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: rgba(255, 255, 255, 0.8);
+    text-decoration: none;
+    border-bottom: 1px solid rgba(196, 118, 138, 0.12);
+    transition: color 0.15s, background 0.15s;
+}
+
+.header-mobile-menu-link:last-child {
+    border-bottom: none;
+}
+
+.header-mobile-menu-link:hover {
+    color: var(--pink-light);
+    background: rgba(196, 118, 138, 0.08);
+}
+
 /* ── Hero ────────────────────────────────────────────────────── */
 @keyframes heroFadeUp {
     from { opacity: 0; transform: translateY(28px); }
@@ -1768,8 +1836,16 @@ input[type="file"].form-input {
         font-size: 1.35rem;
     }
 
+    .header-nav {
+        gap: 0.75rem;
+    }
+
     .header-nav-link {
         display: none;
+    }
+
+    .header-hamburger {
+        display: flex;
     }
 
     .section-heading {
