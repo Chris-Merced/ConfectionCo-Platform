@@ -1768,6 +1768,10 @@ input[type="file"].form-input {
         font-size: 1.35rem;
     }
 
+    .header-nav-link {
+        display: none;
+    }
+
     .section-heading {
         font-size: 1.2rem;
         margin-bottom: 1rem;
