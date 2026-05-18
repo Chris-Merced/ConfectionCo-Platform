@@ -1,0 +1,10 @@
+.git
+.github
+.vscode
+client/node
+client/node_modules
+client/dist
+server/target
+server/src/main/resources/static
+.env
+*.md
