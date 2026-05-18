@@ -27,7 +27,7 @@ public class TwilioService implements TextingService {
         try {
             Message.creator(
                     new com.twilio.type.PhoneNumber(normalizePhone(to)),
-                    new com.twilio.type.PhoneNumber("+18508183403"),
+                    new com.twilio.type.PhoneNumber(""),
                     message)
                     .create();
         } catch (Exception e) {
