@@ -80,6 +80,8 @@ jobs:
           AWS_BUCKET_INSPO: aws_bucket_inspo
           AWS_BUCKET_URL: aws_bucket
           APP_BASE_URL: dummyUrl
+          AUTH0_ISSUER_URI: https://dummy.us.auth0.com/
+          AUTH0_AUDIENCE: https://confectionco-api
           OWNER_PHONE: "0000000000"
         run: |
           chmod +x mvnw

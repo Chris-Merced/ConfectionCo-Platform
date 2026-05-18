@@ -53,45 +53,57 @@ Admin manages all status transitions from the dashboard. Payment links are sent 
 
 ## Getting Started
 
-### Prerequisites
-
-- Node.js 18+
-- Java 17
-- PostgreSQL running on `localhost:5432` with a database named `confectionco`
-
 ### Environment Variables
 
-The backend reads the following from `application.properties` or environment:
+Create a `.env` file at the project root:
 
 ```
-# Database
-SPRING_DATASOURCE_URL
-SPRING_DATASOURCE_USERNAME
-SPRING_DATASOURCE_PASSWORD
+# Database (Docker Compose sets these automatically — only needed for manual setup)
+DB_URL=jdbc:postgresql://localhost:5432/confectionco
+DB_USERNAME=confectionco
+DB_PASSWORD=your_password
+
+# App
+APP_BASE_URL=http://localhost:5173
+OWNER_PHONE=+1xxxxxxxxxx
 
 # Auth0
-AUTH0_AUDIENCE
-AUTH0_ISSUER_URI
+AUTH0_ISSUER_URI=https://your-tenant.us.auth0.com/
+AUTH0_AUDIENCE=https://confectionco-api
 
 # Stripe
-STRIPE_SECRET_KEY
-STRIPE_WEBHOOK_SECRET
-
-# AWS S3
-AWS_ACCESS_KEY_ID
-AWS_SECRET_ACCESS_KEY
-AWS_S3_BUCKET
-
-# Twilio
-TWILIO_ACCOUNT_SID
-TWILIO_AUTH_TOKEN
-TWILIO_PHONE_NUMBER
+STRIPE_API_KEY=sk_...
+STRIPE_WEBHOOK_SECRET=whsec_...
 
 # Resend
-RESEND_API_KEY
+RESEND_API_KEY=re_...
+
+# AWS S3
+AWS_ACCESS_KEY_ID=...
+AWS_SECRET_ACCESS_KEY=...
+AWS_REGION=us-east-2
+AWS_BUCKET_ASSETS=...
+AWS_BUCKET_INSPO=...
+AWS_BUCKET_URL=https://...
+
+# Twilio
+TWILIO_ACCOUNT_SID=...
+TWILIO_AUTH_TOKEN=...
 ```
 
-### Running Locally
+### Docker (recommended)
+
+Requires [Docker Desktop](https://www.docker.com/products/docker-desktop/).
+
+```bash
+docker compose up --build
+```
+
+Starts the app on port 8080 and a Postgres instance. Flyway migrations run automatically. Use `--build` when you've changed code; omit it on subsequent starts.
+
+### Running Locally (without Docker)
+
+Requires Node.js 22+, Java 17, and PostgreSQL on `localhost:5432/confectionco`.
 
 **Frontend** (port 5173):
 ```bash
