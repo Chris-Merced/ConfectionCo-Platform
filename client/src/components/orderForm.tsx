@@ -55,11 +55,6 @@ export default function OrderForm(): ReactElement {
             }
         }
 
-        if (!smsConsent) {
-            setError("Please consent to SMS communications to submit your order.");
-            return;
-        }
-
         setLoading(true);
 
         const formData = new FormData();
