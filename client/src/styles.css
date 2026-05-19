@@ -603,6 +603,49 @@ input[type="file"].form-input {
     margin-top: 0.2rem;
 }
 
+/* ── SMS Consent ─────────────────────────────────────────────── */
+.sms-consent {
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 0.9rem 1rem;
+    margin-bottom: 1.15rem;
+}
+
+.sms-consent-row {
+    display: flex;
+    gap: 0.65rem;
+    align-items: flex-start;
+    cursor: pointer;
+}
+
+.sms-consent-row input[type="checkbox"] {
+    margin-top: 3px;
+    flex-shrink: 0;
+    accent-color: var(--pink);
+    width: 15px;
+    height: 15px;
+    cursor: pointer;
+}
+
+.consent-text {
+    font-size: 0.82rem;
+    color: var(--brown);
+    line-height: 1.65;
+}
+
+.rates-note {
+    font-size: 0.77rem;
+    color: var(--text-muted);
+    margin-top: 0.45rem;
+    padding-left: 1.65rem;
+    line-height: 1.55;
+}
+
+.rates-note a {
+    color: var(--pink);
+}
+
 /* ── Submit Button ───────────────────────────────────────────── */
 .form-submit {
     width: 100%;

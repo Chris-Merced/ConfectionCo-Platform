@@ -10,6 +10,7 @@ export default function OrderForm(): ReactElement {
     const [deliveryAddress, setDeliveryAddress] = useState("");
     const [fulfillmentDate, setFulfillmentDate] = useState("");
     const [photos, setPhotos] = useState<FileList | null>(null);
+    const [smsConsent, setSmsConsent] = useState(false);
     const [submitted, setSubmitted] = useState(false);
     const [error, setError] = useState("");
     const [loading, setLoading] = useState(false);
@@ -52,6 +53,11 @@ export default function OrderForm(): ReactElement {
                     return;
                 }
             }
+        }
+
+        if (!smsConsent) {
+            setError("Please consent to SMS communications to submit your order.");
+            return;
         }
 
         setLoading(true);
@@ -234,6 +240,26 @@ export default function OrderForm(): ReactElement {
             </div>
 
             {error && <p className="form-error">{error}</p>}
+
+            <div className="sms-consent">
+                <label className="sms-consent-row">
+                    <input
+                        type="checkbox"
+                        checked={smsConsent}
+                        onChange={e => setSmsConsent(e.target.checked)}
+                    />
+                    <span className="consent-text">
+                        By checking this box, I consent to receive SMS messages from <strong>ConfectionCo Bakery</strong> regarding
+                        my order, including payment links, order confirmations, and service updates.
+                        I understand this consent is not required to make a purchase.
+                    </span>
+                </label>
+                <p className="rates-note">
+                    Message frequency varies. Message &amp; data rates may apply.
+                    Reply <strong>STOP</strong> to unsubscribe at any time. Reply <strong>HELP</strong> for assistance.
+                    View our <a href="/privacy-policy">Privacy Policy</a> and <a href="/terms-and-conditions">Terms &amp; Conditions</a>.
+                </p>
+            </div>
 
             <button className="form-submit" type="submit" disabled={loading}>
                 {loading ? "Submitting..." : "Submit Order"}
