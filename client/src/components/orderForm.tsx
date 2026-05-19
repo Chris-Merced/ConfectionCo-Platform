@@ -94,7 +94,6 @@ export default function OrderForm(): ReactElement {
         return (
             <div className="form-card form-success">
                 <p className="form-success-title">Order Received!</p>
-                <p className="form-success-text">Thank you — we'll be in touch soon to confirm the details.</p>
                 <p className="form-success-text" style={{ marginTop: "0.75rem" }}>Remember to check your spam or junk folder for email correspondence!</p>
             </div>
         );

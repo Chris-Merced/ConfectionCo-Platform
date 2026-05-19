@@ -37,6 +37,10 @@ public class StripeService {
         return Session.retrieve(sessionId).getUrl();
     }
 
+    public String getRefundStatus(String refundId) throws Exception {
+        return Refund.retrieve(refundId).getStatus();
+    }
+
     public Refund createRefund(String sessionId, long amountInCents) throws Exception {
         Session session = Session.retrieve(sessionId);
         String paymentIntentId = session.getPaymentIntent();

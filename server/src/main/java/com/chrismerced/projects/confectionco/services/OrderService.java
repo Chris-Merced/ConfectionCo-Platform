@@ -105,6 +105,12 @@ public class OrderService {
             throw new IllegalArgumentException("No payment session found for this order.");
         }
 
+        if (order.getStatus() == OrderStatus.REFUND_PENDING && order.getStripeRefundId() != null) {
+            String refundStatus = stripeService.getRefundStatus(order.getStripeRefundId());
+            handleStripeRefundUpdated(order.getStripeRefundId(), refundStatus);
+            return;
+        }
+
         if (amount == null || amount.compareTo(BigDecimal.ZERO) <= 0) {
             throw new IllegalArgumentException("Refund amount must be greater than zero.");
         }
