@@ -253,7 +253,7 @@ export default function OrderForm(): ReactElement {
                 </label>
                 <p className="rates-note">
                     Messages from <strong>ConfectionCo Bakery</strong> may include payment links, order confirmations, and service updates.
-                    Message frequency varies. Message &amp; data rates may apply.
+                    Message frequency varies. Message &amp; data rates may apply. (carrier-dependent, not charged by us)
                     Reply <strong>STOP</strong> to unsubscribe at any time. Reply <strong>HELP</strong> for assistance.
                     View our <a href="/privacy-policy">Privacy Policy</a> and <a href="/terms-and-conditions">Terms &amp; Conditions</a>.
                 </p>
