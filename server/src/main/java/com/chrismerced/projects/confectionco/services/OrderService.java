@@ -106,8 +106,8 @@ public class OrderService {
         }
 
         if (order.getStatus() == OrderStatus.REFUND_PENDING && order.getStripeRefundId() != null) {
-            String refundStatus = stripeService.getRefundStatus(order.getStripeRefundId());
-            handleStripeRefundUpdated(order.getStripeRefundId(), refundStatus);
+            com.stripe.model.Refund existing = stripeService.getRefund(order.getStripeRefundId());
+            handleStripeRefundUpdated(existing.getId(), existing.getStatus(), existing.getAmount());
             return;
         }
 
@@ -163,20 +163,24 @@ public class OrderService {
                     log.error("Missing refund id or status in event: {}", event.getId());
                     return;
                 }
-                handleStripeRefundUpdated(refundId, refundStatus);
+                long amountInCents = dataObject.path("amount").asLong(0);
+                handleStripeRefundUpdated(refundId, refundStatus, amountInCents > 0 ? amountInCents : null);
             }
 
             default -> log.info("Unhandled Stripe event: {}", event.getType());
         }
     }
 
-    private void handleStripeRefundUpdated(String refundId, String refundStatus) {
+    private void handleStripeRefundUpdated(String refundId, String refundStatus, Long amountInCents) {
         Order order = orderRepository.findByStripeRefundId(refundId).orElse(null);
         if (order == null) {
             log.warn("charge.refund.updated for unknown refund id: {}", refundId);
             return;
         }
         if ("succeeded".equals(refundStatus)) {
+            if (amountInCents != null) {
+                order.setRefundAmount(BigDecimal.valueOf(amountInCents).movePointLeft(2));
+            }
             for (String key : order.getPhotoUrls()) {
                 try {
                     s3Service.deleteFile(key, inspoBucket);

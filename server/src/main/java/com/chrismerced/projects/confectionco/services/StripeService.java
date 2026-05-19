@@ -37,8 +37,8 @@ public class StripeService {
         return Session.retrieve(sessionId).getUrl();
     }
 
-    public String getRefundStatus(String refundId) throws Exception {
-        return Refund.retrieve(refundId).getStatus();
+    public Refund getRefund(String refundId) throws Exception {
+        return Refund.retrieve(refundId);
     }
 
     public Refund createRefund(String sessionId, long amountInCents) throws Exception {

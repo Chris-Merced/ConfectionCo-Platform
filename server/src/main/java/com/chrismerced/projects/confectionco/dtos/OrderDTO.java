@@ -19,6 +19,7 @@ public class OrderDTO {
     private String status;
     private BigDecimal depositAmount;
     private BigDecimal finalPaymentAmount;
+    private BigDecimal refundAmount;
     private boolean depositPaid;
     private boolean fullPaymentPaid;
     private Integer servingCount;
@@ -38,6 +39,7 @@ public class OrderDTO {
         this.status = order.getStatus().name();
         this.depositAmount = order.getDepositAmount();
         this.finalPaymentAmount = order.getFinalPaymentAmount();
+        this.refundAmount = order.getRefundAmount();
         this.depositPaid = order.isDepositPaid();
         this.fullPaymentPaid = order.isFullPaymentPaid();
         this.servingCount = order.getServingCount();
@@ -60,6 +62,7 @@ public class OrderDTO {
     public String getStatus() { return status; }
     public BigDecimal getDepositAmount() { return depositAmount; }
     public BigDecimal getFinalPaymentAmount() { return finalPaymentAmount; }
+    public BigDecimal getRefundAmount() { return refundAmount; }
     public boolean isDepositPaid() { return depositPaid; }
     public boolean isFullPaymentPaid() { return fullPaymentPaid; }
     public Integer getServingCount() { return servingCount; }

@@ -50,6 +50,9 @@ public class Order {
     @Column(name = "stripe_refund_id")
     private String stripeRefundId;
 
+    @Column(name = "refund_amount")
+    private BigDecimal refundAmount;
+
     @Column(name = "deposit_paid")
     private boolean depositPaid;
 
@@ -101,6 +104,8 @@ public class Order {
     public void setStripeSessionId(String stripeSessionId) { this.stripeSessionId = stripeSessionId; }
     public String getStripeRefundId() { return stripeRefundId; }
     public void setStripeRefundId(String stripeRefundId) { this.stripeRefundId = stripeRefundId; }
+    public BigDecimal getRefundAmount() { return refundAmount; }
+    public void setRefundAmount(BigDecimal refundAmount) { this.refundAmount = refundAmount; }
     public boolean isDepositPaid() { return depositPaid; }
     public void setDepositPaid(boolean depositPaid) { this.depositPaid = depositPaid; }
     public boolean isFullPaymentPaid() { return fullPaymentPaid; }
