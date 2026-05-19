@@ -90,7 +90,8 @@ public class OrderController {
             @RequestParam(defaultValue = "PICKUP") String fulfillmentType,
             @RequestParam(required = false) @Size(max = 500) String deliveryAddress,
             @RequestParam LocalDate fulfillmentDate,
-            @RequestParam(required = false) List<MultipartFile> photos) throws IOException {
+            @RequestParam(required = false) List<MultipartFile> photos,
+            @RequestParam(defaultValue = "false") boolean smsConsent) throws IOException {
 
         String cleanCustomerName = InputSanitizer.stripHtml(customerName);
         String cleanEmail = InputSanitizer.stripHtml(email).toLowerCase();
@@ -136,6 +137,7 @@ public class OrderController {
         order.setFulfillmentType(cleanFulfillmentType);
         order.setDeliveryAddress("DROPOFF".equals(cleanFulfillmentType) ? cleanDeliveryAddress : null);
         order.setFulfillmentDate(fulfillmentDate);
+        order.setSmsConsent(smsConsent);
         order.setPhotoUrls(photoKeys);
 
         Order saved = orderRepository.save(order);

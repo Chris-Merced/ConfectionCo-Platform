@@ -17,6 +17,7 @@ export interface Order {
   deliveryAddress: string | null;
   fulfillmentDate: string | null;
   createdAt: string;
+  smsConsent: boolean;
   photoUrls: string[];
 }
 
@@ -150,7 +151,12 @@ export default function OrderCard({ order, token, onUpdate }: OrderCardProps): R
         <p className="order-card-field"><strong>Name:</strong> {order.customerName}</p>
       )}
       <p className="order-card-field"><strong>Email:</strong> {order.email}</p>
-      <p className="order-card-field"><strong>Phone:</strong> {order.phoneNumber}</p>
+      <p className="order-card-field">
+        <strong>Phone:</strong> {order.phoneNumber}{" "}
+        <span className={`sms-badge ${order.smsConsent ? "sms-badge--yes" : "sms-badge--no"}`}>
+          {order.smsConsent ? "SMS opted in" : "No SMS"}
+        </span>
+      </p>
       <p className="order-card-field"><strong>Servings:</strong> {order.servingCount}</p>
       <p className="order-card-field">
         <strong>Fulfillment:</strong> {order.fulfillmentType === "DROPOFF" ? "Delivery" : "Pickup"}

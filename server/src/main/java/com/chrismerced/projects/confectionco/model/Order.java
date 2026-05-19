@@ -76,6 +76,9 @@ public class Order {
     @Column(name = "updated_at", insertable = false, updatable = false)
     private OffsetDateTime updatedAt;
 
+    @Column(name = "sms_consent")
+    private boolean smsConsent;
+
     @ElementCollection
     @CollectionTable(name = "order_photo_urls", joinColumns = @JoinColumn(name = "order_id"))
     @Column(name = "photo_url")
@@ -114,6 +117,8 @@ public class Order {
     public void setFulfillmentDate(LocalDate fulfillmentDate) { this.fulfillmentDate = fulfillmentDate; }
     public OffsetDateTime getCreatedAt() { return createdAt; }
     public OffsetDateTime getUpdatedAt() { return updatedAt; }
+    public boolean isSmsConsent() { return smsConsent; }
+    public void setSmsConsent(boolean smsConsent) { this.smsConsent = smsConsent; }
     public List<String> getPhotoUrls() { return photoUrls; }
     public void setPhotoUrls(List<String> photoUrls) { this.photoUrls = photoUrls; }
 }

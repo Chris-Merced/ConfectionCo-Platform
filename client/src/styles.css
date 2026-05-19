@@ -1185,6 +1185,26 @@ input[type="file"].form-input {
     text-decoration: underline;
 }
 
+.sms-badge {
+    display: inline-block;
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    padding: 0.15rem 0.5rem;
+    border-radius: 999px;
+    vertical-align: middle;
+}
+
+.sms-badge--yes {
+    background: #e6f4ea;
+    color: #2d6a4f;
+}
+
+.sms-badge--no {
+    background: #f4e6e6;
+    color: #7a2d2d;
+}
+
 .order-card-comments-edit {
     display: flex;
     flex-direction: column;

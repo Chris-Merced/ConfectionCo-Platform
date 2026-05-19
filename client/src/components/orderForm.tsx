@@ -71,6 +71,7 @@ export default function OrderForm(): ReactElement {
         formData.append("fulfillmentDate", fulfillmentDate);
         if (fulfillmentType === "DROPOFF") formData.append("deliveryAddress", deliveryAddress);
         if (comments) formData.append("comments", comments);
+        formData.append("smsConsent", String(smsConsent));
         if (photos) {
             Array.from(photos).forEach(photo => formData.append("photos", photo));
         }
