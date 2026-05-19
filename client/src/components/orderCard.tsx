@@ -147,9 +147,11 @@ export default function OrderCard({ order, token, onUpdate }: OrderCardProps): R
         </div>
       </div>
 
-      <p className={`sms-status ${order.smsConsent ? "sms-status--automatic" : "sms-status--manual"}`}>
-        {order.smsConsent ? "Automatic" : "Not Automatic"}
-      </p>
+      {order.status !== "COMPLETED" && order.status !== "REFUNDED" && (
+        <p className={`sms-status ${order.smsConsent ? "sms-status--automatic" : "sms-status--manual"}`}>
+          {order.smsConsent ? "Automatic" : "Not Automatic"}
+        </p>
+      )}
 
       {order.customerName && (
         <p className="order-card-field"><strong>Name:</strong> {order.customerName}</p>
