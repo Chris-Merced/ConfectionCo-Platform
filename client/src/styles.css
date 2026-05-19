@@ -1185,24 +1185,18 @@ input[type="file"].form-input {
     text-decoration: underline;
 }
 
-.sms-badge {
-    display: inline-block;
-    font-size: 0.72rem;
+.sms-status {
+    font-size: 1rem;
     font-weight: 700;
-    letter-spacing: 0.04em;
-    padding: 0.15rem 0.5rem;
-    border-radius: 999px;
-    vertical-align: middle;
+    margin: 0.4rem 0 0.6rem;
 }
 
-.sms-badge--yes {
-    background: #e6f4ea;
+.sms-status--automatic {
     color: #2d6a4f;
 }
 
-.sms-badge--no {
-    background: #f4e6e6;
-    color: #7a2d2d;
+.sms-status--manual {
+    color: #9b2c2c;
 }
 
 .order-card-comments-edit {
