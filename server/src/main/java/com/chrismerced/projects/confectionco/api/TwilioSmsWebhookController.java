@@ -25,6 +25,12 @@ public class TwilioSmsWebhookController {
     private static final Set<String> OPT_OUT_KEYWORDS = Set.of(
             "STOP", "STOPALL", "UNSUBSCRIBE", "CANCEL", "END", "QUIT");
 
+    private static final Set<String> HELP_KEYWORDS = Set.of("HELP", "INFO");
+
+    private static final String HELP_RESPONSE =
+            "If you have any questions about your order you can reach out via email to " +
+            "hello@confectioncobakery.com. Reply STOP to unsubscribe.";
+
     @Value("${TWILIO_AUTH_TOKEN}")
     private String authToken;
 
@@ -57,6 +63,10 @@ public class TwilioSmsWebhookController {
         }
 
         String keyword = body.trim().toUpperCase();
+        if (HELP_KEYWORDS.contains(keyword)) {
+            return ResponseEntity.ok(
+                    "<Response><Message>" + HELP_RESPONSE + "</Message></Response>");
+        }
         if (OPT_OUT_KEYWORDS.contains(keyword)) {
             String normalizedPhone = InputSanitizer.sanitizePhone(from);
             List<Order> orders = orderRepository.findByPhoneNumber(normalizedPhone);
