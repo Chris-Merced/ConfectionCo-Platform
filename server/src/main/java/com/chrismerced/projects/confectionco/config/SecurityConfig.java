@@ -32,7 +32,7 @@ public class SecurityConfig {
                                 .includeSubDomains(true)))
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/", "/index.html", "/assets/**").permitAll()
-                        .requestMatchers("/api/stripe/webhook", "/api/orders").permitAll()
+                        .requestMatchers("/api/stripe/webhook", "/api/orders", "/api/sms/inbound").permitAll()
                         .requestMatchers("/api/admin/*").authenticated()
                         .anyRequest().permitAll())
                 .oauth2ResourceServer(oauth2 -> oauth2

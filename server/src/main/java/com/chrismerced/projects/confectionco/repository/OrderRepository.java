@@ -14,4 +14,6 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
     List<Order> findByStatusNotIn(Collection<OrderStatus> statuses);
 
     Optional<Order> findByStripeRefundId(String stripeRefundId);
+
+    List<Order> findByPhoneNumber(String phoneNumber);
 }
