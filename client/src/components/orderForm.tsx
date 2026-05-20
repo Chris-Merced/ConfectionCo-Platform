@@ -245,15 +245,13 @@ export default function OrderForm(): ReactElement {
                         onChange={e => setSmsConsent(e.target.checked)}
                     />
                     <span className="consent-text">
-                        <strong>Agree to receive payment links and order updates via text message.</strong>{" "}
-                        We highly recommend checking this box, it's the fastest way to send you your payment link and keep you updated on your order.
-                        Consent is not required to make a purchase.
+                        <strong>Opt in to receive order status updates via text message from ConfectionCo Bakery.</strong>{" "}
+                        Order confirmations and payment links will always be sent to your email. SMS updates are optional and not required to place or complete your order.
                     </span>
                 </label>
                 <p className="rates-note">
-                    Messages from <strong>ConfectionCo Bakery</strong> may include payment links, order confirmations, and service updates.
-                    Message frequency varies. Message &amp; data rates may apply. (carrier-dependent, not charged by us)
-                    Reply <strong>STOP</strong> to unsubscribe at any time. Reply <strong>HELP</strong> for assistance.
+                    Message frequency varies. Msg &amp; data rates may apply.
+                    Reply <strong>STOP</strong> to opt out at any time. Reply <strong>HELP</strong> for assistance.
                     View our <a href="/privacy-policy">Privacy Policy</a> and <a href="/terms-and-conditions">Terms &amp; Conditions</a>.
                 </p>
             </div>

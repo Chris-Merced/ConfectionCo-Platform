@@ -45,7 +45,7 @@ export default function PrivacyPolicy(): ReactElement {
         <section className="policy-section">
           <h2>4. SMS Messaging &amp; Consent</h2>
           <p>
-            By providing your phone number on our order form, you consent to receive SMS messages from ConfectionCo Bakery. These messages may include payment links, order confirmations, and service-related updates.
+            By checking the SMS opt-in checkbox on our order form, you consent to receive text messages from ConfectionCo Bakery related to your order status and updates. SMS consent is entirely optional and is not required to place or complete a purchase. Order confirmations and payment links are always sent to your email address regardless of SMS consent.
           </p>
           <ul>
             <li>Message frequency varies based on your order activity.</li>
