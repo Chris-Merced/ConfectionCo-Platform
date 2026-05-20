@@ -167,6 +167,7 @@ class OrderServiceTest {
     @Test
     void handleStripeEvent_refundSucceeded_setsRefundedAndDeletesPhotos() throws Exception {
         Order order = new Order();
+        order.setSmsConsent(true);
         order.getPhotoUrls().add("photo-key-1");
         when(orderRepository.findByStripeRefundId("re_test123")).thenReturn(Optional.of(order));
 
