@@ -19,8 +19,6 @@ const STATUS_SECTIONS: { key: string; label: string; collapsible?: boolean }[] =
 //     the customer to a google/facebook review link
 // Add favicon with company logo
 // Add SEO optimizations if necessary
-// Implement sms_consent change to false on STOP or UNSUBSCRIBE message
-// Implement HELP message for sms
 export default function AdminDashboard(): ReactElement {
     const { isLoading, isAuthenticated, error, loginWithRedirect: login, logout: auth0Logout, user, getAccessTokenSilently } = useAuth0();
 
