@@ -267,6 +267,10 @@ img, iframe, input, textarea, select, button {
     position: relative;
     z-index: 1;
     max-width: 720px;
+    opacity: 0;
+}
+
+.hero-inner--ready {
     animation: heroFadeUp 0.85s ease-out both;
 }
 

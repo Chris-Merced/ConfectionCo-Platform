@@ -1,5 +1,5 @@
 import type { ReactElement } from "react";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import OrderForm from "../components/orderForm";
 import LocationMap from "../components/LocationMap";
@@ -8,6 +8,17 @@ import "../styles.css";
 export default function Main(): ReactElement {
     const heroRef = useRef<HTMLElement>(null);
     const { hash } = useLocation();
+    const [heroReady, setHeroReady] = useState(false);
+
+    useEffect(() => {
+        if (document.readyState === "complete") {
+            setHeroReady(true);
+        } else {
+            const onLoad = () => setHeroReady(true);
+            window.addEventListener("load", onLoad);
+            return () => window.removeEventListener("load", onLoad);
+        }
+    }, []);
 
     useEffect(() => {
         if (hash) {
@@ -40,7 +51,7 @@ export default function Main(): ReactElement {
         <>
             <section className="hero" ref={heroRef}>
                 <div className="hero-blob" aria-hidden="true" />
-                <div className="hero-inner">
+                <div className={`hero-inner${heroReady ? " hero-inner--ready" : ""}`}>
                     <img
                         src="https://confectioncobakery-assets-859780942726-us-east-2-an.s3.us-east-2.amazonaws.com/FullCompanyLogo.png"
                         alt="Confection Co. Bakery"
