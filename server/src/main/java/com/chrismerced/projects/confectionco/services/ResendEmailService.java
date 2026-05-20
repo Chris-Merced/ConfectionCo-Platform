@@ -25,11 +25,34 @@ public class ResendEmailService implements EmailService {
                 "<p>Hi there!</p>" +
                 "<p>Thank you for placing your order with <strong>Confection Co. Bakery</strong>. " +
                 "We've received your request and it is currently awaiting our review.</p>" +
-                "<p>You should receive a text message shortly with your order confirmation. " +
-                "If you didn't receive one, feel free to reach out to us at " +
-                "<a href=\"mailto:hello@confectioncobakery.com\">hello@confectioncobakery.com</a> " +
-                "with your order ID and we'll make sure you're taken care of.</p>" +
+                "<p>Once your order is reviewed and accepted, we'll send your payment link to this email address. " +
+                "If you have any questions in the meantime, feel free to reach out at " +
+                "<a href=\"mailto:hello@confectioncobakery.com\">hello@confectioncobakery.com</a>.</p>" +
                 "<p>We can't wait to create something sweet for you!</p>" +
+                "<p>— The Confection Co. Team</p>");
+    }
+
+    @Override
+    public void sendDepositPaymentLink(String recipient, String url) {
+        send(recipient,
+                "Your Deposit Payment Link — Confection Co. Bakery",
+                "<p>Hi there!</p>" +
+                "<p>Your order has been accepted! Please use the link below to pay your deposit and get your order started:</p>" +
+                "<p><a href=\"" + url + "\" style=\"background:#e0849a;color:#fff;padding:12px 24px;" +
+                "border-radius:6px;text-decoration:none;display:inline-block;font-weight:bold\">Pay Deposit</a></p>" +
+                "<p>Or copy this link into your browser:<br><a href=\"" + url + "\">" + url + "</a></p>" +
+                "<p>— The Confection Co. Team</p>");
+    }
+
+    @Override
+    public void sendFinalPaymentLink(String recipient, String url) {
+        send(recipient,
+                "Your Final Payment Link — Confection Co. Bakery",
+                "<p>Hi there!</p>" +
+                "<p>Your order is almost complete! Please use the link below to submit your final payment:</p>" +
+                "<p><a href=\"" + url + "\" style=\"background:#e0849a;color:#fff;padding:12px 24px;" +
+                "border-radius:6px;text-decoration:none;display:inline-block;font-weight:bold\">Pay Now</a></p>" +
+                "<p>Or copy this link into your browser:<br><a href=\"" + url + "\">" + url + "</a></p>" +
                 "<p>— The Confection Co. Team</p>");
     }
 

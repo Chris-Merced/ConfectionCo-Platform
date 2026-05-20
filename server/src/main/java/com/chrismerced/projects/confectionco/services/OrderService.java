@@ -69,8 +69,15 @@ public class OrderService {
         orderRepository.save(order);
 
         String url = session.getUrl();
-        textingService.sendText(order.getPhoneNumber(),
-                "Hi! Your deposit payment link for your Confection Co. Bakery order is ready: " + url);
+        emailService.sendDepositPaymentLink(order.getEmail(), url);
+        if (order.isSmsConsent()) {
+            try {
+                textingService.sendText(order.getPhoneNumber(),
+                        "Hi! Your deposit payment link for your Confection Co. Bakery order is ready: " + url);
+            } catch (Exception e) {
+                log.error("Failed to send deposit SMS for order {}", orderId, e);
+            }
+        }
         return url;
     }
 
@@ -88,8 +95,15 @@ public class OrderService {
         orderRepository.save(order);
 
         String url = session.getUrl();
-        textingService.sendText(order.getPhoneNumber(),
-                "Hi! Your final payment link for your Confection Co. Bakery order is ready: " + url);
+        emailService.sendFinalPaymentLink(order.getEmail(), url);
+        if (order.isSmsConsent()) {
+            try {
+                textingService.sendText(order.getPhoneNumber(),
+                        "Hi! Your final payment link for your Confection Co. Bakery order is ready: " + url);
+            } catch (Exception e) {
+                log.error("Failed to send final payment SMS for order {}", orderId, e);
+            }
+        }
         return url;
     }
 
