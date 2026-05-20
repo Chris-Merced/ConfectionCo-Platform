@@ -6,7 +6,7 @@
     --brown-dark:    #4A2512;
     --brown:         #7B4A2D;
     --brown-light:   #B8855A;
-    --pink:          #C4768A;
+    --pink:          #E0849A;
     --pink-light:    #E8B4C0;
     --pink-dark:     #A85C72;
     --black:         #1A0F0A;
@@ -292,6 +292,13 @@ img, iframe, input, textarea, select, button {
     opacity: 0.9;
 }
 
+.hero-logo {
+    display: block;
+    max-width: clamp(260px, 50vw, 480px);
+    height: auto;
+    margin: 0 auto 1rem;
+}
+
 .hero-title {
     font-family: var(--font-serif);
     font-size: clamp(2.8rem, 8vw, 5.5rem);
@@ -304,7 +311,7 @@ img, iframe, input, textarea, select, button {
 
 .hero-title em {
     font-style: italic;
-    color: var(--pink);
+    color: rgb(254, 137, 153);
 }
 
 .hero-title-by {

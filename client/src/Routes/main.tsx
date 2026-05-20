@@ -41,10 +41,13 @@ export default function Main(): ReactElement {
             <section className="hero" ref={heroRef}>
                 <div className="hero-blob" aria-hidden="true" />
                 <div className="hero-inner">
-                    <span className="hero-eyebrow">handcrafted with love</span>
+                    <img
+                        src="https://confectioncobakery-assets-859780942726-us-east-2-an.s3.us-east-2.amazonaws.com/FullCompanyLogo.png"
+                        alt="Confection Co. Bakery"
+                        className="hero-logo"
+                    />
                     <h1 className="hero-title">
                         Custom Cakes &amp; <em>Confections</em><br />
-                        <span className="hero-title-by">by Confection Co. Bakery</span>
                     </h1>
                     <div className="hero-divider" aria-hidden="true">
                         <span className="hero-divider-dot" />
