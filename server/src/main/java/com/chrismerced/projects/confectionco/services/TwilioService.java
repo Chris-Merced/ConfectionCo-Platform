@@ -17,6 +17,9 @@ public class TwilioService implements TextingService {
     @Value("${TWILIO_AUTH_TOKEN}")
     private String authToken;
 
+    @Value("${TWILIO_PHONE_NUMBER}")
+    private String fromPhone;
+
     @PostConstruct
     public void init() {
         Twilio.init(accountSID, authToken);
@@ -27,7 +30,7 @@ public class TwilioService implements TextingService {
         try {
             Message.creator(
                     new com.twilio.type.PhoneNumber(normalizePhone(to)),
-                    new com.twilio.type.PhoneNumber(""),
+                    new com.twilio.type.PhoneNumber(fromPhone),
                     message)
                     .create();
         } catch (Exception e) {

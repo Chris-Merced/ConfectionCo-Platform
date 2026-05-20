@@ -69,7 +69,11 @@ public class OrderService {
         orderRepository.save(order);
 
         String url = session.getUrl();
-        emailService.sendDepositPaymentLink(order.getEmail(), url);
+        try {
+            emailService.sendDepositPaymentLink(order.getEmail(), url);
+        } catch (Exception e) {
+            log.error("Failed to send deposit payment link email for order {}", orderId, e);
+        }
         if (order.isSmsConsent()) {
             try {
                 textingService.sendText(order.getPhoneNumber(),
@@ -95,7 +99,11 @@ public class OrderService {
         orderRepository.save(order);
 
         String url = session.getUrl();
-        emailService.sendFinalPaymentLink(order.getEmail(), url);
+        try {
+            emailService.sendFinalPaymentLink(order.getEmail(), url);
+        } catch (Exception e) {
+            log.error("Failed to send final payment link email for order {}", orderId, e);
+        }
         if (order.isSmsConsent()) {
             try {
                 textingService.sendText(order.getPhoneNumber(),
