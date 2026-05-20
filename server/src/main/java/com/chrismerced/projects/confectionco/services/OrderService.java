@@ -205,11 +205,13 @@ public class OrderService {
             order.setStatus(OrderStatus.REFUNDED);
             orderRepository.save(order);
             log.info("Refund {} succeeded for order {}", refundId, order.getId());
-            try {
-                textingService.sendText(order.getPhoneNumber(),
-                        "Your refund from Confection Co. Bakery has been processed. Please allow 5–10 business days for it to appear in your account.");
-            } catch (Exception e) {
-                log.error("Failed to send refund text for order {}", order.getId(), e);
+            if (order.isSmsConsent()) {
+                try {
+                    textingService.sendText(order.getPhoneNumber(),
+                            "Your refund from Confection Co. Bakery has been processed. Please allow 5–10 business days for it to appear in your account.");
+                } catch (Exception e) {
+                    log.error("Failed to send refund text for order {}", order.getId(), e);
+                }
             }
             try {
                 textingService.sendText(ownerPhone,
@@ -245,11 +247,13 @@ public class OrderService {
             order.setDepositPaid(true);
             order.setStatus(OrderStatus.IN_PROGRESS);
             orderRepository.save(order);
-            try {
-                textingService.sendText(order.getPhoneNumber(),
-                        "Great news! Your deposit has been received by Confection Co. Bakery. We're now working on your order!");
-            } catch (Exception e) {
-                log.error("Failed to send deposit text to order {}", orderId, e);
+            if (order.isSmsConsent()) {
+                try {
+                    textingService.sendText(order.getPhoneNumber(),
+                            "Great news! Your deposit has been received by Confection Co. Bakery. We're now working on your order!");
+                } catch (Exception e) {
+                    log.error("Failed to send deposit text to order {}", orderId, e);
+                }
             }
             try {
                 textingService.sendText(ownerPhone,
@@ -268,11 +272,13 @@ public class OrderService {
             order.setFullPaymentPaid(true);
             order.setStatus(OrderStatus.PAID_IN_FULL);
             orderRepository.save(order);
-            try {
-                textingService.sendText(order.getPhoneNumber(),
-                        "Your final payment has been received by Confection Co. Bakery. Your order is paid in full — thank you!");
-            } catch (Exception e) {
-                log.error("Failed to send final payment text for order {}", orderId, e);
+            if (order.isSmsConsent()) {
+                try {
+                    textingService.sendText(order.getPhoneNumber(),
+                            "Your final payment has been received by Confection Co. Bakery. Your order is paid in full — thank you!");
+                } catch (Exception e) {
+                    log.error("Failed to send final payment text for order {}", orderId, e);
+                }
             }
             try {
                 textingService.sendText(ownerPhone,
