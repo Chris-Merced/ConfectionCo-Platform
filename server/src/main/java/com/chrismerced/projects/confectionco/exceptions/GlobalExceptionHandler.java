@@ -38,7 +38,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(EmailServiceException.class)
     public ResponseEntity<String> handleEmailError(EmailServiceException ex) {
         log.error("Email service error", ex);
-        return ResponseEntity.internalServerError().body("A messaging error occurred. Please try again.");
+        return ResponseEntity.internalServerError().body("An emailing error occurred. Please try again.");
     }
 
     @ExceptionHandler(NoResourceFoundException.class)
