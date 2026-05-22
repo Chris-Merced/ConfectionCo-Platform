@@ -18,6 +18,7 @@ export interface Order {
   fulfillmentDate: string | null;
   createdAt: string;
   smsConsent: boolean;
+  paymentLinkToken: string | null;
   photoUrls: string[];
 }
 
@@ -72,16 +73,9 @@ export default function OrderCard({ order, token, onUpdate }: OrderCardProps): R
     onSuccess: () => { setAmount(""); onUpdate(); },
   });
 
-  const paymentUrlMutation = useMutation({
-    mutationFn: async () => {
-      const res = await fetch(`/api/admin/orders/${order.id}/payment-url`, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
-      if (!res.ok) throw new Error(await res.text());
-      return res.json();
-    },
-    onSuccess: (data) => setPaymentUrl(data.url),
-  });
+  const showPaymentLink = () => {
+    if (order.paymentLinkToken) setPaymentUrl(`${window.location.origin}/pay/${order.paymentLinkToken}`);
+  };
 
   const commentsMutation = useMutation({
     mutationFn: async () => {
@@ -122,7 +116,6 @@ export default function OrderCard({ order, token, onUpdate }: OrderCardProps): R
     finalLinkMutation.isPending ||
     completeMutation.isPending ||
     refundMutation.isPending ||
-    paymentUrlMutation.isPending ||
     commentsMutation.isPending ||
     deleteMutation.isPending;
 
@@ -132,7 +125,6 @@ export default function OrderCard({ order, token, onUpdate }: OrderCardProps): R
     finalLinkMutation.error ||
     completeMutation.error ||
     refundMutation.error ||
-    paymentUrlMutation.error ||
     commentsMutation.error ||
     deleteMutation.error
   ) as Error | null;
@@ -247,7 +239,7 @@ export default function OrderCard({ order, token, onUpdate }: OrderCardProps): R
       {order.status === "AWAITING_DEPOSIT" && (
         <div className="order-card-actions">
           <p className="order-card-waiting">Waiting for customer to pay deposit.</p>
-          <button className="btn-copy" onClick={() => paymentUrlMutation.mutate()} disabled={isAnyPending}>
+          <button className="btn-copy" onClick={showPaymentLink} disabled={!order.paymentLinkToken}>
             Show Link
           </button>
         </div>
@@ -273,7 +265,7 @@ export default function OrderCard({ order, token, onUpdate }: OrderCardProps): R
       {order.status === "AWAITING_FINAL_PAYMENT" && (
         <div className="order-card-actions">
           <p className="order-card-waiting">Waiting for customer to pay final balance.</p>
-          <button className="btn-copy" onClick={() => paymentUrlMutation.mutate()} disabled={isAnyPending}>
+          <button className="btn-copy" onClick={showPaymentLink} disabled={!order.paymentLinkToken}>
             Show Link
           </button>
         </div>

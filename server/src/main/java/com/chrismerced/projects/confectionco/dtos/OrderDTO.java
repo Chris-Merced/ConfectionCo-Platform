@@ -29,6 +29,7 @@ public class OrderDTO {
     private LocalDate fulfillmentDate;
     private OffsetDateTime createdAt;
     private boolean smsConsent;
+    private String paymentLinkToken;
     private List<String> photoUrls;
 
     public OrderDTO(Order order, String bucketUrl) {
@@ -49,6 +50,7 @@ public class OrderDTO {
         this.fulfillmentDate = order.getFulfillmentDate();
         this.createdAt = order.getCreatedAt();
         this.smsConsent = order.isSmsConsent();
+        this.paymentLinkToken = order.getPaymentLinkToken();
         this.photoUrls = order.getPhotoUrls()
                 .stream()
                 .map(key -> bucketUrl + "/" + key)
@@ -72,5 +74,6 @@ public class OrderDTO {
     public LocalDate getFulfillmentDate() { return fulfillmentDate; }
     public OffsetDateTime getCreatedAt() { return createdAt; }
     public boolean isSmsConsent() { return smsConsent; }
+    public String getPaymentLinkToken() { return paymentLinkToken; }
     public List<String> getPhotoUrls() { return photoUrls; }
 }
