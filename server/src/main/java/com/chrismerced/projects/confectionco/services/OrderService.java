@@ -55,7 +55,7 @@ public class OrderService {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public void advanceOrder(Long orderId) {
+    public String advanceOrder(Long orderId) {
         Order order = orderRepository.findById(orderId)
                 .orElseThrow(() -> new ResourceNotFoundException("Order not found: " + orderId));
 
@@ -71,6 +71,7 @@ public class OrderService {
             default -> throw new IllegalStateException("Order cannot be manually advanced from status: " + order.getStatus());
         }
         orderRepository.save(order);
+        return order.getStatus().name();
     }
 
     public void updateOrderStatus(Long orderId, OrderStatus status) {

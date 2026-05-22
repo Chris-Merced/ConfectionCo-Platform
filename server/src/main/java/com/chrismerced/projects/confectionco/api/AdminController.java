@@ -190,8 +190,8 @@ public class AdminController {
     @PostMapping("/orders/{id}/advance")
     public ResponseEntity<?> advanceOrder(@PathVariable Long id) {
         try {
-            orderService.advanceOrder(id);
-            return ResponseEntity.ok().build();
+            String newStatus = orderService.advanceOrder(id);
+            return ResponseEntity.ok(Map.of("status", newStatus));
         } catch (ResourceNotFoundException e) {
             return ResponseEntity.notFound().build();
         } catch (IllegalStateException e) {
