@@ -15,5 +15,7 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
 
     Optional<Order> findByStripeRefundId(String stripeRefundId);
 
+    Optional<Order> findByPaymentLinkToken(String token);
+
     List<Order> findByPhoneNumber(String phoneNumber);
 }
