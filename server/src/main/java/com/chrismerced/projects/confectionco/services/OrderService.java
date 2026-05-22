@@ -249,7 +249,7 @@ public class OrderService {
     private String shortenUrl(String url) {
         try {
             HttpRequest request = HttpRequest.newBuilder()
-                    .uri(URI.create("https://tinyurl.com/api-create.php?url=" + URLEncoder.encode(url, StandardCharsets.UTF_8)))
+                    .uri(URI.create("https://is.gd/create.php?format=simple&url=" + URLEncoder.encode(url, StandardCharsets.UTF_8)))
                     .GET()
                     .build();
             HttpResponse<String> response = HttpClient.newHttpClient().send(request, HttpResponse.BodyHandlers.ofString());
