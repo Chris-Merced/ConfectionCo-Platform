@@ -63,7 +63,7 @@ module.exports = (env, argv) => {
       // Send frontend -> backend API proxy in dev
       proxy: [
         {
-          context: ["/api"],
+          context: ["/api", "/pay"],
           target: "http://localhost:8080",
           changeOrigin: true,
         },
