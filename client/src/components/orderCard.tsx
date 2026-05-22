@@ -287,6 +287,7 @@ export default function OrderCard({ order, token, onUpdate }: OrderCardProps): R
         </div>
       )}
 
+
       {order.status === "REFUND_PENDING" && (
         <div className="order-card-refund-section">
           <p className="order-card-waiting">Refund submitted — awaiting Stripe confirmation.</p>

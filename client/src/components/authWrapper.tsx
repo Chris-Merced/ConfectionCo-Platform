@@ -18,6 +18,7 @@ export default function AuthWrapper({ children }: { children: React.ReactNode })
       clientId="dxRIYZwKz8Zh790ccHzAwctQ3JcqJe1T"
       authorizationParams={{
         redirect_uri: window.location.origin,
+        audience: "https://confectionco-api",
       }}
       onRedirectCallback={onRedirectCallback}
     >
