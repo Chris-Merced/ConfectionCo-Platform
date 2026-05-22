@@ -20,6 +20,7 @@ const STATUS_SECTIONS: { key: string; label: string; collapsible?: boolean }[] =
 // Add favicon with company logo
 // Add SEO optimizations if necessary
 // Make email look prettier
+// Need deeper understanding of jcdba and jparepository
 export default function AdminDashboard(): ReactElement {
     const { isLoading, isAuthenticated, error, loginWithRedirect: login, logout: auth0Logout, user, getAccessTokenSilently } = useAuth0();
 
