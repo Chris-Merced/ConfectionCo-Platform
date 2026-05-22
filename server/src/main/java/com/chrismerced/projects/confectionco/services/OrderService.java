@@ -253,7 +253,8 @@ public class OrderService {
                     .GET()
                     .build();
             HttpResponse<String> response = HttpClient.newHttpClient().send(request, HttpResponse.BodyHandlers.ofString());
-            return response.body().trim();
+            String shortened = response.body().trim();
+            return shortened.startsWith("http") ? shortened : url;
         } catch (Exception e) {
             log.warn("Failed to shorten URL, using original: {}", e.getMessage());
             return url;

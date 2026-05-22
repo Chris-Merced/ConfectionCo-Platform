@@ -102,7 +102,6 @@ public class ResendEmailService implements EmailService {
             // Header
             "<tr><td style=\"background:#e0849a;border-radius:8px 8px 0 0;padding:32px 40px;text-align:center;\">" +
             "<h1 style=\"margin:0;color:#fff;font-size:26px;font-weight:700;letter-spacing:0.3px;\">Confection Co. Bakery</h1>" +
-            "<p style=\"margin:6px 0 0;color:rgba(255,255,255,0.85);font-size:13px;\">Handcrafted with love</p>" +
             "</td></tr>" +
             // Body
             "<tr><td style=\"background:#fff;padding:40px;\">" +
