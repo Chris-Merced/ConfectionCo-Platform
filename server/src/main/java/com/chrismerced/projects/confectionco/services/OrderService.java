@@ -55,6 +55,24 @@ public class OrderService {
         this.jdbcTemplate = jdbcTemplate;
     }
 
+    public void advanceOrder(Long orderId) {
+        Order order = orderRepository.findById(orderId)
+                .orElseThrow(() -> new ResourceNotFoundException("Order not found: " + orderId));
+
+        switch (order.getStatus()) {
+            case AWAITING_DEPOSIT -> {
+                order.setDepositPaid(true);
+                order.setStatus(OrderStatus.IN_PROGRESS);
+            }
+            case AWAITING_FINAL_PAYMENT -> {
+                order.setFullPaymentPaid(true);
+                order.setStatus(OrderStatus.PAID_IN_FULL);
+            }
+            default -> throw new IllegalStateException("Order cannot be manually advanced from status: " + order.getStatus());
+        }
+        orderRepository.save(order);
+    }
+
     public void updateOrderStatus(Long orderId, OrderStatus status) {
         Order order = orderRepository.findById(orderId)
                 .orElseThrow(() -> new ResourceNotFoundException("Order not found: " + orderId));

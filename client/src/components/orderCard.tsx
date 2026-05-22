@@ -73,6 +73,11 @@ export default function OrderCard({ order, token, onUpdate }: OrderCardProps): R
     onSuccess: () => { setAmount(""); onUpdate(); },
   });
 
+  const advanceMutation = useMutation({
+    mutationFn: () => post(`/api/admin/orders/${order.id}/advance`),
+    onSuccess: () => { setPaymentUrl(null); onUpdate(); },
+  });
+
   const showPaymentLink = () => {
     if (order.paymentLinkToken) setPaymentUrl(`${window.location.origin}/pay/${order.paymentLinkToken}`);
   };
@@ -116,6 +121,7 @@ export default function OrderCard({ order, token, onUpdate }: OrderCardProps): R
     finalLinkMutation.isPending ||
     completeMutation.isPending ||
     refundMutation.isPending ||
+    advanceMutation.isPending ||
     commentsMutation.isPending ||
     deleteMutation.isPending;
 
@@ -125,6 +131,7 @@ export default function OrderCard({ order, token, onUpdate }: OrderCardProps): R
     finalLinkMutation.error ||
     completeMutation.error ||
     refundMutation.error ||
+    advanceMutation.error ||
     commentsMutation.error ||
     deleteMutation.error
   ) as Error | null;
@@ -242,6 +249,21 @@ export default function OrderCard({ order, token, onUpdate }: OrderCardProps): R
           <button className="btn-copy" onClick={showPaymentLink} disabled={!order.paymentLinkToken}>
             Show Link
           </button>
+          <input
+            className="order-card-input"
+            type="number"
+            placeholder="New deposit amount"
+            value={amount}
+            onChange={(e) => setAmount(e.target.value)}
+            step="0.01"
+            min="0"
+          />
+          <button className="btn-accept" onClick={() => depositLinkMutation.mutate()} disabled={isAnyPending || !amount}>
+            Regenerate Link
+          </button>
+          <button className="btn-accept" onClick={() => advanceMutation.mutate()} disabled={isAnyPending}>
+            Mark Deposit Received
+          </button>
         </div>
       )}
 
@@ -267,6 +289,21 @@ export default function OrderCard({ order, token, onUpdate }: OrderCardProps): R
           <p className="order-card-waiting">Waiting for customer to pay final balance.</p>
           <button className="btn-copy" onClick={showPaymentLink} disabled={!order.paymentLinkToken}>
             Show Link
+          </button>
+          <input
+            className="order-card-input"
+            type="number"
+            placeholder="New final payment amount"
+            value={amount}
+            onChange={(e) => setAmount(e.target.value)}
+            step="0.01"
+            min="0"
+          />
+          <button className="btn-accept" onClick={() => finalLinkMutation.mutate()} disabled={isAnyPending || !amount}>
+            Regenerate Link
+          </button>
+          <button className="btn-accept" onClick={() => advanceMutation.mutate()} disabled={isAnyPending}>
+            Mark Payment Received
           </button>
         </div>
       )}

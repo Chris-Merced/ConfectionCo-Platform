@@ -187,6 +187,18 @@ public class AdminController {
         }
     }
 
+    @PostMapping("/orders/{id}/advance")
+    public ResponseEntity<?> advanceOrder(@PathVariable Long id) {
+        try {
+            orderService.advanceOrder(id);
+            return ResponseEntity.ok().build();
+        } catch (ResourceNotFoundException e) {
+            return ResponseEntity.notFound().build();
+        } catch (IllegalStateException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
     @PostMapping("/orders/{id}/deposit-link")
     public ResponseEntity<?> generateDepositLink(
             @PathVariable Long id,
