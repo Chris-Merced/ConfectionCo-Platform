@@ -1,12 +1,7 @@
 package com.chrismerced.projects.confectionco.services;
 
 import java.math.BigDecimal;
-import java.net.URI;
-import java.net.URLEncoder;
-import java.net.http.HttpClient;
-import java.net.http.HttpRequest;
-import java.net.http.HttpResponse;
-import java.nio.charset.StandardCharsets;
+import java.security.SecureRandom;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -33,6 +28,12 @@ public class OrderService {
 
     @Value("${app.owner-phone}")
     private String ownerPhone;
+
+    @Value("${app.base-url}")
+    private String baseUrl;
+
+    private static final String TOKEN_CHARS = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+    private static final SecureRandom RANDOM = new SecureRandom();
 
     private final OrderRepository orderRepository;
     private final StripeService stripeService;
@@ -71,10 +72,13 @@ public class OrderService {
         long amountInCents = totalAmount.multiply(BigDecimal.valueOf(100)).longValue();
         Session session = stripeService.createDepositCheckout(orderId, amountInCents, order.getEmail());
 
+        String token = generateToken();
         order.setStripeSessionId(session.getId());
+        order.setPaymentLinkToken(token);
+        order.setPaymentLinkUrl(session.getUrl());
         orderRepository.save(order);
 
-        String url = shortenUrl(session.getUrl());
+        String url = baseUrl + "/pay/" + token;
         try {
             emailService.sendDepositPaymentLink(order.getEmail(), url);
         } catch (Exception e) {
@@ -101,10 +105,13 @@ public class OrderService {
         long amountInCents = amount.multiply(BigDecimal.valueOf(100)).longValue();
         Session session = stripeService.createFinalPaymentCheckout(orderId, amountInCents, order.getEmail());
 
+        String token = generateToken();
         order.setStripeSessionId(session.getId());
+        order.setPaymentLinkToken(token);
+        order.setPaymentLinkUrl(session.getUrl());
         orderRepository.save(order);
 
-        String url = shortenUrl(session.getUrl());
+        String url = baseUrl + "/pay/" + token;
         try {
             emailService.sendFinalPaymentLink(order.getEmail(), url);
         } catch (Exception e) {
@@ -246,19 +253,12 @@ public class OrderService {
         }
     }
 
-    private String shortenUrl(String url) {
-        try {
-            HttpRequest request = HttpRequest.newBuilder()
-                    .uri(URI.create("https://is.gd/create.php?format=simple&url=" + URLEncoder.encode(url, StandardCharsets.UTF_8)))
-                    .GET()
-                    .build();
-            HttpResponse<String> response = HttpClient.newHttpClient().send(request, HttpResponse.BodyHandlers.ofString());
-            String shortened = response.body().trim();
-            return shortened.startsWith("http") ? shortened : url;
-        } catch (Exception e) {
-            log.warn("Failed to shorten URL, using original: {}", e.getMessage());
-            return url;
+    private String generateToken() {
+        StringBuilder token = new StringBuilder(8);
+        for (int i = 0; i < 8; i++) {
+            token.append(TOKEN_CHARS.charAt(RANDOM.nextInt(TOKEN_CHARS.length())));
         }
+        return token.toString();
     }
 
     private boolean markEventProcessed(String eventId) {
