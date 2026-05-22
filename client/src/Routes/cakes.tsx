@@ -44,7 +44,6 @@ export default function Cakes(): ReactElement {
     return (
         <div className={`gallery-page${ready ? " gallery-page--ready" : ""}`}>
             <section className="gallery-hero">
-                <span className="gallery-eyebrow">handcrafted with love</span>
                 <h1 className="gallery-heading">The Cake Gallery</h1>
                 <div className="gallery-rule" aria-hidden="true" />
                 <p className="gallery-subtext">

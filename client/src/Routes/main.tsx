@@ -271,7 +271,6 @@ export default function Main(): ReactElement {
                 <div className="footer-inner">
                     <div>
                         <div className="footer-brand-name">Confection <span>Co</span></div>
-                        <span className="footer-tagline">handcrafted with love</span>
                     </div>
                     <div>
                         <p className="footer-col-title">Get in Touch</p>
