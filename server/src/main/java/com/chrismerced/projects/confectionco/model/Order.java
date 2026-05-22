@@ -82,6 +82,12 @@ public class Order {
     @Column(name = "sms_consent")
     private boolean smsConsent;
 
+    @Column(name = "payment_link_token", unique = true)
+    private String paymentLinkToken;
+
+    @Column(name = "payment_link_url")
+    private String paymentLinkUrl;
+
     @ElementCollection
     @CollectionTable(name = "order_photo_urls", joinColumns = @JoinColumn(name = "order_id"))
     @Column(name = "photo_url")
@@ -124,6 +130,10 @@ public class Order {
     public OffsetDateTime getUpdatedAt() { return updatedAt; }
     public boolean isSmsConsent() { return smsConsent; }
     public void setSmsConsent(boolean smsConsent) { this.smsConsent = smsConsent; }
+    public String getPaymentLinkToken() { return paymentLinkToken; }
+    public void setPaymentLinkToken(String paymentLinkToken) { this.paymentLinkToken = paymentLinkToken; }
+    public String getPaymentLinkUrl() { return paymentLinkUrl; }
+    public void setPaymentLinkUrl(String paymentLinkUrl) { this.paymentLinkUrl = paymentLinkUrl; }
     public List<String> getPhotoUrls() { return photoUrls; }
     public void setPhotoUrls(List<String> photoUrls) { this.photoUrls = photoUrls; }
 }
