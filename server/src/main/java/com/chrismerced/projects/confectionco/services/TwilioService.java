@@ -27,7 +27,7 @@ public class TwilioService implements TextingService {
 
     @Override
     public void sendText(String to, String message) {
-         /*try {
+        /*  try {
             Message.creator(
                     new com.twilio.type.PhoneNumber(normalizePhone(to)),
                     new com.twilio.type.PhoneNumber(fromPhone),

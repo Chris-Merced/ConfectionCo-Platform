@@ -1,6 +1,12 @@
 package com.chrismerced.projects.confectionco.services;
 
 import java.math.BigDecimal;
+import java.net.URI;
+import java.net.URLEncoder;
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
+import java.nio.charset.StandardCharsets;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -68,7 +74,7 @@ public class OrderService {
         order.setStripeSessionId(session.getId());
         orderRepository.save(order);
 
-        String url = session.getUrl();
+        String url = shortenUrl(session.getUrl());
         try {
             emailService.sendDepositPaymentLink(order.getEmail(), url);
         } catch (Exception e) {
@@ -98,7 +104,7 @@ public class OrderService {
         order.setStripeSessionId(session.getId());
         orderRepository.save(order);
 
-        String url = session.getUrl();
+        String url = shortenUrl(session.getUrl());
         try {
             emailService.sendFinalPaymentLink(order.getEmail(), url);
         } catch (Exception e) {
@@ -237,6 +243,20 @@ public class OrderService {
             order.setStripeRefundId(null);
             orderRepository.save(order);
             log.error("Refund {} failed for order {} — status reverted to PAID_IN_FULL", refundId, order.getId());
+        }
+    }
+
+    private String shortenUrl(String url) {
+        try {
+            HttpRequest request = HttpRequest.newBuilder()
+                    .uri(URI.create("https://tinyurl.com/api-create.php?url=" + URLEncoder.encode(url, StandardCharsets.UTF_8)))
+                    .GET()
+                    .build();
+            HttpResponse<String> response = HttpClient.newHttpClient().send(request, HttpResponse.BodyHandlers.ofString());
+            return response.body().trim();
+        } catch (Exception e) {
+            log.warn("Failed to shorten URL, using original: {}", e.getMessage());
+            return url;
         }
     }
 
