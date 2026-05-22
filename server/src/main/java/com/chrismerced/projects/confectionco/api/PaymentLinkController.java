@@ -1,6 +1,7 @@
 package com.chrismerced.projects.confectionco.api;
 
 import java.net.URI;
+import java.util.Optional;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -22,9 +23,9 @@ public class PaymentLinkController {
 
     @GetMapping("/pay/{token}")
     public ResponseEntity<Void> redirect(@PathVariable String token) {
-        return orderRepository.findByPaymentLinkToken(token)
-                .map(Order::getPaymentLinkUrl)
-                .map(url -> ResponseEntity.<Void>status(HttpStatus.FOUND).location(URI.create(url)).build())
-                .orElse(ResponseEntity.notFound().build());
+        Optional<String> url = orderRepository.findByPaymentLinkToken(token)
+                .map(Order::getPaymentLinkUrl);
+        if (url.isEmpty()) return ResponseEntity.notFound().build();
+        return ResponseEntity.status(HttpStatus.FOUND).location(URI.create(url.get())).build();
     }
 }
