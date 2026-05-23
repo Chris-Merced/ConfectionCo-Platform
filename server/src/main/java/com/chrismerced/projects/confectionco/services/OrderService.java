@@ -1,6 +1,7 @@
 package com.chrismerced.projects.confectionco.services;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.security.SecureRandom;
 
 import org.slf4j.Logger;
@@ -91,14 +92,16 @@ public class OrderService {
         }
     }
 
-    public String generateDepositLink(Long orderId, BigDecimal totalAmount) throws Exception {
+    public String generateDepositLink(Long orderId, BigDecimal orderTotal) throws Exception {
         Order order = orderRepository.findById(orderId)
                 .orElseThrow(() -> new ResourceNotFoundException("Order not found: " + orderId));
 
-        order.setDepositAmount(totalAmount);
+        BigDecimal depositAmount = orderTotal.multiply(new BigDecimal("0.40")).setScale(2, RoundingMode.HALF_UP);
+        order.setTotalAmount(orderTotal);
+        order.setDepositAmount(depositAmount);
         order.setStatus(OrderStatus.AWAITING_DEPOSIT);
 
-        long amountInCents = totalAmount.multiply(BigDecimal.valueOf(100)).longValue();
+        long amountInCents = depositAmount.multiply(BigDecimal.valueOf(100)).longValue();
         Session session = stripeService.createDepositCheckout(orderId, amountInCents, order.getEmail());
 
         String token = generateUniqueToken();
@@ -116,7 +119,9 @@ public class OrderService {
         if (order.isSmsConsent()) {
             try {
                 textingService.sendText(order.getPhoneNumber(),
-                        "Hi! Your deposit payment link for your Confection Co. Bakery order is ready: " + url);
+                        "Hi! Here is your deposit payment link for your Confection Co. Bakery order. " +
+                        "A deposit of $" + depositAmount.toPlainString() +
+                        " (40% of your $" + orderTotal.toPlainString() + " order total) is due: " + url);
             } catch (Exception e) {
                 log.error("Failed to send deposit SMS for order {}", orderId, e);
             }
