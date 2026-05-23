@@ -255,7 +255,7 @@ export default function OrderCard({ order, token, onUpdate }: OrderCardProps): R
           <button className="btn-accept" onClick={() => handleAdvance("Mark deposit as received? This will advance the order and cannot be undone.")} disabled={isAnyPending}>
             Mark Deposit Received
           </button>
-          <button className="btn-reject" onClick={() => rejectMutation.mutate()} disabled={isAnyPending}>
+          <button className="btn-reject" onClick={() => { if (!window.confirm("Reject this order? The customer will be notified.")) return; rejectMutation.mutate(); }} disabled={isAnyPending}>
             Reject
           </button>
         </div>
