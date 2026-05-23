@@ -61,11 +61,19 @@ public class OrderService {
                 .orElseThrow(() -> new ResourceNotFoundException("Order not found: " + orderId));
 
         switch (order.getStatus()) {
+            case PENDING -> {
+                order.setDepositPaid(true);
+                order.setStatus(OrderStatus.IN_PROGRESS);
+            }
             case AWAITING_DEPOSIT -> {
                 order.setDepositPaid(true);
                 order.setStatus(OrderStatus.IN_PROGRESS);
                 order.setPaymentLinkToken(null);
                 order.setPaymentLinkUrl(null);
+            }
+            case IN_PROGRESS -> {
+                order.setFullPaymentPaid(true);
+                order.setStatus(OrderStatus.PAID_IN_FULL);
             }
             case AWAITING_FINAL_PAYMENT -> {
                 order.setFullPaymentPaid(true);
