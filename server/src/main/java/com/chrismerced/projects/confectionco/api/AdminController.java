@@ -159,6 +159,10 @@ public class AdminController {
             Order order = orderRepository.findById(id)
                     .orElseThrow(() -> new ResourceNotFoundException("Order not found: " + id));
 
+            if (order.getStatus() != OrderStatus.PAID_IN_FULL) {
+                return ResponseEntity.badRequest().body("Only PAID_IN_FULL orders can be marked complete.");
+            }
+
             orderService.updateOrderStatus(id, OrderStatus.COMPLETED);
 
             for (String key : order.getPhotoUrls()) {
