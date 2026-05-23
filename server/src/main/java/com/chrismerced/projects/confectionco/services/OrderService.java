@@ -64,10 +64,14 @@ public class OrderService {
             case AWAITING_DEPOSIT -> {
                 order.setDepositPaid(true);
                 order.setStatus(OrderStatus.IN_PROGRESS);
+                order.setPaymentLinkToken(null);
+                order.setPaymentLinkUrl(null);
             }
             case AWAITING_FINAL_PAYMENT -> {
                 order.setFullPaymentPaid(true);
                 order.setStatus(OrderStatus.PAID_IN_FULL);
+                order.setPaymentLinkToken(null);
+                order.setPaymentLinkUrl(null);
             }
             default -> throw new IllegalStateException("Order cannot be manually advanced from status: " + order.getStatus());
         }
