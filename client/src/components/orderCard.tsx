@@ -252,7 +252,7 @@ export default function OrderCard({ order, token, onUpdate }: OrderCardProps): R
           >
             {isUrgent ? "Accept — Full Payment" : "Accept"}
           </button>
-          <button className="btn-accept" onClick={() => advanceMutation.mutate()} disabled={isAnyPending}>
+          <button className="btn-accept" onClick={() => handleAdvance("Mark deposit as received? This will advance the order and cannot be undone.")} disabled={isAnyPending}>
             Mark Deposit Received
           </button>
           <button className="btn-reject" onClick={() => rejectMutation.mutate()} disabled={isAnyPending}>
@@ -279,7 +279,7 @@ export default function OrderCard({ order, token, onUpdate }: OrderCardProps): R
           <button className="btn-accept" onClick={() => depositLinkMutation.mutate()} disabled={isAnyPending || !amount}>
             Regenerate Link
           </button>
-          <button className="btn-accept" onClick={() => advanceMutation.mutate()} disabled={isAnyPending}>
+          <button className="btn-accept" onClick={() => handleAdvance("Mark deposit as received? This will advance the order and cannot be undone.")} disabled={isAnyPending}>
             Mark Deposit Received
           </button>
         </div>
@@ -299,7 +299,7 @@ export default function OrderCard({ order, token, onUpdate }: OrderCardProps): R
           <button className="btn-accept" onClick={() => finalLinkMutation.mutate()} disabled={isAnyPending || !amount}>
             Send Final Payment Link
           </button>
-          <button className="btn-accept" onClick={() => advanceMutation.mutate()} disabled={isAnyPending}>
+          <button className="btn-accept" onClick={() => handleAdvance("Mark payment as received? This will advance the order and cannot be undone.")} disabled={isAnyPending}>
             Mark Payment Received
           </button>
         </div>
@@ -323,7 +323,7 @@ export default function OrderCard({ order, token, onUpdate }: OrderCardProps): R
           <button className="btn-accept" onClick={() => finalLinkMutation.mutate()} disabled={isAnyPending || !amount}>
             Regenerate Link
           </button>
-          <button className="btn-accept" onClick={() => advanceMutation.mutate()} disabled={isAnyPending}>
+          <button className="btn-accept" onClick={() => handleAdvance("Mark payment as received? This will advance the order and cannot be undone.")} disabled={isAnyPending}>
             Mark Payment Received
           </button>
         </div>
