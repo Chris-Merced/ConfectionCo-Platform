@@ -34,7 +34,7 @@ public class SecurityConfig {
                         .requestMatchers("/", "/index.html", "/assets/**").permitAll()
                         .requestMatchers("/api/stripe/webhook", "/api/orders", "/api/sms/inbound").permitAll()
                         .requestMatchers("/pay/**").permitAll()
-                        .requestMatchers("/api/admin/*").authenticated()
+                        .requestMatchers("/api/admin/**").authenticated()
                         .anyRequest().permitAll())
                 .oauth2ResourceServer(oauth2 -> oauth2
                         .jwt(jwt -> jwt.jwtAuthenticationConverter(jwtAuthenticationConverter())));
