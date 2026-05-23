@@ -17,6 +17,7 @@ public class OrderDTO {
     private String email;
     private String phoneNumber;
     private String status;
+    private BigDecimal totalAmount;
     private BigDecimal depositAmount;
     private BigDecimal finalPaymentAmount;
     private BigDecimal refundAmount;
@@ -38,6 +39,7 @@ public class OrderDTO {
         this.email = order.getEmail();
         this.phoneNumber = order.getPhoneNumber();
         this.status = order.getStatus().name();
+        this.totalAmount = order.getTotalAmount();
         this.depositAmount = order.getDepositAmount();
         this.finalPaymentAmount = order.getFinalPaymentAmount();
         this.refundAmount = order.getRefundAmount();
@@ -62,6 +64,7 @@ public class OrderDTO {
     public String getEmail() { return email; }
     public String getPhoneNumber() { return phoneNumber; }
     public String getStatus() { return status; }
+    public BigDecimal getTotalAmount() { return totalAmount; }
     public BigDecimal getDepositAmount() { return depositAmount; }
     public BigDecimal getFinalPaymentAmount() { return finalPaymentAmount; }
     public BigDecimal getRefundAmount() { return refundAmount; }
