@@ -142,8 +142,16 @@ public class OrderService {
     }
 
     public String generateFinalPaymentLink(Long orderId, BigDecimal amount) throws Exception {
+        if (amount == null || amount.compareTo(BigDecimal.ZERO) <= 0) {
+            throw new IllegalArgumentException("Final payment amount must be greater than zero.");
+        }
+
         Order order = orderRepository.findById(orderId)
                 .orElseThrow(() -> new ResourceNotFoundException("Order not found: " + orderId));
+
+        if (order.getStatus() != OrderStatus.IN_PROGRESS && order.getStatus() != OrderStatus.AWAITING_FINAL_PAYMENT) {
+            throw new IllegalStateException("Final payment link can only be generated for IN_PROGRESS or AWAITING_FINAL_PAYMENT orders.");
+        }
 
         order.setStatus(OrderStatus.AWAITING_FINAL_PAYMENT);
         order.setFinalPaymentAmount(amount);
