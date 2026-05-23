@@ -102,15 +102,14 @@ export default function Main(): ReactElement {
                         <h2 className="story-heading">Hello, I'm Isabel.</h2>
                         <div className="story-rule" aria-hidden="true" />
                         <p className="story-body">
-                            Born and raised on the shores of Panama City Beach, Florida,
-                            Isabel discovered her love for confections long before she ever put
-                            on a chef's coat. A trained pastry chef, devoted wife, and proud mother of
-                            two, she pours the same warmth into every bake that she gives to the people
-                            she loves most. Confection Co. Bakery is her way of sharing that sweetness
-                            with her community with one handcrafted creation at a time. From showstopping
-                            custom cakes and dainty macarons to silky cheesecakes and flaky pies, every
-                            bake is made entirely from scratch. Each order is a little piece of her heart,
-                            crafted just for you.
+                            I grew up on the shores of Panama City Beach, 
+                            my love for baking started way before I knew what to call it,
+                            as a little girl who wanted everything to taste like a celebration.
+                            These days I get to do this as a pastry chef, a wife, and a mom of two,
+                            and I bring that same love to every single order. Confection Co. is my
+                            way of sharing something made with real care with the people in my community.
+                            Everything is made from scratch, by hand,
+                            just for you.
                         </p>
                         <div className="story-tags">
                             <span className="story-tag">Cakes</span>
