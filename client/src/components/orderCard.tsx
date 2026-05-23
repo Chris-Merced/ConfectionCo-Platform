@@ -224,7 +224,7 @@ export default function OrderCard({ order, token, onUpdate }: OrderCardProps): R
           <input
             className="order-card-input"
             type="number"
-            placeholder={isUrgent ? "Full payment amount" : "Deposit amount"}
+            placeholder={isUrgent ? "Full payment amount" : "Order total"}
             value={amount}
             onChange={(e) => setAmount(e.target.value)}
             step="0.01"
@@ -252,7 +252,7 @@ export default function OrderCard({ order, token, onUpdate }: OrderCardProps): R
           <input
             className="order-card-input"
             type="number"
-            placeholder="New deposit amount"
+            placeholder="New order total"
             value={amount}
             onChange={(e) => setAmount(e.target.value)}
             step="0.01"
