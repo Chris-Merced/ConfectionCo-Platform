@@ -113,6 +113,11 @@ export default function OrderCard({ order, token, onUpdate }: OrderCardProps): R
     deleteMutation.mutate();
   };
 
+  const handleAdvance = (message: string) => {
+    if (!window.confirm(message)) return;
+    advanceMutation.mutate();
+  };
+
   const remainingBalance =
     order.totalAmount != null && order.depositAmount != null
       ? (order.totalAmount - order.depositAmount).toFixed(2)
