@@ -18,7 +18,7 @@ const STATUS_SECTIONS: { key: string; label: string; collapsible?: boolean }[] =
 // When production ready; Set the completed button to send a text with a link referring
 //     the customer to a google/facebook review link
 // Add SEO optimizations if necessary
-// Need deeper understanding of jcdba and jparepository
+// Need deeper understanding of cdba and jparepository
 
 export default function AdminDashboard(): ReactElement {
     const { isLoading, isAuthenticated, error, loginWithRedirect: login, logout: auth0Logout, user, getAccessTokenSilently } = useAuth0();

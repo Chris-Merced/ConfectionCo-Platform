@@ -79,6 +79,16 @@ public class OrderService {
                 .orElseThrow(() -> new ResourceNotFoundException("Order not found: " + orderId));
         order.setStatus(status);
         orderRepository.save(order);
+
+        if (status == OrderStatus.REJECTED && order.isSmsConsent()) {
+            try {
+                textingService.sendText(order.getPhoneNumber(),
+                        "Hi! We're sorry, but we're unable to fulfill your Confection Co. Bakery order at this time. " +
+                        "We appreciate your interest and hope to serve you in the future!");
+            } catch (Exception e) {
+                log.error("Failed to send rejection SMS for order {}", orderId, e);
+            }
+        }
     }
 
     public String generateDepositLink(Long orderId, BigDecimal totalAmount) throws Exception {
