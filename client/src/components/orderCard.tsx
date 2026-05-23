@@ -46,7 +46,7 @@ export default function OrderCard({ order, token, onUpdate }: OrderCardProps): R
       headers,
       body: body ? JSON.stringify(body) : undefined,
     });
-    if (!res.ok) throw new Error(await res.text());
+    if (!res.ok) throw await parseApiError(res);
     return res.json();
   };
 
@@ -91,7 +91,7 @@ export default function OrderCard({ order, token, onUpdate }: OrderCardProps): R
         headers,
         body: JSON.stringify({ comments }),
       });
-      if (!res.ok) throw new Error(await res.text());
+      if (!res.ok) throw await parseApiError(res);
       return res.json();
     },
     onSuccess: () => { setEditingComments(false); onUpdate(); },
@@ -103,7 +103,7 @@ export default function OrderCard({ order, token, onUpdate }: OrderCardProps): R
         method: "DELETE",
         headers: { Authorization: `Bearer ${token}` },
       });
-      if (!res.ok) throw new Error(await res.text());
+      if (!res.ok) throw await parseApiError(res);
     },
     onSuccess: onUpdate,
   });
