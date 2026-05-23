@@ -91,7 +91,7 @@ public class OrderService {
         long amountInCents = totalAmount.multiply(BigDecimal.valueOf(100)).longValue();
         Session session = stripeService.createDepositCheckout(orderId, amountInCents, order.getEmail());
 
-        String token = generateToken();
+        String token = generateUniqueToken();
         order.setStripeSessionId(session.getId());
         order.setPaymentLinkToken(token);
         order.setPaymentLinkUrl(session.getUrl());
@@ -124,7 +124,7 @@ public class OrderService {
         long amountInCents = amount.multiply(BigDecimal.valueOf(100)).longValue();
         Session session = stripeService.createFinalPaymentCheckout(orderId, amountInCents, order.getEmail());
 
-        String token = generateToken();
+        String token = generateUniqueToken();
         order.setStripeSessionId(session.getId());
         order.setPaymentLinkToken(token);
         order.setPaymentLinkUrl(session.getUrl());
@@ -272,6 +272,16 @@ public class OrderService {
         }
     }
 
+    private String generateUniqueToken() {
+        for (int attempt = 0; attempt < 10; attempt++) {
+            String token = generateToken();
+            if (orderRepository.findByPaymentLinkToken(token).isEmpty()) {
+                return token;
+            }
+        }
+        throw new IllegalStateException("Failed to generate a unique payment token after 10 attempts");
+    }
+
     private String generateToken() {
         StringBuilder token = new StringBuilder(8);
         for (int i = 0; i < 8; i++) {
@@ -294,6 +304,8 @@ public class OrderService {
         if (order.getStatus() == OrderStatus.AWAITING_DEPOSIT) {
             order.setDepositPaid(true);
             order.setStatus(OrderStatus.IN_PROGRESS);
+            order.setPaymentLinkToken(null);
+            order.setPaymentLinkUrl(null);
             orderRepository.save(order);
             if (order.isSmsConsent()) {
                 try {
@@ -319,6 +331,8 @@ public class OrderService {
         } else if (order.getStatus() == OrderStatus.AWAITING_FINAL_PAYMENT) {
             order.setFullPaymentPaid(true);
             order.setStatus(OrderStatus.PAID_IN_FULL);
+            order.setPaymentLinkToken(null);
+            order.setPaymentLinkUrl(null);
             orderRepository.save(order);
             if (order.isSmsConsent()) {
                 try {
