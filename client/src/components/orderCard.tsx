@@ -54,7 +54,7 @@ export default function OrderCard({ order, token, onUpdate }: OrderCardProps): R
   });
 
   const depositLinkMutation = useMutation({
-    mutationFn: () => post(`/api/admin/orders/${order.id}/deposit-link`, { depositAmount: parseFloat(amount) }),
+    mutationFn: () => post(`/api/admin/orders/${order.id}/deposit-link`, { totalAmount: parseFloat(amount) }),
     onSuccess: (data) => { setPaymentUrl(data.url); setAmount(""); onUpdate(); },
   });
 

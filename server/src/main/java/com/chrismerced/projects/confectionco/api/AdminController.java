@@ -204,8 +204,8 @@ public class AdminController {
             @PathVariable Long id,
             @RequestBody Map<String, BigDecimal> body) {
         try {
-            BigDecimal depositAmount = body.get("depositAmount");
-            String url = orderService.generateDepositLink(id, depositAmount);
+            BigDecimal totalAmount = body.get("totalAmount");
+            String url = orderService.generateDepositLink(id, totalAmount);
             return ResponseEntity.ok(Map.of("url", url));
         } catch (ResourceNotFoundException e) {
             return ResponseEntity.notFound().build();
