@@ -7,6 +7,7 @@ export interface Order {
   email: string;
   phoneNumber: string;
   status: string;
+  totalAmount: number | null;
   depositAmount: number | null;
   finalPaymentAmount: number | null;
   depositPaid: boolean;
@@ -111,6 +112,11 @@ export default function OrderCard({ order, token, onUpdate }: OrderCardProps): R
     deleteMutation.mutate();
   };
 
+  const remainingBalance =
+    order.totalAmount != null && order.depositAmount != null
+      ? (order.totalAmount - order.depositAmount).toFixed(2)
+      : null;
+
   const isUrgent = order.fulfillmentDate
     ? (new Date(order.fulfillmentDate + "T00:00:00Z").getTime() - new Date(order.createdAt).getTime()) / (1000 * 60 * 60 * 24) < 7
     : false;
@@ -178,6 +184,9 @@ export default function OrderCard({ order, token, onUpdate }: OrderCardProps): R
           <strong>{order.fulfillmentType === "DROPOFF" ? "Delivery Date" : "Pickup Date"}:</strong>{" "}
           {new Date(order.fulfillmentDate + "T00:00:00").toLocaleDateString()}
         </p>
+      )}
+      {order.totalAmount != null && (
+        <p className="order-card-field"><strong>Order Total:</strong> ${order.totalAmount.toFixed(2)}</p>
       )}
       {order.depositAmount != null && (
         <p className="order-card-field"><strong>Deposit:</strong> ${order.depositAmount.toFixed(2)}</p>
@@ -272,7 +281,7 @@ export default function OrderCard({ order, token, onUpdate }: OrderCardProps): R
           <input
             className="order-card-input"
             type="number"
-            placeholder="Final payment amount"
+            placeholder={remainingBalance ?? "Final payment amount"}
             value={amount}
             onChange={(e) => setAmount(e.target.value)}
             step="0.01"
@@ -293,7 +302,7 @@ export default function OrderCard({ order, token, onUpdate }: OrderCardProps): R
           <input
             className="order-card-input"
             type="number"
-            placeholder="New final payment amount"
+            placeholder={remainingBalance ?? "New final payment amount"}
             value={amount}
             onChange={(e) => setAmount(e.target.value)}
             step="0.01"
