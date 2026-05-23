@@ -38,6 +38,9 @@ public class Order {
     @Enumerated(EnumType.STRING)
     private OrderStatus status = OrderStatus.PENDING;
 
+    @Column(name = "total_amount")
+    private BigDecimal totalAmount;
+
     @Column(name = "deposit_amount")
     private BigDecimal depositAmount;
 
@@ -102,6 +105,8 @@ public class Order {
     public void setPhoneNumber(String phoneNumber) { this.phoneNumber = phoneNumber; }
     public OrderStatus getStatus() { return status; }
     public void setStatus(OrderStatus status) { this.status = status; }
+    public BigDecimal getTotalAmount() { return totalAmount; }
+    public void setTotalAmount(BigDecimal totalAmount) { this.totalAmount = totalAmount; }
     public BigDecimal getDepositAmount() { return depositAmount; }
     public void setDepositAmount(BigDecimal depositAmount) { this.depositAmount = depositAmount; }
     public BigDecimal getFinalPaymentAmount() { return finalPaymentAmount; }
