@@ -97,8 +97,16 @@ public class OrderService {
     }
 
     public String generateDepositLink(Long orderId, BigDecimal orderTotal) throws Exception {
+        if (orderTotal == null || orderTotal.compareTo(BigDecimal.ZERO) <= 0) {
+            throw new IllegalArgumentException("Order total must be greater than zero.");
+        }
+
         Order order = orderRepository.findById(orderId)
                 .orElseThrow(() -> new ResourceNotFoundException("Order not found: " + orderId));
+
+        if (order.getStatus() != OrderStatus.PENDING && order.getStatus() != OrderStatus.AWAITING_DEPOSIT) {
+            throw new IllegalStateException("Deposit link can only be generated for PENDING or AWAITING_DEPOSIT orders.");
+        }
 
         BigDecimal depositAmount = orderTotal.multiply(new BigDecimal("0.40")).setScale(2, RoundingMode.HALF_UP);
         order.setTotalAmount(orderTotal);
