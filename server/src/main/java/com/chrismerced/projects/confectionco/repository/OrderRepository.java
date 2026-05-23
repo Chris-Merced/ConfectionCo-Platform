@@ -11,7 +11,7 @@ import com.chrismerced.projects.confectionco.model.OrderStatus;
 
 public interface OrderRepository extends JpaRepository<Order, Long> {
 
-    List<Order> findByStatusNotIn(Collection<OrderStatus> statuses);
+    List<Order> findByStatusNotInOrderByFulfillmentDateAsc(Collection<OrderStatus> statuses);
 
     Optional<Order> findByStripeRefundId(String stripeRefundId);
 

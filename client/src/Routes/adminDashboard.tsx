@@ -12,7 +12,7 @@ const STATUS_SECTIONS: { key: string; label: string; collapsible?: boolean }[] =
     { key: "PAID_IN_FULL", label: "Paid in Full" },
     { key: "REFUND_PENDING", label: "Refund Pending" },
     { key: "REFUNDED", label: "Refunded", collapsible: true },
-    { key: "REJECTED", label: "Rejected" },
+    { key: "REJECTED", label: "Rejected", collapsible: true },
 ];
 //TODO: 
 // When production ready; Set the completed button to send a text with a link referring
@@ -24,7 +24,7 @@ export default function AdminDashboard(): ReactElement {
     const { isLoading, isAuthenticated, error, loginWithRedirect: login, logout: auth0Logout, user, getAccessTokenSilently } = useAuth0();
 
     const [token, setToken] = useState("");
-    const [collapsed, setCollapsed] = useState<Set<string>>(new Set(["REFUNDED"]));
+    const [collapsed, setCollapsed] = useState<Set<string>>(new Set(["REFUNDED", "REJECTED"]));
 
     useEffect(() => {
         if (!isAuthenticated) return;

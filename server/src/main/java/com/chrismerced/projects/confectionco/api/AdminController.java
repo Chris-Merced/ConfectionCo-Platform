@@ -70,7 +70,7 @@ public class AdminController {
     public ResponseEntity<?> getActiveOrders() {
         try {
             String inspoBaseUrl = "https://" + inspoBucket + ".s3." + awsRegion + ".amazonaws.com";
-            List<OrderDTO> orders = orderRepository.findByStatusNotIn(of(OrderStatus.COMPLETED, OrderStatus.REMOVED))
+            List<OrderDTO> orders = orderRepository.findByStatusNotInOrderByFulfillmentDateAsc(of(OrderStatus.COMPLETED, OrderStatus.REMOVED))
                     .stream()
                     .map(order -> new OrderDTO(order, inspoBaseUrl))
                     .collect(Collectors.toList());
