@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -67,6 +68,7 @@ public class AdminController {
     }
 
     @GetMapping("/orders")
+    @Transactional(readOnly = true)
     public ResponseEntity<?> getActiveOrders() {
         try {
             String inspoBaseUrl = "https://" + inspoBucket + ".s3." + awsRegion + ".amazonaws.com";
@@ -76,6 +78,7 @@ public class AdminController {
                     .collect(Collectors.toList());
             return ResponseEntity.ok(orders);
         } catch (Exception e) {
+            log.error("Failed to retrieve orders", e);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to retrieve orders");
         }
     }
