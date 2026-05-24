@@ -56,6 +56,16 @@ export default function OrderForm(): ReactElement {
             return;
         }
 
+        if (!flavor) {
+            setError("Please select a flavor.");
+            return;
+        }
+
+        if (!buttercream) {
+            setError("Please select a buttercream / frosting.");
+            return;
+        }
+
         if (!fulfillmentDate) {
             setError("Please select a date.");
             return;
@@ -85,6 +95,9 @@ export default function OrderForm(): ReactElement {
         formData.append("fulfillmentDate", fulfillmentDate);
         if (fulfillmentType === "DROPOFF") formData.append("deliveryAddress", deliveryAddress);
         if (comments) formData.append("comments", comments);
+        formData.append("flavor", flavor);
+        if (filling) formData.append("filling", filling);
+        formData.append("buttercream", buttercream);
         formData.append("smsConsent", String(smsConsent));
         if (photos) {
             Array.from(photos).forEach(photo => formData.append("photos", photo));
