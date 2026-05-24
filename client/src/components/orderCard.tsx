@@ -173,6 +173,15 @@ export default function OrderCard({ order, token, onUpdate }: OrderCardProps): R
       <p className="order-card-field"><strong>Email:</strong> {order.email}</p>
       <p className="order-card-field"><strong>Phone:</strong> {order.phoneNumber}</p>
       <p className="order-card-field"><strong>Servings:</strong> {order.servingCount}</p>
+      {order.flavor && (
+        <p className="order-card-field"><strong>Flavor:</strong> {order.flavor}</p>
+      )}
+      {order.filling && (
+        <p className="order-card-field"><strong>Filling:</strong> {order.filling}</p>
+      )}
+      {order.buttercream && (
+        <p className="order-card-field"><strong>Buttercream:</strong> {order.buttercream}</p>
+      )}
       <p className="order-card-field">
         <strong>Fulfillment:</strong> {order.fulfillmentType === "DROPOFF" ? "Delivery" : "Pickup"}
       </p>
