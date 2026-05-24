@@ -91,7 +91,10 @@ public class OrderController {
             @RequestParam(required = false) @Size(max = 500) String deliveryAddress,
             @RequestParam LocalDate fulfillmentDate,
             @RequestParam(required = false) List<MultipartFile> photos,
-            @RequestParam(defaultValue = "false") boolean smsConsent) throws IOException {
+            @RequestParam(defaultValue = "false") boolean smsConsent,
+            @RequestParam @NotBlank @Size(max = 100) String flavor,
+            @RequestParam(required = false) @Size(max = 100) String filling,
+            @RequestParam @NotBlank @Size(max = 100) String buttercream) throws IOException {
 
         String cleanCustomerName = InputSanitizer.stripHtml(customerName);
         String cleanEmail = InputSanitizer.stripHtml(email).toLowerCase();
@@ -99,6 +102,9 @@ public class OrderController {
         String cleanComments = InputSanitizer.stripHtml(comments);
         String cleanDeliveryAddress = InputSanitizer.stripHtml(deliveryAddress);
         String cleanFulfillmentType = InputSanitizer.stripHtml(fulfillmentType).toUpperCase();
+        String cleanFlavor = InputSanitizer.stripHtml(flavor);
+        String cleanFilling = InputSanitizer.stripHtml(filling);
+        String cleanButtercream = InputSanitizer.stripHtml(buttercream);
 
         if (cleanPhone == null || cleanPhone.length() != 10) {
             throw new IllegalArgumentException("Phone number must be a valid 10-digit US number.");
@@ -139,6 +145,9 @@ public class OrderController {
         order.setFulfillmentDate(fulfillmentDate);
         order.setSmsConsent(smsConsent);
         order.setPhotoUrls(photoKeys);
+        order.setFlavor(cleanFlavor);
+        order.setFilling(cleanFilling != null && !cleanFilling.isBlank() ? cleanFilling : null);
+        order.setButtercream(cleanButtercream);
 
         Order saved = orderRepository.save(order);
         try {
