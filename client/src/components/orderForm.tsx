@@ -17,9 +17,22 @@ export default function OrderForm(): ReactElement {
     const [fulfillmentDate, setFulfillmentDate] = useState("");
     const [photos, setPhotos] = useState<FileList | null>(null);
     const [smsConsent, setSmsConsent] = useState(false);
+    const [flavor, setFlavor] = useState("");
+    const [filling, setFilling] = useState("");
+    const [buttercream, setButtercream] = useState("");
     const [submitted, setSubmitted] = useState(false);
     const [error, setError] = useState("");
     const [loading, setLoading] = useState(false);
+
+    const fetchOptions = (url: string) => async (): Promise<Option[]> => {
+        const res = await fetch(url);
+        if (!res.ok) throw new Error("Failed to load options");
+        return res.json();
+    };
+
+    const { data: flavors = [] } = useQuery<Option[]>({ queryKey: ["flavors"], queryFn: fetchOptions("/api/options/flavors") });
+    const { data: fillings = [] } = useQuery<Option[]>({ queryKey: ["fillings"], queryFn: fetchOptions("/api/options/fillings") });
+    const { data: buttercreams = [] } = useQuery<Option[]>({ queryKey: ["buttercreams"], queryFn: fetchOptions("/api/options/buttercreams") });
 
     const ALLOWED_TYPES = ["image/jpeg", "image/png", "image/webp"];
     const MAX_FILE_SIZE = 10 * 1024 * 1024;
