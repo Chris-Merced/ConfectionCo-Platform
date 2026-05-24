@@ -186,6 +186,47 @@ export default function OrderForm(): ReactElement {
             </div>
 
             <div className="form-field">
+                <label className="form-label" htmlFor="flavor">Flavor <span className="form-required">*</span></label>
+                <select
+                    className="form-input"
+                    id="flavor"
+                    value={flavor}
+                    onChange={e => setFlavor(e.target.value)}
+                    required
+                >
+                    <option value="">Select a flavor</option>
+                    {flavors.map(f => <option key={f.id} value={f.name}>{f.name}</option>)}
+                </select>
+            </div>
+
+            <div className="form-field">
+                <label className="form-label" htmlFor="filling">Filling</label>
+                <select
+                    className="form-input"
+                    id="filling"
+                    value={filling}
+                    onChange={e => setFilling(e.target.value)}
+                >
+                    <option value="">None</option>
+                    {fillings.map(f => <option key={f.id} value={f.name}>{f.name}</option>)}
+                </select>
+            </div>
+
+            <div className="form-field">
+                <label className="form-label" htmlFor="buttercream">Buttercream / Frosting <span className="form-required">*</span></label>
+                <select
+                    className="form-input"
+                    id="buttercream"
+                    value={buttercream}
+                    onChange={e => setButtercream(e.target.value)}
+                    required
+                >
+                    <option value="">Select a buttercream / frosting</option>
+                    {buttercreams.map(b => <option key={b.id} value={b.name}>{b.name}</option>)}
+                </select>
+            </div>
+
+            <div className="form-field">
                 <label className="form-label">Fulfillment</label>
                 <div className="form-radio-group">
                     <label className={`form-radio-option${fulfillmentType === "PICKUP" ? " selected" : ""}`}>
