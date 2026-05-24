@@ -1,0 +1,4 @@
+ALTER TABLE orders
+    ADD COLUMN flavor      VARCHAR(100) NOT NULL DEFAULT '',
+    ADD COLUMN filling     VARCHAR(100),
+    ADD COLUMN buttercream VARCHAR(100) NOT NULL DEFAULT '';
