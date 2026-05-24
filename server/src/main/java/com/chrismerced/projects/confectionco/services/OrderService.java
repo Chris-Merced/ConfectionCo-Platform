@@ -93,13 +93,20 @@ public class OrderService {
         order.setStatus(status);
         orderRepository.save(order);
 
-        if (status == OrderStatus.REJECTED && order.isSmsConsent()) {
+        if (status == OrderStatus.REJECTED) {
             try {
-                textingService.sendText(order.getPhoneNumber(),
-                        "Hi! We're sorry, but we're unable to fulfill your Confection Co. Bakery order at this time. " +
-                        "We appreciate your interest and hope to serve you in the future!");
+                emailService.sendOrderRejection(order.getEmail());
             } catch (Exception e) {
-                log.error("Failed to send rejection SMS for order {}", orderId, e);
+                log.error("Failed to send rejection email for order {}", orderId, e);
+            }
+            if (order.isSmsConsent()) {
+                try {
+                    textingService.sendText(order.getPhoneNumber(),
+                            "Hi! We're sorry, but we're unable to fulfill your Confection Co. Bakery order at this time. " +
+                            "We appreciate your interest and hope to serve you in the future!");
+                } catch (Exception e) {
+                    log.error("Failed to send rejection SMS for order {}", orderId, e);
+                }
             }
         }
     }

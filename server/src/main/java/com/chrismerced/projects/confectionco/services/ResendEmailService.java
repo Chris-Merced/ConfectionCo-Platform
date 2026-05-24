@@ -82,6 +82,18 @@ public class ResendEmailService implements EmailService {
     }
 
     @Override
+    public void sendOrderRejection(String recipient) {
+        send(recipient, "Update on Your Order — Confection Co. Bakery", wrap(
+            h2("We're Sorry — We Can't Fulfill Your Order") +
+            p("Thank you for your interest in <strong>Confection Co. Bakery</strong>. Unfortunately, " +
+              "we're unable to fulfill your order at this time.") +
+            p("If you have questions or would like to discuss other options, please don't hesitate to reach out at " +
+              link("mailto:hello@confectioncobakery.com", "hello@confectioncobakery.com") + ".") +
+            p("We hope to have the opportunity to serve you in the future!")
+        ));
+    }
+
+    @Override
     public void sendReceipt(String recipient, String receipt) {
         send(recipient, "Your Confection Co. Bakery Receipt", wrap(
             h2("Order Receipt") +

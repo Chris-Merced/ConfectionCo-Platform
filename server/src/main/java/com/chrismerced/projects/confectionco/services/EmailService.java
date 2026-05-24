@@ -8,4 +8,5 @@ public interface EmailService {
     void sendDepositReceipt(String recipient);
     void sendFullPaymentConfirmation(String recipient);
     void sendRefundConfirmation(String recipient);
+    void sendOrderRejection(String recipient);
 }
