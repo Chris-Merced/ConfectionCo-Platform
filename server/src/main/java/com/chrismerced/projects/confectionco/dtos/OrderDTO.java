@@ -32,6 +32,9 @@ public class OrderDTO {
     private boolean smsConsent;
     private String paymentLinkToken;
     private List<String> photoUrls;
+    private String flavor;
+    private String filling;
+    private String buttercream;
 
     public OrderDTO(Order order, String bucketUrl) {
         this.id = order.getId();
@@ -57,6 +60,9 @@ public class OrderDTO {
                 .stream()
                 .map(key -> bucketUrl + "/" + key)
                 .collect(Collectors.toList());
+        this.flavor = order.getFlavor();
+        this.filling = order.getFilling();
+        this.buttercream = order.getButtercream();
     }
 
     public Long getId() { return id; }
@@ -79,4 +85,7 @@ public class OrderDTO {
     public boolean isSmsConsent() { return smsConsent; }
     public String getPaymentLinkToken() { return paymentLinkToken; }
     public List<String> getPhotoUrls() { return photoUrls; }
+    public String getFlavor() { return flavor; }
+    public String getFilling() { return filling; }
+    public String getButtercream() { return buttercream; }
 }

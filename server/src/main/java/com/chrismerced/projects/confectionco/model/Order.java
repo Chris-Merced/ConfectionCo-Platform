@@ -91,6 +91,15 @@ public class Order {
     @Column(name = "payment_link_url")
     private String paymentLinkUrl;
 
+    @Column(name = "flavor")
+    private String flavor;
+
+    @Column(name = "filling")
+    private String filling;
+
+    @Column(name = "buttercream")
+    private String buttercream;
+
     @ElementCollection
     @CollectionTable(name = "order_photo_urls", joinColumns = @JoinColumn(name = "order_id"))
     @Column(name = "photo_url")
@@ -141,4 +150,10 @@ public class Order {
     public void setPaymentLinkUrl(String paymentLinkUrl) { this.paymentLinkUrl = paymentLinkUrl; }
     public List<String> getPhotoUrls() { return photoUrls; }
     public void setPhotoUrls(List<String> photoUrls) { this.photoUrls = photoUrls; }
+    public String getFlavor() { return flavor; }
+    public void setFlavor(String flavor) { this.flavor = flavor; }
+    public String getFilling() { return filling; }
+    public void setFilling(String filling) { this.filling = filling; }
+    public String getButtercream() { return buttercream; }
+    public void setButtercream(String buttercream) { this.buttercream = buttercream; }
 }
