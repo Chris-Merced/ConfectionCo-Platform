@@ -1,4 +1,10 @@
 import { useState, type FormEvent, type ReactElement } from "react";
+import { useQuery } from "@tanstack/react-query";
+
+interface Option {
+    id: number;
+    name: string;
+}
 
 export default function OrderForm(): ReactElement {
     const [customerName, setCustomerName] = useState("");

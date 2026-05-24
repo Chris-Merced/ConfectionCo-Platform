@@ -3,6 +3,7 @@ import { useQuery } from "@tanstack/react-query";
 import { useEffect, useState, type ReactElement } from "react";
 
 import OrderCard, { type Order } from "../components/orderCard";
+import OptionsManager from "../components/optionsManager";
 
 const STATUS_SECTIONS: { key: string; label: string; collapsible?: boolean }[] = [
     { key: "PENDING", label: "Pending Review" },
@@ -75,6 +76,7 @@ export default function AdminDashboard(): ReactElement {
             </div>
 
             <div className="admin-body">
+                <OptionsManager token={token} />
                 {ordersLoading && <p className="admin-status-msg">Loading orders...</p>}
                 {ordersError && <p className="admin-error">Failed to load orders.</p>}
 
