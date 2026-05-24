@@ -22,6 +22,9 @@ export interface Order {
   smsConsent: boolean;
   paymentLinkToken: string | null;
   photoUrls: string[];
+  flavor: string | null;
+  filling: string | null;
+  buttercream: string | null;
 }
 
 interface OrderCardProps {
