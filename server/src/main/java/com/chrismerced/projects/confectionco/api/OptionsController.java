@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.chrismerced.projects.confectionco.model.ButtercreamOption;
@@ -65,7 +64,8 @@ public class OptionsController {
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Map<String, Object>> addFlavor(@RequestBody Map<String, String> body) {
         String name = InputSanitizer.stripHtml(body.get("name"));
-        if (name == null || name.isBlank()) return ResponseEntity.badRequest().build();
+        if (name == null || name.isBlank())
+            return ResponseEntity.badRequest().build();
         FlavorOption o = new FlavorOption();
         o.setName(name);
         FlavorOption saved = flavorRepo.save(o);
@@ -76,7 +76,8 @@ public class OptionsController {
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Map<String, Object>> addFilling(@RequestBody Map<String, String> body) {
         String name = InputSanitizer.stripHtml(body.get("name"));
-        if (name == null || name.isBlank()) return ResponseEntity.badRequest().build();
+        if (name == null || name.isBlank())
+            return ResponseEntity.badRequest().build();
         FillingOption o = new FillingOption();
         o.setName(name);
         FillingOption saved = fillingRepo.save(o);
@@ -87,7 +88,8 @@ public class OptionsController {
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Map<String, Object>> addButtercream(@RequestBody Map<String, String> body) {
         String name = InputSanitizer.stripHtml(body.get("name"));
-        if (name == null || name.isBlank()) return ResponseEntity.badRequest().build();
+        if (name == null || name.isBlank())
+            return ResponseEntity.badRequest().build();
         ButtercreamOption o = new ButtercreamOption();
         o.setName(name);
         ButtercreamOption saved = buttercreamRepo.save(o);
@@ -99,7 +101,8 @@ public class OptionsController {
     @DeleteMapping("/api/admin/options/flavors/{id}")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Void> deleteFlavor(@PathVariable Long id) {
-        if (!flavorRepo.existsById(id)) return ResponseEntity.notFound().build();
+        if (!flavorRepo.existsById(id))
+            return ResponseEntity.notFound().build();
         flavorRepo.deleteById(id);
         return ResponseEntity.noContent().build();
     }
@@ -107,7 +110,8 @@ public class OptionsController {
     @DeleteMapping("/api/admin/options/fillings/{id}")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Void> deleteFilling(@PathVariable Long id) {
-        if (!fillingRepo.existsById(id)) return ResponseEntity.notFound().build();
+        if (!fillingRepo.existsById(id))
+            return ResponseEntity.notFound().build();
         fillingRepo.deleteById(id);
         return ResponseEntity.noContent().build();
     }
@@ -115,7 +119,8 @@ public class OptionsController {
     @DeleteMapping("/api/admin/options/buttercreams/{id}")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Void> deleteButtercream(@PathVariable Long id) {
-        if (!buttercreamRepo.existsById(id)) return ResponseEntity.notFound().build();
+        if (!buttercreamRepo.existsById(id))
+            return ResponseEntity.notFound().build();
         buttercreamRepo.deleteById(id);
         return ResponseEntity.noContent().build();
     }

@@ -1,11 +1,11 @@
 package com.chrismerced.projects.confectionco.api;
 
+import static java.util.List.of;
+
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
-
-import static java.util.List.of;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,16 +25,15 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.chrismerced.projects.confectionco.dtos.OrderDTO;
 import com.chrismerced.projects.confectionco.dtos.SendReceiptRequest;
-import com.chrismerced.projects.confectionco.util.InputSanitizer;
 import com.chrismerced.projects.confectionco.exceptions.ResourceNotFoundException;
+import com.chrismerced.projects.confectionco.model.Order;
 import com.chrismerced.projects.confectionco.model.OrderStatus;
 import com.chrismerced.projects.confectionco.repository.OrderRepository;
 import com.chrismerced.projects.confectionco.services.EmailService;
 import com.chrismerced.projects.confectionco.services.OrderService;
 import com.chrismerced.projects.confectionco.services.S3Service;
 import com.chrismerced.projects.confectionco.services.StripeService;
-import com.chrismerced.projects.confectionco.services.TextingService;
-import com.chrismerced.projects.confectionco.model.Order;
+import com.chrismerced.projects.confectionco.util.InputSanitizer;
 
 @RestController
 @RequestMapping("api/admin")
@@ -53,17 +52,15 @@ public class AdminController {
     private final OrderService orderService;
     private final StripeService stripeService;
     private final EmailService emailService;
-    private final TextingService textingService;
     private final S3Service s3Service;
 
     AdminController(OrderRepository orderRepository, OrderService orderService,
-            StripeService stripeService, EmailService emailService, TextingService textingService,
+            StripeService stripeService, EmailService emailService,
             S3Service s3Service) {
         this.orderRepository = orderRepository;
         this.orderService = orderService;
         this.stripeService = stripeService;
         this.emailService = emailService;
-        this.textingService = textingService;
         this.s3Service = s3Service;
     }
 
@@ -72,7 +69,8 @@ public class AdminController {
     public ResponseEntity<?> getActiveOrders() {
         try {
             String inspoBaseUrl = "https://" + inspoBucket + ".s3." + awsRegion + ".amazonaws.com";
-            List<OrderDTO> orders = orderRepository.findByStatusNotInOrderByFulfillmentDateAsc(of(OrderStatus.COMPLETED, OrderStatus.REMOVED))
+            List<OrderDTO> orders = orderRepository
+                    .findByStatusNotInOrderByFulfillmentDateAsc(of(OrderStatus.COMPLETED, OrderStatus.REMOVED))
                     .stream()
                     .map(order -> new OrderDTO(order, inspoBaseUrl))
                     .collect(Collectors.toList());
@@ -88,7 +86,7 @@ public class AdminController {
             @PathVariable Long id,
             @RequestBody Map<String, String> body) {
         try {
-             Order order = orderRepository.findById(id)
+            Order order = orderRepository.findById(id)
                     .orElseThrow(() -> new ResourceNotFoundException("Order not found: " + id));
             order.setComments(InputSanitizer.stripHtml(body.get("comments")));
             orderRepository.save(order);
