@@ -106,8 +106,10 @@ export default function OptionsManager({ token }: OptionsManagerProps): ReactEle
 
     return (
         <div className="options-manager">
-            <button className="options-manager-toggle" onClick={() => setOpen(o => !o)}>
-                Manage Options {open ? "▾" : "▸"}
+            <button className={`options-manager-toggle${open ? " is-open" : ""}`} onClick={() => setOpen(o => !o)}>
+                <span className="options-manager-icon">⚙</span>
+                Manage Options
+                <span className="options-manager-chevron">▾</span>
             </button>
             {open && (
                 <div className="options-manager-body">
