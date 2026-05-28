@@ -1363,6 +1363,132 @@ input[type="file"].form-input {
 .btn-icon:hover { border-color: var(--brown-light); color: var(--brown); }
 .btn-accept:disabled, .btn-reject:disabled, .btn-copy:disabled, .btn-refund:disabled { opacity: 0.55; cursor: not-allowed; }
 
+/* ── Options Manager ─────────────────────────────────────────── */
+.options-manager {
+    margin-bottom: 1.25rem;
+}
+
+.options-manager-toggle {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.55rem;
+    padding: 0.5rem 1.1rem;
+    background: var(--brown-dark);
+    color: var(--bg);
+    border: none;
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    font-family: var(--font-sans);
+    font-size: 0.8rem;
+    font-weight: 700;
+    letter-spacing: 0.07em;
+    text-transform: uppercase;
+    transition: background 0.15s, box-shadow 0.15s;
+    box-shadow: var(--shadow-sm);
+}
+
+.options-manager-toggle:hover {
+    background: var(--brown);
+    box-shadow: var(--shadow-md);
+}
+
+.options-manager-icon {
+    font-size: 0.85rem;
+    opacity: 0.8;
+}
+
+.options-manager-chevron {
+    font-size: 0.75rem;
+    display: inline-block;
+    transition: transform 0.2s ease;
+}
+
+.options-manager-toggle.is-open .options-manager-chevron {
+    transform: rotate(180deg);
+}
+
+@keyframes omFadeIn {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+}
+
+.options-manager-body {
+    margin-top: 0.75rem;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1rem;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    padding: 1.25rem;
+    box-shadow: var(--shadow-sm);
+    animation: omFadeIn 0.15s ease;
+}
+
+.options-panel {
+    background: #fff;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.options-panel-title {
+    font-family: var(--font-serif);
+    font-size: 0.95rem;
+    color: var(--brown-dark);
+    padding-bottom: 0.5rem;
+    border-bottom: 1.5px solid var(--surface-alt);
+    margin: 0;
+}
+
+.options-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+    max-height: 180px;
+    overflow-y: auto;
+    scrollbar-width: thin;
+    scrollbar-color: var(--border) transparent;
+    flex: 1;
+}
+
+.options-list-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.35rem 0.6rem;
+    background: var(--bg);
+    border-radius: var(--radius-sm);
+    font-size: 0.875rem;
+    color: var(--black);
+    transition: background 0.1s;
+}
+
+.options-list-item:hover {
+    background: var(--surface-alt);
+}
+
+.options-add-row {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.options-add-row .form-input {
+    flex: 1;
+    font-size: 0.875rem;
+    padding: 0.4rem 0.65rem;
+}
+
+@media (max-width: 860px) {
+    .options-manager-body {
+        grid-template-columns: 1fr;
+    }
+}
+
 /* ── Story / Meet the Baker ──────────────────────────────────── */
 .story-section {
     background: var(--surface);
