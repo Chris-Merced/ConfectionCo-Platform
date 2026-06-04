@@ -235,9 +235,12 @@ public class AdminController {
     }
 
     @PostMapping("/orders/{id}/advance")
-    public ResponseEntity<?> advanceOrder(@PathVariable Long id) {
+    public ResponseEntity<?> advanceOrder(
+            @PathVariable Long id,
+            @RequestBody(required = false) Map<String, BigDecimal> body) {
         try {
-            String newStatus = orderService.advanceOrder(id);
+            BigDecimal amount = body != null ? body.get("amount") : null;
+            String newStatus = orderService.advanceOrder(id, amount);
             return ResponseEntity.ok(Map.of("status", newStatus));
         } catch (ResourceNotFoundException e) {
             return ResponseEntity.notFound().build();

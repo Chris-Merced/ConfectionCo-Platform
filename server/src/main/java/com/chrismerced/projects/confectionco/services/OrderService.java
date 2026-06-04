@@ -235,7 +235,7 @@ public class OrderService {
         }
     }
 
-    public String advanceOrder(Long orderId) {
+    public String advanceOrder(Long orderId, BigDecimal amount) {
         Order order = orderRepository.findById(orderId)
                 .orElseThrow(() -> new ResourceNotFoundException("Order not found: " + orderId));
 
@@ -243,6 +243,10 @@ public class OrderService {
             case PENDING -> {
                 order.setDepositPaid(true);
                 order.setStatus(OrderStatus.IN_PROGRESS);
+                if (amount != null && amount.compareTo(BigDecimal.ZERO) > 0) {
+                    order.setTotalAmount(amount);
+                    order.setDepositAmount(amount.multiply(new BigDecimal("0.40")).setScale(2, RoundingMode.HALF_UP));
+                }
             }
             case AWAITING_DEPOSIT -> {
                 order.setDepositPaid(true);
@@ -253,6 +257,9 @@ public class OrderService {
             case IN_PROGRESS -> {
                 order.setFullPaymentPaid(true);
                 order.setStatus(OrderStatus.PAID_IN_FULL);
+                if (amount != null && amount.compareTo(BigDecimal.ZERO) > 0 && order.getFinalPaymentAmount() == null) {
+                    order.setFinalPaymentAmount(amount);
+                }
             }
             case AWAITING_FINAL_PAYMENT -> {
                 order.setFullPaymentPaid(true);
