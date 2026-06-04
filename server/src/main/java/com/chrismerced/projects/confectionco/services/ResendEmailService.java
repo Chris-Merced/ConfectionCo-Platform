@@ -44,11 +44,12 @@ public class ResendEmailService implements EmailService {
     }
 
     @Override
-    public void sendFinalPaymentLink(String recipient, String url) {
+    public void sendFinalPaymentLink(String recipient, String url, java.math.BigDecimal amount) {
         send(recipient, "Your Final Payment Link — Confection Co. Bakery", wrap(
             h2("Your Final Payment Is Ready") +
-            p("Your order is almost complete! Please use the button below to submit your final payment:") +
-            button(url, "Complete Payment") +
+            p("Your order is almost complete! A final payment of <strong>$" + amount.toPlainString() + "</strong> is due. " +
+              "Please use the button below to complete your order:") +
+            button(url, "Pay $" + amount.toPlainString()) +
             pSmall("Or copy this link into your browser: " + link(url, url))
         ));
     }

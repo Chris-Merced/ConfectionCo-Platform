@@ -361,14 +361,15 @@ public class OrderService {
 
         String url = baseUrl + "/pay/" + token;
         try {
-            emailService.sendFinalPaymentLink(order.getEmail(), url);
+            emailService.sendFinalPaymentLink(order.getEmail(), url, amount);
         } catch (Exception e) {
             log.error("Failed to send final payment link email for order {}", orderId, e);
         }
         if (order.isSmsConsent()) {
             try {
                 textingService.sendText(order.getPhoneNumber(),
-                        "Hi! Your final payment link for your Confection Co. Bakery order is ready: " + url);
+                        "Hi! Your final payment of $" + amount.toPlainString() +
+                        " for your Confection Co. Bakery order is ready: " + url);
             } catch (Exception e) {
                 log.error("Failed to send final payment SMS for order {}", orderId, e);
             }
