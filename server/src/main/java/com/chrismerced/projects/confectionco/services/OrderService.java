@@ -64,6 +64,9 @@ public class OrderService {
 
     private static final String TOKEN_CHARS = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
     private static final SecureRandom RANDOM = new SecureRandom();
+    private static final Set<String> VALID_ITEM_TYPES =
+            Set.of("CAKE", "PIE_CLASSIC", "PIE_CUSTARD", "CHEESECAKE", "MACARON", "SURPRISE_ME");
+    private static final Set<String> VALID_FULFILLMENT_TYPES = Set.of("PICKUP", "DROPOFF");
 
     private final OrderRepository orderRepository;
     private final StripeService stripeService;
@@ -72,10 +75,25 @@ public class OrderService {
     private final TextingService textingService;
     private final S3Service s3Service;
     private final JdbcTemplate jdbcTemplate;
+    private final OrderCustomItemRepository customItemRepository;
+    private final OrderFixedItemRepository fixedItemRepository;
+    private final OrderItemPhotoRepository itemPhotoRepository;
+    private final FlavorOptionRepository flavorRepo;
+    private final FillingOptionRepository fillingRepo;
+    private final ButtercreamOptionRepository buttercreamRepo;
+    private final PieStyleOptionRepository pieStyleRepo;
+    private final CheesecakeCrustOptionRepository cheesecakeCrustRepo;
+    private final ItemSizeRepository sizeRepo;
+    private final FixedProductRepository fixedProductRepo;
 
     OrderService(OrderRepository orderRepository, StripeService stripeService, ObjectMapper objectMapper,
             EmailService emailService, TextingService textingService, S3Service s3Service,
-            JdbcTemplate jdbcTemplate) {
+            JdbcTemplate jdbcTemplate, OrderCustomItemRepository customItemRepository,
+            OrderFixedItemRepository fixedItemRepository, OrderItemPhotoRepository itemPhotoRepository,
+            FlavorOptionRepository flavorRepo, FillingOptionRepository fillingRepo,
+            ButtercreamOptionRepository buttercreamRepo, PieStyleOptionRepository pieStyleRepo,
+            CheesecakeCrustOptionRepository cheesecakeCrustRepo, ItemSizeRepository sizeRepo,
+            FixedProductRepository fixedProductRepo) {
         this.orderRepository = orderRepository;
         this.stripeService = stripeService;
         this.objectMapper = objectMapper;
@@ -83,6 +101,139 @@ public class OrderService {
         this.textingService = textingService;
         this.s3Service = s3Service;
         this.jdbcTemplate = jdbcTemplate;
+        this.customItemRepository = customItemRepository;
+        this.fixedItemRepository = fixedItemRepository;
+        this.itemPhotoRepository = itemPhotoRepository;
+        this.flavorRepo = flavorRepo;
+        this.fillingRepo = fillingRepo;
+        this.buttercreamRepo = buttercreamRepo;
+        this.pieStyleRepo = pieStyleRepo;
+        this.cheesecakeCrustRepo = cheesecakeCrustRepo;
+        this.sizeRepo = sizeRepo;
+        this.fixedProductRepo = fixedProductRepo;
+    }
+
+    @Transactional
+    public CreateOrderResponse createOrder(CreateOrderRequest req) {
+        String phone = InputSanitizer.sanitizePhone(req.getPhoneNumber());
+        if (phone == null || phone.length() != 10) {
+            throw new IllegalArgumentException("Phone number must be a valid 10-digit US number.");
+        }
+
+        String fulfillmentType = InputSanitizer.stripHtml(req.getFulfillmentType()).toUpperCase();
+        if (!VALID_FULFILLMENT_TYPES.contains(fulfillmentType)) {
+            throw new IllegalArgumentException("Invalid fulfillment type.");
+        }
+
+        if (req.getFulfillmentDate() == null || !req.getFulfillmentDate().isAfter(LocalDate.now())) {
+            throw new IllegalArgumentException("Fulfillment date must be in the future.");
+        }
+
+        Order order = new Order();
+        order.setCustomerName(InputSanitizer.stripHtml(req.getCustomerName()));
+        order.setEmail(InputSanitizer.stripHtml(req.getEmail()).toLowerCase());
+        order.setPhoneNumber(phone);
+        order.setComments(InputSanitizer.stripHtml(req.getComments()));
+        order.setFulfillmentType(fulfillmentType);
+        order.setDeliveryAddress("DROPOFF".equals(fulfillmentType)
+                ? InputSanitizer.stripHtml(req.getDeliveryAddress()) : null);
+        order.setFulfillmentDate(req.getFulfillmentDate());
+        order.setSmsConsent(req.isSmsConsent());
+        Order saved = orderRepository.save(order);
+
+        List<CreateOrderResponse.ItemRef> itemRefs = new ArrayList<>();
+        for (CreateOrderCustomItemRequest itemReq : req.getCustomItems()) {
+            OrderCustomItem item = buildCustomItem(itemReq, saved.getId());
+            OrderCustomItem savedItem = customItemRepository.save(item);
+            itemRefs.add(new CreateOrderResponse.ItemRef(savedItem.getId(), savedItem.getItemType()));
+        }
+
+        if (req.getFixedItems() != null) {
+            for (var fixedReq : req.getFixedItems()) {
+                OrderFixedItem fixedItem = new OrderFixedItem();
+                fixedItem.setOrderId(saved.getId());
+                fixedItem.setFixedProduct(fixedProductRepo.getReferenceById(fixedReq.getFixedProductId()));
+                fixedItem.setQuantity(fixedReq.getQuantity());
+                fixedItemRepository.save(fixedItem);
+            }
+        }
+
+        return new CreateOrderResponse(saved.getId(), itemRefs);
+    }
+
+    @Transactional
+    public void addItemPhotos(Long orderId, Long itemId, List<String> photoKeys) {
+        OrderCustomItem item = customItemRepository.findById(itemId)
+                .orElseThrow(() -> new ResourceNotFoundException("Item not found: " + itemId));
+        if (!item.getOrderId().equals(orderId)) {
+            throw new IllegalArgumentException("Item does not belong to this order.");
+        }
+        for (String key : photoKeys) {
+            OrderItemPhoto photo = new OrderItemPhoto();
+            photo.setOrderCustomItem(item);
+            photo.setPhotoUrl(key);
+            itemPhotoRepository.save(photo);
+        }
+    }
+
+    private OrderCustomItem buildCustomItem(CreateOrderCustomItemRequest req, Long orderId) {
+        String itemType = req.getItemType().toUpperCase();
+        if (!VALID_ITEM_TYPES.contains(itemType)) {
+            throw new IllegalArgumentException("Invalid item type: " + itemType);
+        }
+
+        OrderCustomItem item = new OrderCustomItem();
+        item.setOrderId(orderId);
+        item.setItemType(itemType);
+        item.setQuantity(Math.max(1, req.getQuantity()));
+        item.setGlutenFree(req.isGlutenFree());
+        item.setColorPreference(InputSanitizer.stripHtml(req.getColorPreference()));
+        item.setComments(InputSanitizer.stripHtml(req.getComments()));
+
+        if (req.getSizeId() != null)
+            item.setSize(sizeRepo.getReferenceById(req.getSizeId()));
+        if (req.getFlavorId() != null)
+            item.setFlavor(flavorRepo.getReferenceById(req.getFlavorId()));
+        if (req.getFlavor2Id() != null)
+            item.setFlavor2(flavorRepo.getReferenceById(req.getFlavor2Id()));
+        if (req.getFillingId() != null)
+            item.setFilling(fillingRepo.getReferenceById(req.getFillingId()));
+        if (req.getButtercreamId() != null)
+            item.setButtercream(buttercreamRepo.getReferenceById(req.getButtercreamId()));
+        if (req.getPieStyleId() != null)
+            item.setPieStyle(pieStyleRepo.getReferenceById(req.getPieStyleId()));
+        if (req.getCheesecakeCrustId() != null)
+            item.setCheesecakeCrust(cheesecakeCrustRepo.getReferenceById(req.getCheesecakeCrustId()));
+
+        validateCustomItem(itemType, req);
+        return item;
+    }
+
+    private void validateCustomItem(String itemType, CreateOrderCustomItemRequest req) {
+        switch (itemType) {
+            case "CAKE" -> {
+                if (req.getFlavorId() == null) throw new IllegalArgumentException("Cake requires a flavor.");
+                if (req.getButtercreamId() == null) throw new IllegalArgumentException("Cake requires a buttercream/frosting.");
+            }
+            case "SURPRISE_ME" -> {
+                if (req.getFlavorId() == null) throw new IllegalArgumentException("Surprise Me requires a flavor.");
+            }
+            case "PIE_CLASSIC", "PIE_CUSTARD" -> {
+                if (req.getSizeId() == null) throw new IllegalArgumentException("Pie requires a size.");
+                if (req.getFlavorId() == null) throw new IllegalArgumentException("Pie requires a flavor.");
+                if (req.getPieStyleId() == null) throw new IllegalArgumentException("Pie requires a style.");
+            }
+            case "CHEESECAKE" -> {
+                if (req.getSizeId() == null) throw new IllegalArgumentException("Cheesecake requires a size.");
+                if (req.getFlavorId() == null) throw new IllegalArgumentException("Cheesecake requires a flavor.");
+                if (req.getCheesecakeCrustId() == null) throw new IllegalArgumentException("Cheesecake requires a crust.");
+            }
+            case "MACARON" -> {
+                if (req.getSizeId() == null) throw new IllegalArgumentException("Macaron requires a size.");
+                if (req.getFlavorId() == null) throw new IllegalArgumentException("Macaron requires the first flavor.");
+                if (req.getFlavor2Id() == null) throw new IllegalArgumentException("Macaron requires the second flavor.");
+            }
+        }
     }
 
     public String advanceOrder(Long orderId) {
@@ -319,6 +470,13 @@ public class OrderService {
                     s3Service.deleteFile(key, inspoBucket);
                 } catch (Exception e) {
                     log.error("Failed to delete S3 object {} for order {}: {}", key, order.getId(), e.getMessage());
+                }
+            }
+            for (var photo : itemPhotoRepository.findByOrderCustomItem_OrderId(order.getId())) {
+                try {
+                    s3Service.deleteFile(photo.getPhotoUrl(), inspoBucket);
+                } catch (Exception e) {
+                    log.error("Failed to delete item photo {} for order {}: {}", photo.getPhotoUrl(), order.getId(), e.getMessage());
                 }
             }
             order.setStatus(OrderStatus.REFUNDED);
