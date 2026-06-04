@@ -15,7 +15,6 @@ import com.chrismerced.projects.confectionco.repository.OrderItemPhotoRepository
 import com.chrismerced.projects.confectionco.repository.OrderRepository;
 import com.chrismerced.projects.confectionco.repository.PieStyleOptionRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.stripe.model.Event;
 import com.stripe.model.Refund;
 
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -193,17 +192,13 @@ class OrderServiceTest {
         order.setSmsConsent(true);
         order.getPhotoUrls().add("photo-key-1");
         when(orderRepository.findByStripeRefundId("re_test123")).thenReturn(Optional.of(order));
-
-        Event event = mock(Event.class);
-        when(event.getId()).thenReturn("evt_refund_success");
-        when(event.getType()).thenReturn("charge.refund.updated");
         when(jdbcTemplate.update(anyString(), any(Object[].class))).thenReturn(1);
 
         String payload = """
                 {"data":{"object":{"id":"re_test123","status":"succeeded"}}}
                 """;
 
-        orderService.handleStripeEvent(event, payload);
+        orderService.handleStripeEvent("charge.refund.updated", "evt_refund_success", payload);
 
         ArgumentCaptor<Order> captor = ArgumentCaptor.forClass(Order.class);
         verify(orderRepository).save(captor.capture());
@@ -218,17 +213,13 @@ class OrderServiceTest {
         Order order = new Order();
         order.setStripeRefundId("re_test123");
         when(orderRepository.findByStripeRefundId("re_test123")).thenReturn(Optional.of(order));
-
-        Event event = mock(Event.class);
-        when(event.getId()).thenReturn("evt_refund_failed");
-        when(event.getType()).thenReturn("charge.refund.updated");
         when(jdbcTemplate.update(anyString(), any(Object[].class))).thenReturn(1);
 
         String payload = """
                 {"data":{"object":{"id":"re_test123","status":"failed"}}}
                 """;
 
-        orderService.handleStripeEvent(event, payload);
+        orderService.handleStripeEvent("charge.refund.updated", "evt_refund_failed", payload);
 
         ArgumentCaptor<Order> captor = ArgumentCaptor.forClass(Order.class);
         verify(orderRepository).save(captor.capture());
@@ -240,17 +231,13 @@ class OrderServiceTest {
     @Test
     void handleStripeEvent_refundUpdated_unknownRefundId_doesNotSave() throws Exception {
         when(orderRepository.findByStripeRefundId("re_unknown")).thenReturn(Optional.empty());
-
-        Event event = mock(Event.class);
-        when(event.getId()).thenReturn("evt_refund_unknown");
-        when(event.getType()).thenReturn("charge.refund.updated");
         when(jdbcTemplate.update(anyString(), any(Object[].class))).thenReturn(1);
 
         String payload = """
                 {"data":{"object":{"id":"re_unknown","status":"succeeded"}}}
                 """;
 
-        orderService.handleStripeEvent(event, payload);
+        orderService.handleStripeEvent("charge.refund.updated", "evt_refund_unknown", payload);
 
         verify(orderRepository, never()).save(any());
     }
@@ -264,17 +251,13 @@ class OrderServiceTest {
         order.setPhoneNumber("5555555555");
         order.setEmail("test@example.com");
         when(orderRepository.findById(1L)).thenReturn(Optional.of(order));
-
-        Event event = mock(Event.class);
-        when(event.getId()).thenReturn("evt_checkout_deposit");
-        when(event.getType()).thenReturn("checkout.session.completed");
         when(jdbcTemplate.update(anyString(), any(Object[].class))).thenReturn(1);
 
         String payload = """
                 {"data":{"object":{"client_reference_id":"1"}}}
                 """;
 
-        orderService.handleStripeEvent(event, payload);
+        orderService.handleStripeEvent("checkout.session.completed", "evt_checkout_deposit", payload);
 
         ArgumentCaptor<Order> captor = ArgumentCaptor.forClass(Order.class);
         verify(orderRepository).save(captor.capture());
@@ -289,17 +272,13 @@ class OrderServiceTest {
         order.setPhoneNumber("5555555555");
         order.setEmail("test@example.com");
         when(orderRepository.findById(1L)).thenReturn(Optional.of(order));
-
-        Event event = mock(Event.class);
-        when(event.getId()).thenReturn("evt_checkout_final");
-        when(event.getType()).thenReturn("checkout.session.completed");
         when(jdbcTemplate.update(anyString(), any(Object[].class))).thenReturn(1);
 
         String payload = """
                 {"data":{"object":{"client_reference_id":"1"}}}
                 """;
 
-        orderService.handleStripeEvent(event, payload);
+        orderService.handleStripeEvent("checkout.session.completed", "evt_checkout_final", payload);
 
         ArgumentCaptor<Order> captor = ArgumentCaptor.forClass(Order.class);
         verify(orderRepository).save(captor.capture());
