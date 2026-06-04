@@ -142,6 +142,7 @@ public class AdminController {
     }
 
     @PostMapping("/orders/{id}/reject")
+    @Transactional
     public ResponseEntity<?> rejectOrder(@PathVariable Long id) {
         try {
             Order order = orderRepository.findById(id)
@@ -149,6 +150,7 @@ public class AdminController {
             if (order.getStatus() != OrderStatus.PENDING) {
                 return ResponseEntity.badRequest().body("Only PENDING orders can be rejected.");
             }
+            deleteAllOrderPhotos(id, order);
             orderService.updateOrderStatus(id, OrderStatus.REJECTED);
             return ResponseEntity.ok(Map.of("status", OrderStatus.REJECTED.name()));
         } catch (ResourceNotFoundException e) {
