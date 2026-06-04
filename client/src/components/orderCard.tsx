@@ -120,7 +120,7 @@ export default function OrderCard({ order, token, onUpdate }: OrderCardProps): R
   });
 
   const advanceMutation = useMutation({
-    mutationFn: () => post(`/api/admin/orders/${order.id}/advance`),
+    mutationFn: (amount?: number) => post(`/api/admin/orders/${order.id}/advance`, amount != null ? { amount } : undefined),
     onSuccess: () => { setPaymentUrl(null); onUpdate(); },
   });
 
@@ -157,9 +157,9 @@ export default function OrderCard({ order, token, onUpdate }: OrderCardProps): R
     deleteMutation.mutate();
   };
 
-  const handleAdvance = (message: string) => {
+  const handleAdvance = (message: string, amount?: number) => {
     if (!window.confirm(message)) return;
-    advanceMutation.mutate();
+    advanceMutation.mutate(amount);
   };
 
   const remainingBalance =
@@ -381,7 +381,7 @@ export default function OrderCard({ order, token, onUpdate }: OrderCardProps): R
             >
               {isUrgent ? "Accept — Full Payment" : "Accept"}
             </button>
-            <button className="btn-accept" onClick={() => handleAdvance("Mark deposit as received? This will advance the order and cannot be undone.")} disabled={isAnyPending}>
+            <button className="btn-accept" onClick={() => handleAdvance("Mark deposit as received? This will advance the order and cannot be undone.", grandTotal > 0 ? grandTotal : undefined)} disabled={isAnyPending}>
               Mark Deposit Received
             </button>
             <button className="btn-reject" onClick={() => { if (!window.confirm("Reject this order? The customer will be notified.")) return; rejectMutation.mutate(); }} disabled={isAnyPending}>
@@ -429,7 +429,7 @@ export default function OrderCard({ order, token, onUpdate }: OrderCardProps): R
           <button className="btn-accept" onClick={() => finalLinkMutation.mutate(parseFloat(amount))} disabled={isAnyPending || !amount}>
             Send Final Payment Link
           </button>
-          <button className="btn-accept" onClick={() => handleAdvance("Mark payment as received? This will advance the order and cannot be undone.")} disabled={isAnyPending}>
+          <button className="btn-accept" onClick={() => handleAdvance("Mark payment as received? This will advance the order and cannot be undone.", amount ? parseFloat(amount) : undefined)} disabled={isAnyPending}>
             Mark Payment Received
           </button>
         </div>
