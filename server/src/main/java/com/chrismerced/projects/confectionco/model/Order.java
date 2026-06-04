@@ -62,9 +62,6 @@ public class Order {
     @Column(name = "full_payment_paid")
     private boolean fullPaymentPaid;
 
-    @Column(name = "serving_count")
-    private Integer servingCount;
-
     private String comments;
 
     @Column(name = "fulfillment_type")
