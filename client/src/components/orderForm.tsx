@@ -225,12 +225,6 @@ function ItemBuilder({
                         {pieStyles.map(o => <option key={o.id} value={o.id}>{o.name}</option>)}
                     </select>
                 </div>
-                {item.itemType === "PIE_CUSTARD" && (
-                    <label className="form-checkbox-row">
-                        <input type="checkbox" checked={item.glutenFree} onChange={e => set("glutenFree", e.target.checked)} />
-                        <span>Gluten Free</span>
-                    </label>
-                )}
                 <p className="item-builder-price">9-inch · $35</p>
             </>}
 

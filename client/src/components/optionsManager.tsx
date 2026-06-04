@@ -29,8 +29,7 @@ const PIE_TYPES = [
     { value: "CUSTARD", label: "Custard Pie" },
 ];
 
-// ── Generic simple panel ───────────────────────────────────────────────────
-
+// -- General panel
 interface CategoryPanelProps {
     label: string;
     fetchUrl: string;
@@ -99,7 +98,7 @@ function CategoryPanel({ label, fetchUrl, addUrl, deleteUrl, queryKey, token }: 
     );
 }
 
-// ── Flavor panel (filtered by item type) ──────────────────────────────────
+// - - Flavor panel by Item Type
 
 function FlavorPanel({ token }: { token: string }): ReactElement {
     const [selectedType, setSelectedType] = useState("CAKE");
@@ -164,7 +163,7 @@ function FlavorPanel({ token }: { token: string }): ReactElement {
     );
 }
 
-// ── Pie Style panel (filtered by pie type) ────────────────────────────────
+// ─- Pie Style panel Split by Pie Type
 
 function PieStylePanel({ token }: { token: string }): ReactElement {
     const [selectedPieType, setSelectedPieType] = useState("CLASSIC");
@@ -229,8 +228,7 @@ function PieStylePanel({ token }: { token: string }): ReactElement {
     );
 }
 
-// ── Cheesecake Crust panel ────────────────────────────────────────────────
-
+// -- Cheesecake Crust panel
 function CheesecakeCrustPanel({ token }: { token: string }): ReactElement {
     const [newName, setNewName] = useState("");
     const [newGlutenFree, setNewGlutenFree] = useState(false);
@@ -298,7 +296,7 @@ function CheesecakeCrustPanel({ token }: { token: string }): ReactElement {
     );
 }
 
-// ── Sizes panel ───────────────────────────────────────────────────────────
+// -- Sizes panel
 
 function SizePanel({ token }: { token: string }): ReactElement {
     const [selectedType, setSelectedType] = useState("CHEESECAKE");
@@ -368,7 +366,7 @@ function SizePanel({ token }: { token: string }): ReactElement {
     );
 }
 
-// ── Fixed Products panel ──────────────────────────────────────────────────
+// -- Fixed Products panel
 
 function FixedProductPanel({ token }: { token: string }): ReactElement {
     const [newName, setNewName] = useState("");
@@ -453,7 +451,7 @@ function FixedProductPanel({ token }: { token: string }): ReactElement {
     );
 }
 
-// ── OptionsManager ─────────────────────────────────────────────────────────
+// -- OptionsManager 
 
 interface OptionsManagerProps {
     token: string;
