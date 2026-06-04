@@ -1,4 +1,4 @@
-import { useState, type ReactElement } from "react";
+import { useState, useMemo, type ReactElement } from "react";
 import { useMutation } from "@tanstack/react-query";
 import { parseApiError } from "../utils/parseApiError";
 
@@ -70,6 +70,12 @@ interface OrderCardProps {
 export default function OrderCard({ order, token, onUpdate }: OrderCardProps): ReactElement {
   const [amount, setAmount] = useState("");
   const [editingComments, setEditingComments] = useState(false);
+
+  const calculatedTotal = useMemo(() => {
+    const itemsTotal = order.customItems.reduce((s, i) => s + (i.sizePrice != null ? Number(i.sizePrice) * i.quantity : 0), 0);
+    const fixedTotal  = order.fixedItems.reduce((s, i) => s + Number(i.price) * i.quantity, 0);
+    return itemsTotal + fixedTotal;
+  }, [order.customItems, order.fixedItems]);
   const [comments, setComments] = useState(order.comments ?? "");
   const [paymentUrl, setPaymentUrl] = useState<string | null>(null);
 
@@ -279,8 +285,10 @@ export default function OrderCard({ order, token, onUpdate }: OrderCardProps): R
           {new Date(order.fulfillmentDate + "T00:00:00").toLocaleDateString()}
         </p>
       )}
-      {order.totalAmount != null && (
+      {order.totalAmount != null ? (
         <p className="order-card-field"><strong>Order Total:</strong> ${order.totalAmount.toFixed(2)}</p>
+      ) : calculatedTotal > 0 && (
+        <p className="order-card-field"><strong>Items Total:</strong> ${calculatedTotal.toFixed(2)}{order.customItems.some(i => i.itemType === "CAKE") ? " (+ cake TBD)" : ""}</p>
       )}
       {order.depositAmount != null && (
         <p className="order-card-field"><strong>Deposit:</strong> ${order.depositAmount.toFixed(2)}</p>

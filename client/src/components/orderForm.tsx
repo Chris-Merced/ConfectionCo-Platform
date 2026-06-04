@@ -15,6 +15,7 @@ interface CartItem {
     quantity:           number;
     sizeId:             number | null;
     sizeLabel:          string;
+    sizePrice:          number | null;
     flavorId:           number | null;
     flavorName:         string;
     flavor2Id:          number | null;
@@ -44,7 +45,7 @@ const ITEM_TYPE_LABELS: Record<ItemType, string> = {
 
 const BLANK_ITEM: CartItem = {
     itemType: "CAKE", quantity: 1,
-    sizeId: null, sizeLabel: "",
+    sizeId: null, sizeLabel: "", sizePrice: null,
     flavorId: null, flavorName: "",
     flavor2Id: null, flavor2Name: "",
     fillingId: null, fillingName: "",
@@ -77,6 +78,7 @@ interface ItemBuilderProps {
     classicPieSizes:   SizeOption[];
     custardPieSizes:   SizeOption[];
     macaronSizes:      SizeOption[];
+    surpriseMeSizes:   SizeOption[];
     onAdd:    (item: CartItem) => void;
     onCancel: () => void;
 }
@@ -86,7 +88,7 @@ function ItemBuilder({
     cheesecakeFlavors, macaronFlavors,
     fillings, buttercreams, classicPieStyles, custardPieStyles,
     cheesecakeCrusts, cheesecakeSizes,
-    classicPieSizes, custardPieSizes, macaronSizes,
+    classicPieSizes, custardPieSizes, macaronSizes, surpriseMeSizes,
     onAdd, onCancel,
 }: ItemBuilderProps): ReactElement {
     const [item, setItem] = useState<CartItem>({ ...BLANK_ITEM });
@@ -97,9 +99,10 @@ function ItemBuilder({
 
     const setType = (type: ItemType) => {
         const base = { ...BLANK_ITEM, itemType: type };
-        if (type === "PIE_CLASSIC" && classicPieSizes.length > 0) { base.sizeId = classicPieSizes[0].id; base.sizeLabel = classicPieSizes[0].label; }
-        if (type === "PIE_CUSTARD" && custardPieSizes.length > 0) { base.sizeId = custardPieSizes[0].id; base.sizeLabel = custardPieSizes[0].label; }
-        if (type === "MACARON"    && macaronSizes.length > 0)      { base.sizeId = macaronSizes[0].id;    base.sizeLabel = macaronSizes[0].label; }
+        if (type === "PIE_CLASSIC" && classicPieSizes.length > 0)  { base.sizeId = classicPieSizes[0].id;  base.sizeLabel = classicPieSizes[0].label;  base.sizePrice = classicPieSizes[0].price; }
+        if (type === "PIE_CUSTARD" && custardPieSizes.length > 0)  { base.sizeId = custardPieSizes[0].id;  base.sizeLabel = custardPieSizes[0].label;  base.sizePrice = custardPieSizes[0].price; }
+        if (type === "MACARON"     && macaronSizes.length > 0)      { base.sizeId = macaronSizes[0].id;     base.sizeLabel = macaronSizes[0].label;     base.sizePrice = macaronSizes[0].price; }
+        if (type === "SURPRISE_ME" && surpriseMeSizes.length > 0)  { base.sizeId = surpriseMeSizes[0].id;  base.sizeLabel = surpriseMeSizes[0].label;  base.sizePrice = surpriseMeSizes[0].price; }
         setItem(base);
     };
 
@@ -117,7 +120,7 @@ function ItemBuilder({
 
     const pickSize = (options: SizeOption[], id: number) => {
         const opt = options.find(o => o.id === id);
-        setItem(prev => ({ ...prev, sizeId: id || null, sizeLabel: opt?.label ?? "" }));
+        setItem(prev => ({ ...prev, sizeId: id || null, sizeLabel: opt?.label ?? "", sizePrice: opt?.price ?? null }));
     };
 
     const pickCrust = (id: number) => {
@@ -193,8 +196,9 @@ function ItemBuilder({
             {/* ── Surprise Me ── */}
             {item.itemType === "SURPRISE_ME" && <>
                 <p className="item-builder-note">
-                    A fun 6-inch two-layer cake fully designed by the baker — just pick a flavor and tell us your color scheme!
+                    A fun 6-inch two-layer cake fully designed by the baker. Pick a flavor and a color scheme and Isabel will let her personal vision come to life!
                 </p>
+                <p className="item-builder-price">6-inch · $75</p>
                 <div className="form-field">
                     <label className="form-label">Flavor <span className="form-required">*</span></label>
                     <select className="form-input" value={item.flavorId ?? ""} onChange={e => pickFlavor(cakeFlavors, +e.target.value, "flavorId", "flavorName")}>
@@ -310,7 +314,7 @@ function CartItemSummary({ item, index, onRemove }: { item: CartItem; index: num
     if (item.buttercreamName)    lines.push(`Frosting: ${item.buttercreamName}`);
     if (item.pieStyleName)       lines.push(`Style: ${item.pieStyleName}`);
     if (item.cheesecakeCrustName) lines.push(`Crust: ${item.cheesecakeCrustName}`);
-    if (item.sizeLabel)          lines.push(item.sizeLabel);
+    if (item.sizeLabel)          lines.push(item.sizePrice != null ? `${item.sizeLabel} · $${item.sizePrice.toFixed(2)}` : item.sizeLabel);
     if (item.colorPreference)    lines.push(`Color: ${item.colorPreference}`);
     if (item.glutenFree)         lines.push("Gluten Free");
     if (item.comments)           lines.push(`Notes: ${item.comments}`);
@@ -371,6 +375,7 @@ export default function OrderForm(): ReactElement {
     const { data: classicPieSizes   = [] } = useQuery<SizeOption[]>  ({ queryKey: ["sizes", "PIE_CLASSIC"],  queryFn: fetchOptions("/api/options/sizes?itemType=PIE_CLASSIC"),     staleTime: Infinity });
     const { data: custardPieSizes   = [] } = useQuery<SizeOption[]>  ({ queryKey: ["sizes", "PIE_CUSTARD"],  queryFn: fetchOptions("/api/options/sizes?itemType=PIE_CUSTARD"),     staleTime: Infinity });
     const { data: macaronSizes      = [] } = useQuery<SizeOption[]>  ({ queryKey: ["sizes", "MACARON"],      queryFn: fetchOptions("/api/options/sizes?itemType=MACARON"),         staleTime: Infinity });
+    const { data: surpriseMeSizes   = [] } = useQuery<SizeOption[]>  ({ queryKey: ["sizes", "SURPRISE_ME"],  queryFn: fetchOptions("/api/options/sizes?itemType=SURPRISE_ME"),     staleTime: Infinity });
     const { data: fixedProducts     = [] } = useQuery<FixedProduct[]>({ queryKey: ["fixedProducts"],         queryFn: fetchOptions("/api/options/fixed-products"),                 staleTime: Infinity });
 
     function validatePhone(raw: string): boolean {
@@ -556,6 +561,7 @@ export default function OrderForm(): ReactElement {
                     classicPieSizes={classicPieSizes}
                     custardPieSizes={custardPieSizes}
                     macaronSizes={macaronSizes}
+                    surpriseMeSizes={surpriseMeSizes}
                     onAdd={handleAddItem}
                     onCancel={() => setShowBuilder(false)}
                 />
@@ -598,6 +604,36 @@ export default function OrderForm(): ReactElement {
                     placeholder="Any notes that apply to the whole order…"
                     maxLength={2000} />
             </div>
+
+            {/* ── Order Summary ── */}
+            {(cartItems.length > 0 || fixedProducts.some(p => (fixedQtys[p.id] ?? 0) > 0)) && (() => {
+                const knownTotal = cartItems.reduce((s, i) => s + (i.sizePrice != null ? i.sizePrice * i.quantity : 0), 0)
+                    + fixedProducts.reduce((s, p) => s + p.price * (fixedQtys[p.id] ?? 0), 0);
+                const hasCakes = cartItems.some(i => i.itemType === "CAKE");
+                return (
+                    <div className="order-summary">
+                        {cartItems.map((item, i) => (
+                            <div key={i} className="order-summary-row">
+                                <span>{ITEM_TYPE_LABELS[item.itemType]}{item.quantity > 1 ? ` ×${item.quantity}` : ""}</span>
+                                <span>{item.sizePrice != null ? `$${(item.sizePrice * item.quantity).toFixed(2)}` : <em className="order-summary-tbd">TBD</em>}</span>
+                            </div>
+                        ))}
+                        {fixedProducts.filter(p => (fixedQtys[p.id] ?? 0) > 0).map(p => (
+                            <div key={p.id} className="order-summary-row">
+                                <span>{p.name} ×{fixedQtys[p.id]}</span>
+                                <span>${(p.price * fixedQtys[p.id]).toFixed(2)}</span>
+                            </div>
+                        ))}
+                        <div className="order-summary-total">
+                            <span>Estimated Total</span>
+                            <span>
+                                ${knownTotal.toFixed(2)}
+                                {hasCakes && <em className="order-summary-tbd"> + custom cake (quoted after review)</em>}
+                            </span>
+                        </div>
+                    </div>
+                );
+            })()}
 
             {error && <p className="form-error">{error}</p>}
 

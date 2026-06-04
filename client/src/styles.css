@@ -2445,3 +2445,42 @@ input[type="file"].form-input {
     font-size: 0.875rem;
     padding: 0.4rem 0.65rem;
 }
+
+/* ── Order Summary (customer form) ───────────────────────────── */
+.order-summary {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 0.85rem 1rem;
+    margin-bottom: 1.25rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+}
+
+.order-summary-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    font-size: 0.875rem;
+    color: var(--black);
+}
+
+.order-summary-total {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    font-size: 0.92rem;
+    font-weight: 700;
+    color: var(--brown-dark);
+    border-top: 1.5px solid var(--border);
+    padding-top: 0.4rem;
+    margin-top: 0.2rem;
+}
+
+.order-summary-tbd {
+    font-style: italic;
+    font-weight: 400;
+    color: var(--text-muted);
+    font-size: 0.83rem;
+}
