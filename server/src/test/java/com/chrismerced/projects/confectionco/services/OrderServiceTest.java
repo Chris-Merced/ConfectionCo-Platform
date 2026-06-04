@@ -3,7 +3,17 @@ package com.chrismerced.projects.confectionco.services;
 import com.chrismerced.projects.confectionco.exceptions.ResourceNotFoundException;
 import com.chrismerced.projects.confectionco.model.Order;
 import com.chrismerced.projects.confectionco.model.OrderStatus;
+import com.chrismerced.projects.confectionco.repository.ButtercreamOptionRepository;
+import com.chrismerced.projects.confectionco.repository.CheesecakeCrustOptionRepository;
+import com.chrismerced.projects.confectionco.repository.FillingOptionRepository;
+import com.chrismerced.projects.confectionco.repository.FixedProductRepository;
+import com.chrismerced.projects.confectionco.repository.FlavorOptionRepository;
+import com.chrismerced.projects.confectionco.repository.ItemSizeRepository;
+import com.chrismerced.projects.confectionco.repository.OrderCustomItemRepository;
+import com.chrismerced.projects.confectionco.repository.OrderFixedItemRepository;
+import com.chrismerced.projects.confectionco.repository.OrderItemPhotoRepository;
 import com.chrismerced.projects.confectionco.repository.OrderRepository;
+import com.chrismerced.projects.confectionco.repository.PieStyleOptionRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.stripe.model.Event;
 import com.stripe.model.Refund;
@@ -33,6 +43,16 @@ class OrderServiceTest {
     @Mock TextingService textingService;
     @Mock S3Service s3Service;
     @Mock JdbcTemplate jdbcTemplate;
+    @Mock OrderCustomItemRepository customItemRepository;
+    @Mock OrderFixedItemRepository fixedItemRepository;
+    @Mock OrderItemPhotoRepository itemPhotoRepository;
+    @Mock FlavorOptionRepository flavorRepo;
+    @Mock FillingOptionRepository fillingRepo;
+    @Mock ButtercreamOptionRepository buttercreamRepo;
+    @Mock PieStyleOptionRepository pieStyleRepo;
+    @Mock CheesecakeCrustOptionRepository cheesecakeCrustRepo;
+    @Mock ItemSizeRepository sizeRepo;
+    @Mock FixedProductRepository fixedProductRepo;
 
     private final ObjectMapper objectMapper = new ObjectMapper();
 
@@ -41,7 +61,10 @@ class OrderServiceTest {
     @BeforeEach
     void setUp() {
         orderService = new OrderService(orderRepository, stripeService, objectMapper,
-                emailService, textingService, s3Service, jdbcTemplate);
+                emailService, textingService, s3Service, jdbcTemplate,
+                customItemRepository, fixedItemRepository, itemPhotoRepository,
+                flavorRepo, fillingRepo, buttercreamRepo, pieStyleRepo,
+                cheesecakeCrustRepo, sizeRepo, fixedProductRepo);
         ReflectionTestUtils.setField(orderService, "inspoBucket", "test-bucket");
         ReflectionTestUtils.setField(orderService, "ownerPhone", "0000000000");
     }
