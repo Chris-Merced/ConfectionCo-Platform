@@ -326,8 +326,8 @@ public class OrderService {
             try {
                 textingService.sendText(order.getPhoneNumber(),
                         "Hi! Here is your deposit payment link for your Confection Co. Bakery order. " +
-                        "A deposit of $" + depositAmount.toPlainString() +
-                        " (40% of your $" + orderTotal.toPlainString() + " order total) is due: " + url);
+                        "A deposit of $" + String.format("%.2f", depositAmount) +
+                        " (40% of your $" + String.format("%.2f", orderTotal) + " order total) is due: " + url);
             } catch (Exception e) {
                 log.error("Failed to send deposit SMS for order {}", orderId, e);
             }
@@ -368,7 +368,7 @@ public class OrderService {
         if (order.isSmsConsent()) {
             try {
                 textingService.sendText(order.getPhoneNumber(),
-                        "Hi! Your final payment of $" + amount.toPlainString() +
+                        "Hi! Your final payment of $" + String.format("%.2f", amount) +
                         " for your Confection Co. Bakery order is ready: " + url);
             } catch (Exception e) {
                 log.error("Failed to send final payment SMS for order {}", orderId, e);

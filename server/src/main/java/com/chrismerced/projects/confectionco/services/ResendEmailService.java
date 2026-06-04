@@ -35,10 +35,10 @@ public class ResendEmailService implements EmailService {
     public void sendDepositPaymentLink(String recipient, String url, java.math.BigDecimal depositAmount, java.math.BigDecimal orderTotal) {
         send(recipient, "Your Deposit Payment Link — Confection Co. Bakery", wrap(
             h2("Your Order Has Been Accepted!") +
-            p("Great news! Your order total is <strong>$" + orderTotal.toPlainString() + "</strong>. " +
-              "A deposit of <strong>$" + depositAmount.toPlainString() + "</strong> (40%) is due now to get started. " +
+            p("Great news! Your order total is <strong>$" + String.format("%.2f", orderTotal) + "</strong>. " +
+              "A deposit of <strong>$" + String.format("%.2f", depositAmount) + "</strong> (40%) is due now to get started. " +
               "Please use the button below to pay:") +
-            button(url, "Pay Deposit — $" + depositAmount.toPlainString()) +
+            button(url, "Pay Deposit — $" + String.format("%.2f", depositAmount)) +
             pSmall("Or copy this link into your browser: " + link(url, url))
         ));
     }
@@ -47,9 +47,9 @@ public class ResendEmailService implements EmailService {
     public void sendFinalPaymentLink(String recipient, String url, java.math.BigDecimal amount) {
         send(recipient, "Your Final Payment Link — Confection Co. Bakery", wrap(
             h2("Your Final Payment Is Ready") +
-            p("Your order is almost complete! A final payment of <strong>$" + amount.toPlainString() + "</strong> is due. " +
+            p("Your order is almost complete! A final payment of <strong>$" + String.format("%.2f", amount) + "</strong> is due. " +
               "Please use the button below to complete your order:") +
-            button(url, "Pay $" + amount.toPlainString()) +
+            button(url, "Pay $" + String.format("%.2f", amount)) +
             pSmall("Or copy this link into your browser: " + link(url, url))
         ));
     }
