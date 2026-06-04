@@ -118,8 +118,6 @@ public class Order {
     public void setDepositPaid(boolean depositPaid) { this.depositPaid = depositPaid; }
     public boolean isFullPaymentPaid() { return fullPaymentPaid; }
     public void setFullPaymentPaid(boolean fullPaymentPaid) { this.fullPaymentPaid = fullPaymentPaid; }
-    public Integer getServingCount() { return servingCount; }
-    public void setServingCount(Integer servingCount) { this.servingCount = servingCount; }
     public String getComments() { return comments; }
     public void setComments(String comments) { this.comments = comments; }
     public String getFulfillmentType() { return fulfillmentType; }
@@ -138,10 +136,4 @@ public class Order {
     public void setPaymentLinkUrl(String paymentLinkUrl) { this.paymentLinkUrl = paymentLinkUrl; }
     public List<String> getPhotoUrls() { return photoUrls; }
     public void setPhotoUrls(List<String> photoUrls) { this.photoUrls = photoUrls; }
-    public String getFlavor() { return flavor; }
-    public void setFlavor(String flavor) { this.flavor = flavor; }
-    public String getFilling() { return filling; }
-    public void setFilling(String filling) { this.filling = filling; }
-    public String getButtercream() { return buttercream; }
-    public void setButtercream(String buttercream) { this.buttercream = buttercream; }
 }
