@@ -123,18 +123,13 @@ public class AdminController {
     }
 
     @DeleteMapping("/orders/{id}")
+    @Transactional
     public ResponseEntity<?> removeOrder(@PathVariable Long id) {
         try {
             Order order = orderRepository.findById(id)
                     .orElseThrow(() -> new ResourceNotFoundException("Order not found: " + id));
 
-            for (String key : order.getPhotoUrls()) {
-                try {
-                    s3Service.deleteFile(key, inspoBucket);
-                } catch (Exception e) {
-                    log.error("Failed to delete S3 object {} for order {}: {}", key, id, e.getMessage());
-                }
-            }
+            deleteAllOrderPhotos(id, order);
 
             order.setStatus(OrderStatus.REMOVED);
             orderRepository.save(order);
@@ -179,6 +174,7 @@ public class AdminController {
     }
 
     @PostMapping("/orders/{id}/complete")
+    @Transactional
     public ResponseEntity<?> completeOrder(@PathVariable Long id) {
         try {
             Order order = orderRepository.findById(id)
@@ -189,18 +185,30 @@ public class AdminController {
             }
 
             orderService.updateOrderStatus(id, OrderStatus.COMPLETED);
-
-            for (String key : order.getPhotoUrls()) {
-                try {
-                    s3Service.deleteFile(key, inspoBucket);
-                } catch (Exception e) {
-                    log.error("Failed to delete S3 object {} for order {}: {}", key, id, e.getMessage());
-                }
-            }
+            deleteAllOrderPhotos(id, order);
 
             return ResponseEntity.ok(Map.of("status", OrderStatus.COMPLETED.name()));
         } catch (ResourceNotFoundException e) {
             return ResponseEntity.notFound().build();
+        }
+    }
+
+    private void deleteAllOrderPhotos(Long orderId, Order order) {
+        for (String key : order.getPhotoUrls()) {
+            try {
+                s3Service.deleteFile(key, inspoBucket);
+            } catch (Exception e) {
+                log.error("Failed to delete S3 object {} for order {}: {}", key, orderId, e.getMessage());
+            }
+        }
+        for (OrderCustomItem item : customItemRepository.findByOrderId(orderId)) {
+            for (var photo : item.getPhotos()) {
+                try {
+                    s3Service.deleteFile(photo.getPhotoUrl(), inspoBucket);
+                } catch (Exception e) {
+                    log.error("Failed to delete item photo {} for order {}: {}", photo.getPhotoUrl(), orderId, e.getMessage());
+                }
+            }
         }
     }
 
