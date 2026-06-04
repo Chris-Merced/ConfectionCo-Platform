@@ -88,15 +88,6 @@ public class Order {
     @Column(name = "payment_link_url")
     private String paymentLinkUrl;
 
-    @Column(name = "flavor")
-    private String flavor;
-
-    @Column(name = "filling")
-    private String filling;
-
-    @Column(name = "buttercream")
-    private String buttercream;
-
     @ElementCollection
     @CollectionTable(name = "order_photo_urls", joinColumns = @JoinColumn(name = "order_id"))
     @Column(name = "photo_url")
