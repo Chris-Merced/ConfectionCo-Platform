@@ -86,6 +86,7 @@ function ItemBuilder({
     cheesecakeFlavors, macaronFlavors,
     fillings, buttercreams, classicPieStyles, custardPieStyles,
     cheesecakeCrusts, cheesecakeSizes,
+    classicPieSizes, custardPieSizes, macaronSizes,
     onAdd, onCancel,
 }: ItemBuilderProps): ReactElement {
     const [item, setItem] = useState<CartItem>({ ...BLANK_ITEM });
@@ -94,7 +95,13 @@ function ItemBuilder({
     const set = <K extends keyof CartItem>(key: K, value: CartItem[K]) =>
         setItem(prev => ({ ...prev, [key]: value }));
 
-    const setType = (type: ItemType) => setItem({ ...BLANK_ITEM, itemType: type });
+    const setType = (type: ItemType) => {
+        const base = { ...BLANK_ITEM, itemType: type };
+        if (type === "PIE_CLASSIC" && classicPieSizes.length > 0) { base.sizeId = classicPieSizes[0].id; base.sizeLabel = classicPieSizes[0].label; }
+        if (type === "PIE_CUSTARD" && custardPieSizes.length > 0) { base.sizeId = custardPieSizes[0].id; base.sizeLabel = custardPieSizes[0].label; }
+        if (type === "MACARON"    && macaronSizes.length > 0)      { base.sizeId = macaronSizes[0].id;    base.sizeLabel = macaronSizes[0].label; }
+        setItem(base);
+    };
 
     const pickFlavor = (options: Option[], id: number, field: "flavorId" | "flavor2Id", nameField: "flavorName" | "flavor2Name") => {
         const opt = options.find(o => o.id === id);
@@ -132,9 +139,9 @@ function ItemBuilder({
         const t = item.itemType;
         if (t === "CAKE")                         { if (!item.flavorId) return "Cake requires a flavor."; if (!item.buttercreamId) return "Cake requires a buttercream / frosting."; }
         if (t === "SURPRISE_ME")                  { if (!item.flavorId) return "Surprise Me requires a flavor."; }
-        if (t === "PIE_CLASSIC" || t === "PIE_CUSTARD") { if (!item.flavorId) return "Pie requires a flavor."; if (!item.pieStyleId) return "Pie requires a style."; }
+        if (t === "PIE_CLASSIC" || t === "PIE_CUSTARD") { if (!item.sizeId) return "Pie size unavailable — please try again."; if (!item.flavorId) return "Pie requires a flavor."; if (!item.pieStyleId) return "Pie requires a style."; }
         if (t === "CHEESECAKE")                   { if (!item.sizeId) return "Cheesecake requires a size."; if (!item.flavorId) return "Cheesecake requires a flavor."; if (!item.cheesecakeCrustId) return "Cheesecake requires a crust."; }
-        if (t === "MACARON")                      { if (!item.flavorId) return "Macarons require the first flavor."; if (!item.flavor2Id) return "Macarons require the second flavor."; }
+        if (t === "MACARON")                      { if (!item.sizeId) return "Macaron size unavailable — please try again."; if (!item.flavorId) return "Macarons require the first flavor."; if (!item.flavor2Id) return "Macarons require the second flavor."; }
         return "";
     }
 
@@ -367,6 +374,9 @@ export default function OrderForm(): ReactElement {
     const { data: custardPieStyles  = [] } = useQuery<Option[]>      ({ queryKey: ["pieStyles", "CUSTARD"],  queryFn: fetchOptions("/api/options/pie-styles?pieType=CUSTARD"),     staleTime: Infinity });
     const { data: cheesecakeCrusts  = [] } = useQuery<CrustOption[]> ({ queryKey: ["cheesecakeCrusts"],      queryFn: fetchOptions("/api/options/cheesecake-crusts"),              staleTime: Infinity });
     const { data: cheesecakeSizes   = [] } = useQuery<SizeOption[]>  ({ queryKey: ["sizes", "CHEESECAKE"],   queryFn: fetchOptions("/api/options/sizes?itemType=CHEESECAKE"),      staleTime: Infinity });
+    const { data: classicPieSizes   = [] } = useQuery<SizeOption[]>  ({ queryKey: ["sizes", "PIE_CLASSIC"],  queryFn: fetchOptions("/api/options/sizes?itemType=PIE_CLASSIC"),     staleTime: Infinity });
+    const { data: custardPieSizes   = [] } = useQuery<SizeOption[]>  ({ queryKey: ["sizes", "PIE_CUSTARD"],  queryFn: fetchOptions("/api/options/sizes?itemType=PIE_CUSTARD"),     staleTime: Infinity });
+    const { data: macaronSizes      = [] } = useQuery<SizeOption[]>  ({ queryKey: ["sizes", "MACARON"],      queryFn: fetchOptions("/api/options/sizes?itemType=MACARON"),         staleTime: Infinity });
     const { data: fixedProducts     = [] } = useQuery<FixedProduct[]>({ queryKey: ["fixedProducts"],         queryFn: fetchOptions("/api/options/fixed-products"),                 staleTime: Infinity });
 
     function validatePhone(raw: string): boolean {
@@ -549,6 +559,9 @@ export default function OrderForm(): ReactElement {
                     custardPieStyles={custardPieStyles}
                     cheesecakeCrusts={cheesecakeCrusts}
                     cheesecakeSizes={cheesecakeSizes}
+                    classicPieSizes={classicPieSizes}
+                    custardPieSizes={custardPieSizes}
+                    macaronSizes={macaronSizes}
                     onAdd={handleAddItem}
                     onCancel={() => setShowBuilder(false)}
                 />
