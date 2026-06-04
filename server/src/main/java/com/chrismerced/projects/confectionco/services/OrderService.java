@@ -318,7 +318,7 @@ public class OrderService {
 
         String url = baseUrl + "/pay/" + token;
         try {
-            emailService.sendDepositPaymentLink(order.getEmail(), url);
+            emailService.sendDepositPaymentLink(order.getEmail(), url, depositAmount, orderTotal);
         } catch (Exception e) {
             log.error("Failed to send deposit payment link email for order {}", orderId, e);
         }

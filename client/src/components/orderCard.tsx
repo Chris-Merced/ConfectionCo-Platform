@@ -69,6 +69,7 @@ interface OrderCardProps {
 
 export default function OrderCard({ order, token, onUpdate }: OrderCardProps): ReactElement {
   const [amount, setAmount] = useState("");
+  const [cakePrices, setCakePrices] = useState<Record<number, string>>({});
   const [editingComments, setEditingComments] = useState(false);
 
   const calculatedTotal = useMemo(() => {
@@ -99,12 +100,12 @@ export default function OrderCard({ order, token, onUpdate }: OrderCardProps): R
   });
 
   const depositLinkMutation = useMutation({
-    mutationFn: () => post(`/api/admin/orders/${order.id}/deposit-link`, { totalAmount: parseFloat(amount) }),
+    mutationFn: (total: number) => post(`/api/admin/orders/${order.id}/deposit-link`, { totalAmount: total }),
     onSuccess: (data) => { setPaymentUrl(data.url); setAmount(""); onUpdate(); },
   });
 
   const finalLinkMutation = useMutation({
-    mutationFn: () => post(`/api/admin/orders/${order.id}/final-link`, { amount: parseFloat(amount) }),
+    mutationFn: (amt: number) => post(`/api/admin/orders/${order.id}/final-link`, { amount: amt }),
     onSuccess: (data) => { setPaymentUrl(data.url); setAmount(""); onUpdate(); },
   });
 
@@ -330,32 +331,65 @@ export default function OrderCard({ order, token, onUpdate }: OrderCardProps): R
         </div>
       )}
 
-      {order.status === "PENDING" && (
-        <div className="order-card-actions">
-          <input
-            className="order-card-input"
-            type="number"
-            placeholder={isUrgent ? "Full payment amount" : "Order total"}
-            value={amount}
-            onChange={(e) => setAmount(e.target.value)}
-            step="0.01"
-            min="0"
-          />
-          <button
-            className="btn-accept"
-            onClick={() => isUrgent ? finalLinkMutation.mutate() : depositLinkMutation.mutate()}
-            disabled={isAnyPending || !amount}
-          >
-            {isUrgent ? "Accept — Full Payment" : "Accept"}
-          </button>
-          <button className="btn-accept" onClick={() => handleAdvance("Mark deposit as received? This will advance the order and cannot be undone.")} disabled={isAnyPending}>
-            Mark Deposit Received
-          </button>
-          <button className="btn-reject" onClick={() => { if (!window.confirm("Reject this order? The customer will be notified.")) return; rejectMutation.mutate(); }} disabled={isAnyPending}>
-            Reject
-          </button>
-        </div>
-      )}
+      {order.status === "PENDING" && (() => {
+        const cakeItems = order.customItems.filter(i => i.itemType === "CAKE");
+        const cakeTotal = cakeItems.reduce((s, i) => s + (parseFloat(cakePrices[i.id] ?? "") || 0), 0);
+        const grandTotal = calculatedTotal + cakeTotal;
+        const depositDisplay = grandTotal * 0.4;
+        const allCakesFilled = cakeItems.every(i => parseFloat(cakePrices[i.id] ?? "") > 0);
+        const canAccept = grandTotal > 0 && (cakeItems.length === 0 || allCakesFilled);
+        return (
+          <div className="order-card-actions">
+            {cakeItems.length > 0 && (
+              <div className="order-card-cake-prices">
+                {cakeItems.map((cake, idx) => (
+                  <div key={cake.id} className="order-card-cake-price-row">
+                    <label className="order-card-cake-price-label">
+                      {cakeItems.length > 1 ? `Cake #${idx + 1}` : "Cake"} Price
+                      {cake.colorPreference ? ` (${cake.colorPreference})` : ""}
+                    </label>
+                    <div className="order-card-cake-price-wrap">
+                      <span className="order-card-cake-price-symbol">$</span>
+                      <input
+                        className="order-card-input"
+                        type="number"
+                        placeholder="0.00"
+                        value={cakePrices[cake.id] ?? ""}
+                        onChange={(e) => setCakePrices(prev => ({ ...prev, [cake.id]: e.target.value }))}
+                        step="0.01"
+                        min="0"
+                      />
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+            <div className="order-card-deposit-summary">
+              <div className="order-card-deposit-row">
+                <span>Order Total</span>
+                <span>${grandTotal.toFixed(2)}</span>
+              </div>
+              <div className="order-card-deposit-row order-card-deposit-row--highlight">
+                <span>40% Deposit</span>
+                <span>${depositDisplay.toFixed(2)}</span>
+              </div>
+            </div>
+            <button
+              className="btn-accept"
+              onClick={() => isUrgent ? finalLinkMutation.mutate(grandTotal) : depositLinkMutation.mutate(grandTotal)}
+              disabled={isAnyPending || !canAccept}
+            >
+              {isUrgent ? "Accept — Full Payment" : "Accept"}
+            </button>
+            <button className="btn-accept" onClick={() => handleAdvance("Mark deposit as received? This will advance the order and cannot be undone.")} disabled={isAnyPending}>
+              Mark Deposit Received
+            </button>
+            <button className="btn-reject" onClick={() => { if (!window.confirm("Reject this order? The customer will be notified.")) return; rejectMutation.mutate(); }} disabled={isAnyPending}>
+              Reject
+            </button>
+          </div>
+        );
+      })()}
 
       {order.status === "AWAITING_DEPOSIT" && (
         <div className="order-card-actions">
@@ -372,7 +406,7 @@ export default function OrderCard({ order, token, onUpdate }: OrderCardProps): R
             step="0.01"
             min="0"
           />
-          <button className="btn-accept" onClick={() => depositLinkMutation.mutate()} disabled={isAnyPending || !amount}>
+          <button className="btn-accept" onClick={() => depositLinkMutation.mutate(parseFloat(amount))} disabled={isAnyPending || !amount}>
             Regenerate Link
           </button>
           <button className="btn-accept" onClick={() => handleAdvance("Mark deposit as received? This will advance the order and cannot be undone.")} disabled={isAnyPending}>
@@ -392,7 +426,7 @@ export default function OrderCard({ order, token, onUpdate }: OrderCardProps): R
             step="0.01"
             min="0"
           />
-          <button className="btn-accept" onClick={() => finalLinkMutation.mutate()} disabled={isAnyPending || !amount}>
+          <button className="btn-accept" onClick={() => finalLinkMutation.mutate(parseFloat(amount))} disabled={isAnyPending || !amount}>
             Send Final Payment Link
           </button>
           <button className="btn-accept" onClick={() => handleAdvance("Mark payment as received? This will advance the order and cannot be undone.")} disabled={isAnyPending}>
@@ -416,7 +450,7 @@ export default function OrderCard({ order, token, onUpdate }: OrderCardProps): R
             step="0.01"
             min="0"
           />
-          <button className="btn-accept" onClick={() => finalLinkMutation.mutate()} disabled={isAnyPending || !amount}>
+          <button className="btn-accept" onClick={() => finalLinkMutation.mutate(parseFloat(amount))} disabled={isAnyPending || !amount}>
             Regenerate Link
           </button>
           <button className="btn-accept" onClick={() => handleAdvance("Mark payment as received? This will advance the order and cannot be undone.")} disabled={isAnyPending}>

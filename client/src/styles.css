@@ -2387,6 +2387,64 @@ input[type="file"].form-input {
     color: var(--text-muted);
 }
 
+.order-card-cake-prices {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    margin-bottom: 0.5rem;
+}
+
+.order-card-cake-price-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem;
+}
+
+.order-card-cake-price-label {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--brown-dark);
+    flex-shrink: 0;
+}
+
+.order-card-cake-price-wrap {
+    display: flex;
+    align-items: center;
+    gap: 0.2rem;
+}
+
+.order-card-cake-price-symbol {
+    font-size: 0.875rem;
+    color: var(--text-muted);
+}
+
+.order-card-deposit-summary {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 0.5rem 0.75rem;
+    margin-bottom: 0.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+}
+
+.order-card-deposit-row {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.85rem;
+    color: var(--brown);
+}
+
+.order-card-deposit-row--highlight {
+    font-weight: 700;
+    color: var(--brown-dark);
+    border-top: 1px solid var(--border);
+    padding-top: 0.25rem;
+    margin-top: 0.1rem;
+}
+
 /* ── Options Manager — new panel elements ────────────────────── */
 .options-select {
     width: 100%;

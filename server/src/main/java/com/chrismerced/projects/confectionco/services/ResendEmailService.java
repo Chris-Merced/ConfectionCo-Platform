@@ -32,11 +32,13 @@ public class ResendEmailService implements EmailService {
     }
 
     @Override
-    public void sendDepositPaymentLink(String recipient, String url) {
+    public void sendDepositPaymentLink(String recipient, String url, java.math.BigDecimal depositAmount, java.math.BigDecimal orderTotal) {
         send(recipient, "Your Deposit Payment Link — Confection Co. Bakery", wrap(
             h2("Your Order Has Been Accepted!") +
-            p("Great news! Please use the button below to pay your deposit and get your order started:") +
-            button(url, "Pay Deposit") +
+            p("Great news! Your order total is <strong>$" + orderTotal.toPlainString() + "</strong>. " +
+              "A deposit of <strong>$" + depositAmount.toPlainString() + "</strong> (40%) is due now to get started. " +
+              "Please use the button below to pay:") +
+            button(url, "Pay Deposit — $" + depositAmount.toPlainString()) +
             pSmall("Or copy this link into your browser: " + link(url, url))
         ));
     }
