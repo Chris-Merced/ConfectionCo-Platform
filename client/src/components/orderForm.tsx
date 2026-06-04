@@ -198,7 +198,7 @@ function ItemBuilder({
                 <p className="item-builder-note">
                     A fun 6-inch two-layer cake fully designed by the baker. Pick a flavor and a color scheme and Isabel will let her personal vision come to life!
                 </p>
-                <p className="item-builder-price">6-inch · $75</p>
+                <p className="item-builder-price">6-inch Two Layer · $75</p>
                 <div className="form-field">
                     <label className="form-label">Flavor <span className="form-required">*</span></label>
                     <select className="form-input" value={item.flavorId ?? ""} onChange={e => pickFlavor(cakeFlavors, +e.target.value, "flavorId", "flavorName")}>
