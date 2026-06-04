@@ -14,7 +14,6 @@ const FLAVOR_ITEM_TYPES = [
     { value: "PIE_CUSTARD", label: "Custard Pie" },
     { value: "CHEESECAKE",  label: "Cheesecake" },
     { value: "MACARON",     label: "Macaron" },
-    { value: "SURPRISE_ME", label: "Surprise Me!" },
 ];
 
 const SIZE_ITEM_TYPES = [
