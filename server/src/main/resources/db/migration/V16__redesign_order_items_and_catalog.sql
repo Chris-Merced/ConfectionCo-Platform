@@ -169,17 +169,9 @@ INSERT INTO flavor_options (name, item_type) VALUES
     ('Earl Grey',       'MACARON'),
     ('Ganache',         'MACARON');
 
--- Cake sizes: prices are 0.00 placeholders — update once pricing is confirmed
+-- Cakes (CAKE and SURPRISE_ME) have no fixed size or price — amount is
+-- determined after customer negotiations, so no size rows are seeded for them.
 INSERT INTO sizes (item_type, label, description, price) VALUES
-    ('CAKE', '6-inch (2 layer)',  'Feeds 8-10 people',  0.00),
-    ('CAKE', '6-inch (3 layer)',  'Feeds 10-12 people', 0.00),
-    ('CAKE', '8-inch (2 layer)',  'Feeds 12-15 people', 0.00),
-    ('CAKE', '8-inch (3 layer)',  'Feeds 15-18 people', 0.00),
-    ('CAKE', '10-inch (2 layer)', 'Feeds 18-22 people', 0.00),
-    ('CAKE', '10-inch (3 layer)', 'Feeds 22-26 people', 0.00),
-
-    ('SURPRISE_ME', '6-inch (2 layer)', 'Feeds 8-10 people', 0.00),
-
     ('PIE_CLASSIC', '9-inch', NULL, 35.00),
     ('PIE_CUSTARD', '9-inch', NULL, 35.00),
 
