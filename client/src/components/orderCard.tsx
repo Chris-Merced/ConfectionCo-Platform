@@ -2,6 +2,42 @@ import { useState, type ReactElement } from "react";
 import { useMutation } from "@tanstack/react-query";
 import { parseApiError } from "../utils/parseApiError";
 
+const ITEM_TYPE_LABELS: Record<string, string> = {
+  CAKE: "Custom Cake",
+  PIE_CLASSIC: "Classic Pie",
+  PIE_CUSTARD: "Custard Pie",
+  CHEESECAKE: "Cheesecake",
+  MACARON: "Macarons",
+  SURPRISE_ME: "Surprise Me!",
+};
+
+interface OrderCustomItem {
+  id: number;
+  itemType: string;
+  sizeLabel: string | null;
+  sizePrice: number | null;
+  quantity: number;
+  flavorName: string | null;
+  flavor2Name: string | null;
+  fillingName: string | null;
+  buttercreamName: string | null;
+  colorPreference: string | null;
+  pieStyleName: string | null;
+  glutenFree: boolean;
+  cheesecakeCrustName: string | null;
+  comments: string | null;
+  photoUrls: string[];
+}
+
+interface OrderFixedItem {
+  id: number;
+  productName: string;
+  description: string | null;
+  unitDescription: string | null;
+  price: number;
+  quantity: number;
+}
+
 export interface Order {
   id: number;
   customerName: string | null;
@@ -13,7 +49,6 @@ export interface Order {
   finalPaymentAmount: number | null;
   depositPaid: boolean;
   fullPaymentPaid: boolean;
-  servingCount: number;
   comments: string | null;
   fulfillmentType: string;
   deliveryAddress: string | null;
@@ -22,9 +57,8 @@ export interface Order {
   smsConsent: boolean;
   paymentLinkToken: string | null;
   photoUrls: string[];
-  flavor: string | null;
-  filling: string | null;
-  buttercream: string | null;
+  customItems: OrderCustomItem[];
+  fixedItems: OrderFixedItem[];
 }
 
 interface OrderCardProps {
@@ -172,16 +206,58 @@ export default function OrderCard({ order, token, onUpdate }: OrderCardProps): R
       )}
       <p className="order-card-field"><strong>Email:</strong> {order.email}</p>
       <p className="order-card-field"><strong>Phone:</strong> {order.phoneNumber}</p>
-      <p className="order-card-field"><strong>Servings:</strong> {order.servingCount}</p>
-      {order.flavor && (
-        <p className="order-card-field"><strong>Flavor:</strong> {order.flavor}</p>
+
+      {(order.customItems.length > 0 || order.fixedItems.length > 0) && (
+        <div className="order-card-items">
+          {order.customItems.map(item => (
+            <div key={item.id} className="order-card-item">
+              <div className="order-card-item-header">
+                <span className="order-card-item-type">{ITEM_TYPE_LABELS[item.itemType] ?? item.itemType}</span>
+                {item.sizeLabel && (
+                  <span className="order-card-item-size">
+                    {item.sizeLabel}{item.sizePrice != null ? ` · $${Number(item.sizePrice).toFixed(2)}` : ""}
+                  </span>
+                )}
+                {item.quantity > 1 && <span className="order-card-item-qty">×{item.quantity}</span>}
+              </div>
+              <div className="order-card-item-details">
+                {item.flavorName && <span>{item.flavorName}</span>}
+                {item.flavor2Name && <span>{item.flavor2Name}</span>}
+                {item.fillingName && <span>Filling: {item.fillingName}</span>}
+                {item.buttercreamName && <span>Frosting: {item.buttercreamName}</span>}
+                {item.pieStyleName && <span>Style: {item.pieStyleName}</span>}
+                {item.cheesecakeCrustName && (
+                  <span>Crust: {item.cheesecakeCrustName}{item.glutenFree ? " (GF)" : ""}</span>
+                )}
+                {!item.cheesecakeCrustName && item.glutenFree && <span>Gluten Free</span>}
+                {item.colorPreference && <span>Color: {item.colorPreference}</span>}
+                {item.comments && <span style={{ fontStyle: "italic" }}>Notes: {item.comments}</span>}
+              </div>
+              {item.photoUrls.length > 0 && (
+                <div className="order-card-photos">
+                  {item.photoUrls.map((url, j) => (
+                    <a key={j} href={url} target="_blank" rel="noreferrer">
+                      <img src={url} alt={`Inspiration ${j + 1}`} className="order-card-thumbnail" />
+                    </a>
+                  ))}
+                </div>
+              )}
+            </div>
+          ))}
+          {order.fixedItems.length > 0 && (
+            <div className="order-card-fixed-items">
+              {order.fixedItems.map(item => (
+                <p key={item.id} className="order-card-field">
+                  <strong>{item.productName}</strong> ×{item.quantity}
+                  {item.unitDescription && <span className="order-card-unit"> ({item.unitDescription})</span>}
+                  {" · "}<span className="order-card-unit">${Number(item.price).toFixed(2)}</span>
+                </p>
+              ))}
+            </div>
+          )}
+        </div>
       )}
-      {order.filling && (
-        <p className="order-card-field"><strong>Filling:</strong> {order.filling}</p>
-      )}
-      {order.buttercream && (
-        <p className="order-card-field"><strong>Buttercream:</strong> {order.buttercream}</p>
-      )}
+
       <p className="order-card-field">
         <strong>Fulfillment:</strong> {order.fulfillmentType === "DROPOFF" ? "Delivery" : "Pickup"}
       </p>

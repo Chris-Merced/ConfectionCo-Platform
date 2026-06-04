@@ -74,6 +74,9 @@ interface ItemBuilderProps {
     custardPieStyles:  Option[];
     cheesecakeCrusts:  CrustOption[];
     cheesecakeSizes:   SizeOption[];
+    classicPieSizes:   SizeOption[];
+    custardPieSizes:   SizeOption[];
+    macaronSizes:      SizeOption[];
     onAdd:    (item: CartItem) => void;
     onCancel: () => void;
 }
