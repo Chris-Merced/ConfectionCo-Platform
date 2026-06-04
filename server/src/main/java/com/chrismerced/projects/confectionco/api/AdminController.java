@@ -23,11 +23,17 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.chrismerced.projects.confectionco.dtos.OrderCustomItemDTO;
 import com.chrismerced.projects.confectionco.dtos.OrderDTO;
+import com.chrismerced.projects.confectionco.dtos.OrderFixedItemDTO;
 import com.chrismerced.projects.confectionco.dtos.SendReceiptRequest;
 import com.chrismerced.projects.confectionco.exceptions.ResourceNotFoundException;
 import com.chrismerced.projects.confectionco.model.Order;
+import com.chrismerced.projects.confectionco.model.OrderCustomItem;
 import com.chrismerced.projects.confectionco.model.OrderStatus;
+import com.chrismerced.projects.confectionco.repository.OrderCustomItemRepository;
+import com.chrismerced.projects.confectionco.repository.OrderFixedItemRepository;
+import com.chrismerced.projects.confectionco.repository.OrderItemPhotoRepository;
 import com.chrismerced.projects.confectionco.repository.OrderRepository;
 import com.chrismerced.projects.confectionco.services.EmailService;
 import com.chrismerced.projects.confectionco.services.OrderService;
@@ -53,15 +59,23 @@ public class AdminController {
     private final StripeService stripeService;
     private final EmailService emailService;
     private final S3Service s3Service;
+    private final OrderCustomItemRepository customItemRepository;
+    private final OrderFixedItemRepository fixedItemRepository;
+    private final OrderItemPhotoRepository itemPhotoRepository;
 
     AdminController(OrderRepository orderRepository, OrderService orderService,
-            StripeService stripeService, EmailService emailService,
-            S3Service s3Service) {
+            StripeService stripeService, EmailService emailService, S3Service s3Service,
+            OrderCustomItemRepository customItemRepository,
+            OrderFixedItemRepository fixedItemRepository,
+            OrderItemPhotoRepository itemPhotoRepository) {
         this.orderRepository = orderRepository;
         this.orderService = orderService;
         this.stripeService = stripeService;
         this.emailService = emailService;
         this.s3Service = s3Service;
+        this.customItemRepository = customItemRepository;
+        this.fixedItemRepository = fixedItemRepository;
+        this.itemPhotoRepository = itemPhotoRepository;
     }
 
     @GetMapping("/orders")
