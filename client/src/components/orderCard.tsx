@@ -162,6 +162,8 @@ export default function OrderCard({ order, token, onUpdate }: OrderCardProps): R
     advanceMutation.mutate(amount);
   };
 
+  const photosDeleted = ["REJECTED", "REFUNDED", "COMPLETED", "REMOVED"].includes(order.status);
+
   const remainingBalance =
     order.totalAmount != null && order.depositAmount != null
       ? (order.totalAmount - order.depositAmount).toFixed(2)
@@ -240,7 +242,7 @@ export default function OrderCard({ order, token, onUpdate }: OrderCardProps): R
                 {item.colorPreference && <span>Color: {item.colorPreference}</span>}
                 {item.comments && <span style={{ fontStyle: "italic" }}>Notes: {item.comments}</span>}
               </div>
-              {item.photoUrls.length > 0 && (
+              {item.photoUrls.length > 0 && !photosDeleted && (
                 <div className="order-card-photos">
                   {item.photoUrls.map((url, j) => (
                     <a key={j} href={url} target="_blank" rel="noreferrer">
@@ -321,7 +323,7 @@ export default function OrderCard({ order, token, onUpdate }: OrderCardProps): R
         )}
       </div>
 
-      {order.photoUrls.length > 0 && order.status !== "REFUNDED" && (
+      {order.photoUrls.length > 0 && !photosDeleted && (
         <div className="order-card-photos">
           {order.photoUrls.map((url, i) => (
             <a key={i} href={url} target="_blank" rel="noreferrer">
