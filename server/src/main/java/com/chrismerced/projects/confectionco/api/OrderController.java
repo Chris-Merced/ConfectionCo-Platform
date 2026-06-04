@@ -2,34 +2,30 @@ package com.chrismerced.projects.confectionco.api;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
-
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.Max;
-import jakarta.validation.constraints.Min;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Size;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.chrismerced.projects.confectionco.model.Order;
-import com.chrismerced.projects.confectionco.repository.OrderRepository;
+import com.chrismerced.projects.confectionco.dtos.CreateOrderRequest;
+import com.chrismerced.projects.confectionco.dtos.CreateOrderResponse;
 import com.chrismerced.projects.confectionco.services.EmailService;
+import com.chrismerced.projects.confectionco.services.OrderService;
 import com.chrismerced.projects.confectionco.services.S3Service;
 import com.chrismerced.projects.confectionco.services.TextingService;
-import com.chrismerced.projects.confectionco.util.InputSanitizer;
+
+import jakarta.validation.Valid;
 
 @Validated
 @RestController
@@ -39,13 +35,10 @@ public class OrderController {
     @Value("${aws.bucket-inspo}")
     private String inspoBucket;
 
-    @Value("${aws.bucket-assets}")
-    private String assetBucket;
-
     @Value("${app.owner-phone}")
     private String ownerPhone;
 
-    private final OrderRepository orderRepository;
+    private final OrderService orderService;
     private final S3Service s3Service;
     private final EmailService emailService;
     private final TextingService textingService;
@@ -53,14 +46,63 @@ public class OrderController {
     private static final byte[] MAGIC_JPEG = {(byte) 0xFF, (byte) 0xD8, (byte) 0xFF};
     private static final byte[] MAGIC_PNG  = {(byte) 0x89, 0x50, 0x4E, 0x47};
     private static final byte[] MAGIC_WEBP = {0x52, 0x49, 0x46, 0x46};
-    private static final Set<String> VALID_FULFILLMENT_TYPES = Set.of("PICKUP", "DROPOFF");
 
-    OrderController(OrderRepository orderRepository, S3Service s3Service, EmailService emailService,
-            TextingService textingService) {
-        this.orderRepository = orderRepository;
+    OrderController(OrderService orderService, S3Service s3Service,
+                    EmailService emailService, TextingService textingService) {
+        this.orderService = orderService;
         this.s3Service = s3Service;
         this.emailService = emailService;
         this.textingService = textingService;
+    }
+
+    @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<CreateOrderResponse> createOrder(
+            @RequestBody @Valid CreateOrderRequest request) {
+
+        CreateOrderResponse response = orderService.createOrder(request);
+
+        try {
+            emailService.sendOrderConfirmation(request.getEmail());
+        } catch (Exception e) {
+            // Non-fatal
+        }
+        try {
+            textingService.sendText(ownerPhone,
+                    "New Confection Co. order from " + request.getCustomerName() +
+                    " for " + request.getFulfillmentDate() + ". Order ID: " + response.getOrderId());
+        } catch (Exception e) {
+            // Non-fatal
+        }
+
+        return ResponseEntity.ok(response);
+    }
+
+    @PostMapping(value = "/{orderId}/items/{itemId}/photos", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<Void> uploadItemPhotos(
+            @PathVariable Long orderId,
+            @PathVariable Long itemId,
+            @RequestParam(required = false) List<MultipartFile> photos) throws IOException {
+
+        if (photos == null || photos.isEmpty()) {
+            return ResponseEntity.ok().build();
+        }
+
+        long maxBytes = 10 * 1024 * 1024;
+        List<String> photoKeys = new ArrayList<>();
+        for (MultipartFile photo : photos) {
+            if (!photo.isEmpty()) {
+                if (photo.getSize() > maxBytes) {
+                    throw new IllegalArgumentException("Each photo must be under 10MB.");
+                }
+                if (!hasValidImageMagic(photo)) {
+                    throw new IllegalArgumentException("Only JPEG, PNG, and WebP images are allowed.");
+                }
+                photoKeys.add(s3Service.uploadFile(photo, inspoBucket));
+            }
+        }
+
+        orderService.addItemPhotos(orderId, itemId, photoKeys);
+        return ResponseEntity.ok().build();
     }
 
     private boolean hasValidImageMagic(MultipartFile file) throws IOException {
@@ -78,89 +120,5 @@ public class OrderController {
             if (data[i] != prefix[i]) return false;
         }
         return true;
-    }
-
-    @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<Map<String, Long>> createOrder(
-            @RequestParam @NotBlank @Size(max = 100) String customerName,
-            @RequestParam @Email @NotBlank String email,
-            @RequestParam @NotBlank String phoneNumber,
-            @RequestParam @Min(1) @Max(500) int servingCount,
-            @RequestParam(required = false) @Size(max = 2000) String comments,
-            @RequestParam(defaultValue = "PICKUP") String fulfillmentType,
-            @RequestParam(required = false) @Size(max = 500) String deliveryAddress,
-            @RequestParam LocalDate fulfillmentDate,
-            @RequestParam(required = false) List<MultipartFile> photos,
-            @RequestParam(defaultValue = "false") boolean smsConsent,
-            @RequestParam @NotBlank @Size(max = 100) String flavor,
-            @RequestParam(required = false) @Size(max = 100) String filling,
-            @RequestParam @NotBlank @Size(max = 100) String buttercream) throws IOException {
-
-        String cleanCustomerName = InputSanitizer.stripHtml(customerName);
-        String cleanEmail = InputSanitizer.stripHtml(email).toLowerCase();
-        String cleanPhone = InputSanitizer.sanitizePhone(phoneNumber);
-        String cleanComments = InputSanitizer.stripHtml(comments);
-        String cleanDeliveryAddress = InputSanitizer.stripHtml(deliveryAddress);
-        String cleanFulfillmentType = InputSanitizer.stripHtml(fulfillmentType).toUpperCase();
-        String cleanFlavor = InputSanitizer.stripHtml(flavor);
-        String cleanFilling = InputSanitizer.stripHtml(filling);
-        String cleanButtercream = InputSanitizer.stripHtml(buttercream);
-
-        if (cleanPhone == null || cleanPhone.length() != 10) {
-            throw new IllegalArgumentException("Phone number must be a valid 10-digit US number.");
-        }
-
-        if (!VALID_FULFILLMENT_TYPES.contains(cleanFulfillmentType)) {
-            throw new IllegalArgumentException("Invalid fulfillment type.");
-        }
-
-        if (!fulfillmentDate.isAfter(LocalDate.now())) {
-            throw new IllegalArgumentException("Fulfillment date must be in the future.");
-        }
-
-        long maxBytes = 10 * 1024 * 1024;
-        List<String> photoKeys = new ArrayList<>();
-        if (photos != null) {
-            for (MultipartFile photo : photos) {
-                if (!photo.isEmpty()) {
-                    if (photo.getSize() > maxBytes) {
-                        throw new IllegalArgumentException("Each photo must be under 10MB.");
-                    }
-                    if (!hasValidImageMagic(photo)) {
-                        throw new IllegalArgumentException("Only JPEG, PNG, and WebP images are allowed.");
-                    }
-                    photoKeys.add(s3Service.uploadFile(photo, inspoBucket));
-                }
-            }
-        }
-
-        Order order = new Order();
-        order.setCustomerName(cleanCustomerName);
-        order.setEmail(cleanEmail);
-        order.setPhoneNumber(cleanPhone);
-        order.setServingCount(servingCount);
-        order.setComments(cleanComments);
-        order.setFulfillmentType(cleanFulfillmentType);
-        order.setDeliveryAddress("DROPOFF".equals(cleanFulfillmentType) ? cleanDeliveryAddress : null);
-        order.setFulfillmentDate(fulfillmentDate);
-        order.setSmsConsent(smsConsent);
-        order.setPhotoUrls(photoKeys);
-        order.setFlavor(cleanFlavor);
-        order.setFilling(cleanFilling != null && !cleanFilling.isBlank() ? cleanFilling : null);
-        order.setButtercream(cleanButtercream);
-
-        Order saved = orderRepository.save(order);
-        try {
-            emailService.sendOrderConfirmation(cleanEmail);
-        } catch (Exception e) {
-            // Non-fatal — order is saved, email failure is logged by EmailService
-        }
-        try {
-            textingService.sendText(ownerPhone,
-                    "New Confection Co. order from " + cleanCustomerName + " for " + fulfillmentDate + ". Order ID: " + saved.getId());
-        } catch (Exception e) {
-            // Non-fatal
-        }
-        return ResponseEntity.ok(Map.of("orderId", saved.getId()));
     }
 }
