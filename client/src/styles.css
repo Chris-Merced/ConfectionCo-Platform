@@ -2143,3 +2143,305 @@ input[type="file"].form-input {
         justify-content: center;
     }
 }
+
+/* ── Order Form — item builder & cart ────────────────────────── */
+.form-section-label {
+    font-family: var(--font-serif);
+    font-size: 1.05rem;
+    color: var(--brown-dark);
+    font-weight: 600;
+    margin: 1.5rem 0 0.75rem;
+    padding-bottom: 0.4rem;
+    border-bottom: 1.5px solid var(--surface-alt);
+}
+
+.form-required { color: var(--pink-dark); }
+
+.form-checkbox-row {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.9rem;
+    color: var(--brown);
+    cursor: pointer;
+    margin-bottom: 0.75rem;
+}
+
+.form-checkbox-row input[type="checkbox"] {
+    accent-color: var(--pink);
+    width: 15px;
+    height: 15px;
+    cursor: pointer;
+    flex-shrink: 0;
+}
+
+.item-builder {
+    background: var(--surface);
+    border: 1.5px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 1.25rem;
+    margin-bottom: 1rem;
+}
+
+.item-builder-note {
+    font-size: 0.875rem;
+    color: var(--text-muted);
+    font-style: italic;
+    margin-bottom: 0.75rem;
+    line-height: 1.55;
+}
+
+.item-builder-price {
+    font-size: 0.875rem;
+    color: var(--brown);
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+}
+
+.item-builder-actions {
+    display: flex;
+    gap: 0.5rem;
+    margin-top: 0.5rem;
+}
+
+.cart-item {
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 0.75rem;
+    margin-bottom: 0.5rem;
+}
+
+.cart-item-header {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 0.35rem;
+}
+
+.cart-item-type {
+    font-weight: 700;
+    font-size: 0.9rem;
+    color: var(--brown-dark);
+    flex: 1;
+}
+
+.cart-item-index {
+    font-size: 0.78rem;
+    color: var(--text-muted);
+}
+
+.cart-item-details {
+    list-style: none;
+    font-size: 0.83rem;
+    color: var(--text-muted);
+    line-height: 1.6;
+    padding-left: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.2rem 0.75rem;
+}
+
+.btn-add-item {
+    width: 100%;
+    padding: 0.6rem;
+    background: transparent;
+    border: 1.5px dashed var(--border);
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    font-family: var(--font-sans);
+    font-size: 0.88rem;
+    font-weight: 600;
+    color: var(--brown);
+    letter-spacing: 0.04em;
+    transition: border-color 0.15s, color 0.15s, background 0.15s;
+    margin-bottom: 0.25rem;
+}
+
+.btn-add-item:hover {
+    border-color: var(--pink);
+    color: var(--pink-dark);
+    background: rgba(196, 118, 138, 0.04);
+}
+
+.fixed-items-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    margin-bottom: 0.75rem;
+}
+
+.fixed-item-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 0.65rem 0.85rem;
+}
+
+.fixed-item-info {
+    display: flex;
+    flex-direction: column;
+    gap: 0.15rem;
+    flex: 1;
+    min-width: 0;
+}
+
+.fixed-item-name { font-weight: 600; font-size: 0.9rem; color: var(--black); }
+.fixed-item-meta { font-size: 0.8rem; color: var(--brown); }
+.fixed-item-desc { font-size: 0.8rem; color: var(--text-muted); font-style: italic; }
+
+.fixed-item-qty {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    flex-shrink: 0;
+}
+
+.qty-btn {
+    width: 28px;
+    height: 28px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    font-size: 1rem;
+    line-height: 1;
+    color: var(--brown);
+    font-family: var(--font-sans);
+    transition: background 0.1s;
+}
+
+.qty-btn:hover { background: var(--surface-alt); }
+
+.qty-value {
+    font-size: 0.9rem;
+    font-weight: 700;
+    color: var(--black);
+    min-width: 1.5rem;
+    text-align: center;
+}
+
+/* ── Order Card — items section ──────────────────────────────── */
+.order-card-items {
+    margin: 0.5rem 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+}
+
+.order-card-item {
+    background: #fff;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 0.55rem 0.7rem;
+}
+
+.order-card-item-header {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    margin-bottom: 0.25rem;
+    flex-wrap: wrap;
+}
+
+.order-card-item-type {
+    font-weight: 700;
+    font-size: 0.855rem;
+    color: var(--brown-dark);
+}
+
+.order-card-item-size {
+    font-size: 0.79rem;
+    color: var(--brown);
+}
+
+.order-card-item-qty {
+    font-size: 0.79rem;
+    color: var(--text-muted);
+}
+
+.order-card-item-details {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.15rem 0.6rem;
+    font-size: 0.79rem;
+    color: var(--text-muted);
+    line-height: 1.5;
+}
+
+.order-card-fixed-items {
+    border-top: 1px solid var(--border);
+    padding-top: 0.35rem;
+    margin-top: 0.1rem;
+}
+
+.order-card-unit {
+    font-weight: normal;
+    color: var(--text-muted);
+}
+
+/* ── Options Manager — new panel elements ────────────────────── */
+.options-select {
+    width: 100%;
+    padding: 0.4rem 0.65rem;
+    border: 1.5px solid var(--border);
+    border-radius: var(--radius-sm);
+    background: var(--bg);
+    color: var(--black);
+    font-family: var(--font-sans);
+    font-size: 0.875rem;
+    outline: none;
+}
+
+.options-select:focus { border-color: var(--border-focus); }
+
+.options-gf-tag {
+    font-size: 0.68rem;
+    font-weight: 700;
+    background: #d1fae5;
+    color: #065f46;
+    padding: 0.1rem 0.35rem;
+    border-radius: 4px;
+    letter-spacing: 0.04em;
+    flex-shrink: 0;
+}
+
+.options-gf-checkbox {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-size: 0.82rem;
+    color: var(--brown);
+    cursor: pointer;
+}
+
+.options-gf-checkbox input[type="checkbox"] {
+    accent-color: var(--pink);
+    width: 14px;
+    height: 14px;
+    cursor: pointer;
+}
+
+.options-item-meta {
+    font-size: 0.78rem;
+    color: var(--text-muted);
+    flex-shrink: 0;
+}
+
+.options-add-form {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+}
+
+.options-add-form .form-input {
+    font-size: 0.875rem;
+    padding: 0.4rem 0.65rem;
+}
