@@ -86,7 +86,17 @@ public class AdminController {
             List<OrderDTO> orders = orderRepository
                     .findByStatusNotInOrderByFulfillmentDateAsc(of(OrderStatus.COMPLETED, OrderStatus.REMOVED))
                     .stream()
-                    .map(order -> new OrderDTO(order, inspoBaseUrl))
+                    .map(order -> {
+                        List<OrderCustomItemDTO> customItems = customItemRepository
+                                .findByOrderId(order.getId()).stream()
+                                .map(item -> new OrderCustomItemDTO(item, inspoBaseUrl))
+                                .collect(Collectors.toList());
+                        List<OrderFixedItemDTO> fixedItems = fixedItemRepository
+                                .findByOrderId(order.getId()).stream()
+                                .map(OrderFixedItemDTO::new)
+                                .collect(Collectors.toList());
+                        return new OrderDTO(order, inspoBaseUrl, customItems, fixedItems);
+                    })
                     .collect(Collectors.toList());
             return ResponseEntity.ok(orders);
         } catch (Exception e) {
