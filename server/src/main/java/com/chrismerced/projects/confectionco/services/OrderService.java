@@ -230,8 +230,7 @@ public class OrderService {
             }
             case "MACARON" -> {
                 if (req.getSizeId() == null) throw new IllegalArgumentException("Macaron requires a size.");
-                if (req.getFlavorId() == null) throw new IllegalArgumentException("Macaron requires the first flavor.");
-                if (req.getFlavor2Id() == null) throw new IllegalArgumentException("Macaron requires the second flavor.");
+                if (req.getFlavorId() == null) throw new IllegalArgumentException("Macaron requires a flavor.");
             }
         }
     }

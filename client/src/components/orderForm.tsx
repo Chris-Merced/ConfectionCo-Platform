@@ -141,7 +141,7 @@ function ItemBuilder({
         if (t === "SURPRISE_ME")                  { if (!item.flavorId) return "Surprise Me requires a flavor."; }
         if (t === "PIE_CLASSIC" || t === "PIE_CUSTARD") { if (!item.sizeId) return "Pie size unavailable — please try again."; if (!item.flavorId) return "Pie requires a flavor."; if (!item.pieStyleId) return "Pie requires a style."; }
         if (t === "CHEESECAKE")                   { if (!item.sizeId) return "Cheesecake requires a size."; if (!item.flavorId) return "Cheesecake requires a flavor."; if (!item.cheesecakeCrustId) return "Cheesecake requires a crust."; }
-        if (t === "MACARON")                      { if (!item.sizeId) return "Macaron size unavailable — please try again."; if (!item.flavorId) return "Macarons require the first flavor."; if (!item.flavor2Id) return "Macarons require the second flavor."; }
+        if (t === "MACARON")                      { if (!item.sizeId) return "Macaron size unavailable — please try again."; if (!item.flavorId) return "Macarons require a flavor."; }
         return "";
     }
 
@@ -259,18 +259,18 @@ function ItemBuilder({
 
             {/* ── Macarons ── */}
             {item.itemType === "MACARON" && <>
-                <p className="item-builder-price">One dozen · $36 · Choose two flavors</p>
+                <p className="item-builder-price">One dozen · $36</p>
                 <div className="form-field">
-                    <label className="form-label">First Flavor <span className="form-required">*</span></label>
+                    <label className="form-label">Flavor <span className="form-required">*</span></label>
                     <select className="form-input" value={item.flavorId ?? ""} onChange={e => pickFlavor(macaronFlavors, +e.target.value, "flavorId", "flavorName")}>
                         <option value="">Select a flavor</option>
                         {macaronFlavors.map(o => <option key={o.id} value={o.id}>{o.name}</option>)}
                     </select>
                 </div>
                 <div className="form-field">
-                    <label className="form-label">Second Flavor <span className="form-required">*</span></label>
+                    <label className="form-label">Second Flavor (optional)</label>
                     <select className="form-input" value={item.flavor2Id ?? ""} onChange={e => pickFlavor(macaronFlavors, +e.target.value, "flavor2Id", "flavor2Name")}>
-                        <option value="">Select a flavor</option>
+                        <option value="">None</option>
                         {macaronFlavors.map(o => <option key={o.id} value={o.id}>{o.name}</option>)}
                     </select>
                 </div>
