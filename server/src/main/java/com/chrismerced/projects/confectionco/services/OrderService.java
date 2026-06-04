@@ -377,6 +377,7 @@ public class OrderService {
         return url;
     }
 
+    @Transactional
     public void refundOrder(Long orderId, BigDecimal amount) throws Exception {
         Order order = orderRepository.findById(orderId)
                 .orElseThrow(() -> new ResourceNotFoundException("Order not found: " + orderId));
@@ -411,23 +412,24 @@ public class OrderService {
         orderRepository.save(order);
     }
 
-    public void handleStripeEvent(Event event, String rawPayload) {
-        if (!markEventProcessed(event.getId())) {
-            log.info("Duplicate Stripe event ignored: {}", event.getId());
+    @Transactional
+    public void handleStripeEvent(String eventType, String eventId, String rawPayload) {
+        if (!markEventProcessed(eventId)) {
+            log.info("Duplicate Stripe event ignored: {}", eventId);
             return;
         }
-        switch (event.getType()) {
+        switch (eventType) {
             case "checkout.session.completed" -> {
                 com.fasterxml.jackson.databind.JsonNode dataObject;
                 try {
                     dataObject = objectMapper.readTree(rawPayload).path("data").path("object");
                 } catch (Exception e) {
-                    log.error("Failed to parse webhook payload for event {}", event.getId(), e);
+                    log.error("Failed to parse webhook payload for event {}", eventId, e);
                     return;
                 }
                 String orderId = dataObject.path("client_reference_id").asText(null);
                 if (orderId == null) {
-                    log.error("Missing client_reference_id in event: {}", event.getId());
+                    log.error("Missing client_reference_id in event: {}", eventId);
                     return;
                 }
                 handleStripeCheckoutCompleted(Long.valueOf(orderId));
@@ -438,20 +440,20 @@ public class OrderService {
                 try {
                     dataObject = objectMapper.readTree(rawPayload).path("data").path("object");
                 } catch (Exception e) {
-                    log.error("Failed to parse refund webhook payload for event {}", event.getId(), e);
+                    log.error("Failed to parse refund webhook payload for event {}", eventId, e);
                     return;
                 }
                 String refundId = dataObject.path("id").asText(null);
                 String refundStatus = dataObject.path("status").asText(null);
                 if (refundId == null || refundStatus == null) {
-                    log.error("Missing refund id or status in event: {}", event.getId());
+                    log.error("Missing refund id or status in event: {}", eventId);
                     return;
                 }
                 long amountInCents = dataObject.path("amount").asLong(0);
                 handleStripeRefundUpdated(refundId, refundStatus, amountInCents > 0 ? amountInCents : null);
             }
 
-            default -> log.info("Unhandled Stripe event: {}", event.getType());
+            default -> log.info("Unhandled Stripe event: {}", eventType);
         }
     }
 

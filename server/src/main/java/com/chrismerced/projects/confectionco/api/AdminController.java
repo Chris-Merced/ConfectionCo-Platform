@@ -170,7 +170,10 @@ public class AdminController {
             return ResponseEntity.notFound().build();
         } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
+        } catch (com.stripe.exception.StripeException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
         } catch (Exception e) {
+            log.error("Failed to process refund for order {}", id, e);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to process refund");
         }
     }
