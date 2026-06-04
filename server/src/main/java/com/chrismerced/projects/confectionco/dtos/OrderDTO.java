@@ -6,11 +6,9 @@ import java.time.OffsetDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
-
 import com.chrismerced.projects.confectionco.model.Order;
 
 public class OrderDTO {
-
 
     private Long id;
     private String customerName;
@@ -23,7 +21,6 @@ public class OrderDTO {
     private BigDecimal refundAmount;
     private boolean depositPaid;
     private boolean fullPaymentPaid;
-    private Integer servingCount;
     private String comments;
     private String fulfillmentType;
     private String deliveryAddress;
@@ -32,11 +29,12 @@ public class OrderDTO {
     private boolean smsConsent;
     private String paymentLinkToken;
     private List<String> photoUrls;
-    private String flavor;
-    private String filling;
-    private String buttercream;
+    private List<OrderCustomItemDTO> customItems;
+    private List<OrderFixedItemDTO> fixedItems;
 
-    public OrderDTO(Order order, String bucketUrl) {
+    public OrderDTO(Order order, String bucketUrl,
+                    List<OrderCustomItemDTO> customItems,
+                    List<OrderFixedItemDTO> fixedItems) {
         this.id = order.getId();
         this.customerName = order.getCustomerName();
         this.email = order.getEmail();
@@ -48,7 +46,6 @@ public class OrderDTO {
         this.refundAmount = order.getRefundAmount();
         this.depositPaid = order.isDepositPaid();
         this.fullPaymentPaid = order.isFullPaymentPaid();
-        this.servingCount = order.getServingCount();
         this.comments = order.getComments();
         this.fulfillmentType = order.getFulfillmentType();
         this.deliveryAddress = order.getDeliveryAddress();
@@ -60,9 +57,8 @@ public class OrderDTO {
                 .stream()
                 .map(key -> bucketUrl + "/" + key)
                 .collect(Collectors.toList());
-        this.flavor = order.getFlavor();
-        this.filling = order.getFilling();
-        this.buttercream = order.getButtercream();
+        this.customItems = customItems;
+        this.fixedItems = fixedItems;
     }
 
     public Long getId() { return id; }
@@ -76,7 +72,6 @@ public class OrderDTO {
     public BigDecimal getRefundAmount() { return refundAmount; }
     public boolean isDepositPaid() { return depositPaid; }
     public boolean isFullPaymentPaid() { return fullPaymentPaid; }
-    public Integer getServingCount() { return servingCount; }
     public String getComments() { return comments; }
     public String getFulfillmentType() { return fulfillmentType; }
     public String getDeliveryAddress() { return deliveryAddress; }
@@ -85,7 +80,6 @@ public class OrderDTO {
     public boolean isSmsConsent() { return smsConsent; }
     public String getPaymentLinkToken() { return paymentLinkToken; }
     public List<String> getPhotoUrls() { return photoUrls; }
-    public String getFlavor() { return flavor; }
-    public String getFilling() { return filling; }
-    public String getButtercream() { return buttercream; }
+    public List<OrderCustomItemDTO> getCustomItems() { return customItems; }
+    public List<OrderFixedItemDTO> getFixedItems() { return fixedItems; }
 }
