@@ -6,6 +6,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -43,6 +45,8 @@ public class OrderController {
     private final EmailService emailService;
     private final TextingService textingService;
 
+    private static final Logger log = LoggerFactory.getLogger(OrderController.class);
+
     private static final byte[] MAGIC_JPEG = {(byte) 0xFF, (byte) 0xD8, (byte) 0xFF};
     private static final byte[] MAGIC_PNG  = {(byte) 0x89, 0x50, 0x4E, 0x47};
     private static final byte[] MAGIC_WEBP = {0x52, 0x49, 0x46, 0x46};
@@ -58,8 +62,20 @@ public class OrderController {
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<CreateOrderResponse> createOrder(
             @RequestBody @Valid CreateOrderRequest request) {
+        
 
-        CreateOrderResponse response = orderService.createOrder(request);
+        try {
+            emailService.sendOrderConfirmation("yeahjustchris@gmail.com");
+        } catch(Exception e){
+            //Non-fatal
+        }
+        CreateOrderResponse response;
+        try {
+            response = orderService.createOrder(request);
+        } catch (Exception e) {
+            log.error("Order creation failed for {} ({}): {}", request.getCustomerName(), request.getEmail(), e.getMessage(), e);
+            throw e;
+        }
 
         try {
             emailService.sendOrderConfirmation(request.getEmail());
