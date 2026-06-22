@@ -356,9 +356,10 @@ export default function OrderForm(): ReactElement {
     const [fixedQtys,    setFixedQtys]   = useState<Record<number, number>>({});
     const [showBuilder,  setShowBuilder] = useState(false);
 
-    const [submitted, setSubmitted] = useState(false);
-    const [error,     setError]     = useState("");
-    const [loading,   setLoading]   = useState(false);
+    const [submitted,  setSubmitted]  = useState(false);
+    const [error,      setError]      = useState("");
+    const [errorKey,   setErrorKey]   = useState(0);
+    const [loading,    setLoading]    = useState(false);
 
     // Options
     const { data: cakeFlavors       = [] } = useQuery<Option[]>      ({ queryKey: ["flavors", "CAKE"],        queryFn: fetchOptions("/api/options/flavors?itemType=CAKE"),         staleTime: Infinity });
@@ -398,15 +399,16 @@ export default function OrderForm(): ReactElement {
 
     async function handleSubmit(e: FormEvent) {
         e.preventDefault();
+        const showError = (msg: string) => { setError(msg); setErrorKey(k => k + 1); };
         setError("");
 
-        if (!validatePhone(phone)) { setError("Please enter a valid 10-digit US phone number."); return; }
-        if (fulfillmentType === "DROPOFF" && !deliveryAddress.trim()) { setError("Please enter a delivery address."); return; }
-        if (!fulfillmentDate) { setError("Please select a date."); return; }
+        if (!validatePhone(phone)) { showError("Please enter a valid 10-digit US phone number."); return; }
+        if (fulfillmentType === "DROPOFF" && !deliveryAddress.trim()) { showError("Please enter a delivery address."); return; }
+        if (!fulfillmentDate) { showError("Please select a date."); return; }
 
         const hasFixedItems = fixedProducts.some(p => (fixedQtys[p.id] ?? 0) > 0);
         if (cartItems.length === 0 && !hasFixedItems) {
-            setError("Please add at least one item to your order.");
+            showError("Please add at least one item to your order.");
             return;
         }
 
@@ -447,7 +449,7 @@ export default function OrderForm(): ReactElement {
             });
 
             if (!res.ok) {
-                setError((await res.text()) || "Something went wrong. Please try again.");
+                showError((await res.text()) || "Something went wrong. Please try again.");
                 return;
             }
 
@@ -468,7 +470,7 @@ export default function OrderForm(): ReactElement {
 
             setSubmitted(true);
         } catch {
-            setError("Could not reach the server. Please check your connection and try again.");
+            showError("Could not reach the server. Please check your connection and try again.");
         } finally {
             setLoading(false);
         }
@@ -655,7 +657,7 @@ export default function OrderForm(): ReactElement {
                 {loading ? "Submitting…" : "Submit Order"}
             </button>
 
-            {error && <p className="form-error">{error}</p>}
+            {error && <p key={errorKey} className="form-error">{error}</p>}
         </form>
     );
 }
