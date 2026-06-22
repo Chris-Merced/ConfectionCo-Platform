@@ -535,7 +535,7 @@ export default function OrderForm(): ReactElement {
                 </label>
                 <input className="form-input" id="fulfillmentDate" type="date" value={fulfillmentDate}
                     onChange={e => setFulfillmentDate(e.target.value)}
-                    min={new Date().toISOString().split("T")[0]} required />
+                    min={new Date(Date.now() + 86400000).toISOString().split("T")[0]} required />
             </div>
 
             {/* ── Custom Items ── */}
