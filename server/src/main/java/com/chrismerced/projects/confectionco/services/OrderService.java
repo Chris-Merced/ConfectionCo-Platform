@@ -129,6 +129,12 @@ public class OrderService {
             throw new IllegalArgumentException("Fulfillment date must be in the future.");
         }
 
+        boolean hasCustomItems = req.getCustomItems() != null && !req.getCustomItems().isEmpty();
+        boolean hasFixedItems = req.getFixedItems() != null && !req.getFixedItems().isEmpty();
+        if (!hasCustomItems && !hasFixedItems) {
+            throw new IllegalArgumentException("Order must contain at least one item.");
+        }
+
         Order order = new Order();
         order.setCustomerName(InputSanitizer.stripHtml(req.getCustomerName()));
         order.setEmail(InputSanitizer.stripHtml(req.getEmail()).toLowerCase());

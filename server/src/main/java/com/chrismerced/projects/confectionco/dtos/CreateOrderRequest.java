@@ -7,7 +7,6 @@ import java.util.List;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Size;
 
 public class CreateOrderRequest {
@@ -35,9 +34,8 @@ public class CreateOrderRequest {
 
     private boolean smsConsent;
 
-    @NotEmpty
     @Valid
-    private List<CreateOrderCustomItemRequest> customItems;
+    private List<CreateOrderCustomItemRequest> customItems = new ArrayList<>();
 
     @Valid
     private List<CreateOrderFixedItemRequest> fixedItems = new ArrayList<>();
