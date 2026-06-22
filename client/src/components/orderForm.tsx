@@ -635,8 +635,6 @@ export default function OrderForm(): ReactElement {
                 );
             })()}
 
-            {error && <p className="form-error">{error}</p>}
-
             {/* ── SMS Consent ── */}
             <div className="sms-consent">
                 <label className="sms-consent-row">
@@ -656,6 +654,8 @@ export default function OrderForm(): ReactElement {
             <button className="form-submit" type="submit" disabled={loading || showBuilder}>
                 {loading ? "Submitting…" : "Submit Order"}
             </button>
+
+            {error && <p className="form-error">{error}</p>}
         </form>
     );
 }
